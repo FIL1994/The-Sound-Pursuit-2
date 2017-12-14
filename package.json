@@ -1,0 +1,41 @@
+{
+  "name": "the-sound-pursuit-2",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "build": "SET NODE_ENV='production' & node ./node_modules/webpack/bin/webpack.js -p --progress --colors & cd scripts & build.cmd",
+    "build:linux": "NODE_ENV='production' node ./node_modules/webpack/bin/webpack.js -p --progress --colors"
+  },
+  "author": "Philip Van Raalte",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.34",
+    "babel-core": "^7.0.0-beta.3",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-import": "^1.6.3",
+    "babel-plugin-syntax-async-functions": "^7.0.0-beta.0",
+    "babel-plugin-transform-regenerator": "^7.0.0-beta.3",
+    "babel-polyfill": "^7.0.0-beta.3",
+    "babel-preset-env": "^7.0.0-beta.3",
+    "babel-preset-react": "^7.0.0-beta.3",
+    "babel-preset-stage-1": "^7.0.0-beta.3",
+    "babel-register": "^7.0.0-beta.3",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7"
+  },
+  "dependencies": {
+    "chance": "^1.0.12",
+    "jquery": "^3.2.1",
+    "localforage": "^1.5.5",
+    "lodash": "^4.17.4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  }
+}
