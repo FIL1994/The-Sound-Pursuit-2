@@ -18,6 +18,7 @@ import Records from './components/pages/Records';
 import ReleaseRecord from './components/pages/ReleaseRecord';
 import MainMenu from './components/pages/MainMenu';
 import Settings from './components/pages/Settings';
+import DragAndDrop from './components/pages/DragAndDrop';
 
 class App extends Component {
   constructor(props) {
@@ -83,6 +84,7 @@ class App extends Component {
             <Route exact path="/records/" component={Records}/>
             <Route path="/records/release/" component={ReleaseRecord}/>
             <Route path="/settings/" component={Settings}/>
+            <Route path="/drag" component={DragAndDrop}/>
             <Redirect to="/"/>
           </Switch>
           {_.isEmpty(score) ? null : this.renderModalScore()}
