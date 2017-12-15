@@ -1,82 +1,102 @@
 /**
  * @author Philip Van Raalte
- * @date 2017-12-14
+ * @date 2017-12-15
  */
-import React, {Component, Fragment} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import update from 'immutability-helper';
-import {DropTarget, DragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import Card from './Card';
+import {DropTarget} from 'react-dnd';
 import ItemTypes from './ItemTypes';
-import _ from 'lodash';
 
-const cardTarget = {
-  drop(){}
-};
-
-@DragDropContext(HTML5Backend)
-@DropTarget(ItemTypes.CARD, cardTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
 class Container extends Component {
-  static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired
-  };
-
   constructor(props) {
     super(props);
+    this.state = {cards: props.list};
 
-    this.moveSong = this.moveSong.bind(this);
-    this.findSong = this.findSong.bind(this);
-
-    this.state = {songs: []};
+    this.pushCard = this.pushCard.bind(this);
+    this.removeCard = this.removeCard.bind(this);
+    this.moveCard = this.moveCard.bind(this);
   }
 
-  moveSong(id, atIndex) {
-    const {song, index} = this.findSong(id);
-
-    this.setState(
-      update(this.state, {
-        songs: {
-          $splice: [[index, 1], [atIndex, 0, song]],
-        },
-      }),
-    );
+  pushCard(card) {
+    this.setState(update(this.state, {
+      cards: {
+        $push: [ card ]
+      }
+    }));
   }
 
-  findSong(id) {
-    const {songs} = this.state;
-    const song = songs.filter(s => s.id === id)[0];
+  removeCard(index) {
+    this.setState(update(this.state, {
+      cards: {
+        $splice: [
+          [index, 1]
+        ]
+      }
+    }));
+  }
 
-    return {
-      song,
-      index: songs.indexOf(song)
-    }
+  moveCard(dragIndex, hoverIndex) {
+    const { cards } = this.state;
+    const dragCard = cards[dragIndex];
+
+    this.setState(update(this.state, {
+      cards: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard]
+        ]
+      }
+    }));
   }
 
   render() {
-    const {songs} = this.state;
-    const {connectDropTarget, items} = this.props;
+    const {cards} = this.state;
+    const {canDrop, isOver, connectDropTarget} = this.props;
+    const isActive = canDrop && isOver;
+    const style = {
+      minHeight: "404px",
+      border: "1px solid gray"
+    };
 
-    if(_.isEmpty(songs) && !_.isEmpty(items)) {
-      setTimeout(() => this.setState({songs: items}));
-    }
+    const backgroundColor = isActive ? "#5755d9" : "#FFF";
 
     return connectDropTarget(
-      <div style={{width: 400}}>
-        {songs.map(song => (
-          <Card
-            key={song.id}
-            id={song.id}
-            text={song.title}
-            moveCard={this.moveSong}
-            findCard={this.findSong}
-          />
-        ))}
+      <div style={{...style, backgroundColor}} className={this.props.classes}>
+        {
+          cards.map((card, i) =>
+            <Card
+              key={card.id}
+              index={i}
+              listId={this.props.id}
+              card={card}
+              removeCard={this.removeCard}
+              moveCard={this.moveCard}
+            />)
+        }
       </div>
     );
   }
 }
 
-export default Container;
+const cardTarget = {
+  /* Analyses if the container's id is different from the container's id of the object being dropped.
+   * If positive then push the element. don't need to push elements when the containers are the same
+   */
+  drop(props, monitor, component) {
+    const {id} = props;
+    const sourceObj = monitor.getItem();
+    if(id !== sourceObj.listId) {
+      component.pushCard(sourceObj.card);
+    }
+    return {
+      listId: id
+    }
+  }
+};
+
+export default DropTarget(ItemTypes.CARD, cardTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  canDrop: monitor.canDrop()
+}))(Container);
