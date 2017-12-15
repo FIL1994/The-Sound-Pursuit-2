@@ -3,6 +3,7 @@
  * @date 2017-12-14
  */
 import React, {Component, Fragment} from 'react';
+import update from 'immutability-helper';
 import {connect} from 'react-redux';
 
 import _ from 'lodash';
@@ -42,6 +43,70 @@ class DragAndDrop extends Component {
     this.props.getWeek();
   }
 
+  pushCard(card) {
+    this.setState(update(this.state, {
+      unusedSongs: {
+        $push: [ card ]
+      }
+    }));
+  }
+
+  removeCard(index) {
+    this.setState(update(this.state, {
+      unusedSongs: {
+        $splice: [
+          [index, 1]
+        ]
+      }
+    }));
+  }
+
+  moveCard(dragIndex, hoverIndex) {
+    const { unusedSongs } = this.state;
+    const dragCard = unusedSongs[dragIndex];
+
+    this.setState(update(this.state, {
+      releaseSongs: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard]
+        ]
+      }
+    }));
+  }
+
+  pushCardRelease(card) {
+    this.setState(update(this.state, {
+      releaseSongs: {
+        $push: [ card ]
+      }
+    }));
+  }
+
+  removeCardRelease(index) {
+    this.setState(update(this.state, {
+      releaseSongs: {
+        $splice: [
+          [index, 1]
+        ]
+      }
+    }));
+  }
+
+  moveCardRelease(dragIndex, hoverIndex) {
+    const { unusedSongs } = this.state;
+    const dragCard = unusedSongs[dragIndex];
+
+    this.setState(update(this.state, {
+      cards: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard]
+        ]
+      }
+    }));
+  }
+
   render() {
     const {songs} = this.props;
     const {unusedSongs, releaseSongs} = this.state;
@@ -53,8 +118,6 @@ class DragAndDrop extends Component {
 
     return (
       <Page className="centered text-center">
-        <h1>Drag and Drop</h1>
-        <Divider/>
         {
           !_.isArray(songs) ? null :
             <Fragment>
@@ -64,22 +127,44 @@ class DragAndDrop extends Component {
               </div>
               <div className="columns">
                 <div className="column col-6 col-mx-auto">
+                  <h5>Unreleased Songs ({songs.length})</h5>
                   <Container
                     id="container-unreleased"
                     classes="centered scrollable"
+                    maxSongs={Number.MAX_SAFE_INTEGER}
                     list={
                       songs.map(({id, title}) => {
                         return {id, text: title}
                       })
                     }
+                    pushCard={this.pushCard}
+                    moveCard={this.moveCard}
+                    removeCard={this.removeCard}
+                    ref={(songsList) => this.songsList = songsList}
+                    getCards={() => {
+                      try{
+                        return this.songList.handler.component.state.cards;
+                      } catch(e) {
+                        return undefined;
+                      }
+                    }}
                   />
                 </div>
                 <div className="column col-6 col-mx-auto">
+                  <h5>Songs to Release</h5>
                   <Container
                     id="container-to-release"
                     classes="centered scrollable"
+                    maxSongs={16}
                     list={[]}
                     ref={(songsToRelease) => this.songsToRelease = songsToRelease}
+                    getCards={() => {
+                      try{
+                        return this.songsToRelease.handler.component.state.cards;
+                      } catch(e) {
+                        return undefined;
+                      }
+                    }}
                   />
                 </div>
               </div>

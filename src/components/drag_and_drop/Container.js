@@ -7,15 +7,22 @@ import update from 'immutability-helper';
 import Card from './Card';
 import {DropTarget} from 'react-dnd';
 import ItemTypes from './ItemTypes';
+import _ from 'lodash';
 
 class Container extends Component {
   constructor(props) {
     super(props);
-    this.state = {cards: props.list};
+    this.state = {
+      cards: props.list
+    };
 
     this.pushCard = this.pushCard.bind(this);
     this.removeCard = this.removeCard.bind(this);
     this.moveCard = this.moveCard.bind(this);
+  }
+
+  getCards() {
+    return this.state.cards;
   }
 
   pushCard(card) {
@@ -72,6 +79,7 @@ class Container extends Component {
               card={card}
               removeCard={this.removeCard}
               moveCard={this.moveCard}
+              canDrag={true}
             />)
         }
       </div>
@@ -84,7 +92,7 @@ const cardTarget = {
    * If positive then push the element. don't need to push elements when the containers are the same
    */
   drop(props, monitor, component) {
-    const {id} = props;
+    const {id, pushCard} = props;
     const sourceObj = monitor.getItem();
     if(id !== sourceObj.listId) {
       component.pushCard(sourceObj.card);
@@ -92,6 +100,15 @@ const cardTarget = {
     return {
       listId: id
     }
+  },
+  canDrop(props, monitor) {
+    const cards = props.getCards();
+
+    if(!_.isArray(cards)) {
+      return true;
+    }
+
+    return Boolean(cards.length < props.maxSongs);
   }
 };
 

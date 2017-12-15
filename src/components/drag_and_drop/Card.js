@@ -3,26 +3,34 @@
  * @date 2017-12-15
  */
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 import {DragSource, DropTarget} from 'react-dnd';
-import flow from 'lodash/flow';
+import _ from 'lodash';
 import ItemTypes from './ItemTypes';
 
 const style = {
   border: "1px dashed gray",
   padding: "0.5rem 1rem",
   margin: ".5rem",
-  backgroundColor: "white",
-  cursor: "move"
+  backgroundColor: "white"
 };
 
 class Card extends Component {
+  static defaultProps = {
+    canDrag: true
+  };
+
+  static propTypes = {
+    canDrag: PropTypes.bool
+  };
+
   render() {
     const {card, isDragging, connectDragSource, connectDropTarget} = this.props;
     const opacity = isDragging ? 0 : 1;
 
     return connectDragSource(connectDropTarget(
-      <div style={{...style, opacity}}>
+      <div style={{...style, opacity, cursor: this.props.canDrag ? "move" : "not-allowed"}}>
         {card.text}
       </div>
     ));
@@ -30,6 +38,9 @@ class Card extends Component {
 }
 
 const cardSource = {
+  canDrag(props, monitor) {
+    return props.canDrag;
+  },
   // returns an object with useful props when dragging event is over
   beginDrag(props) {
     return {
@@ -99,10 +110,13 @@ const cardTarget = {
       */
       monitor.getItem().index = hoverIndex;
     }
+  },
+  canDrop() {
+    return false;
   }
 };
 
-export default flow(
+export default _.flow(
   DropTarget(ItemTypes.CARD, cardTarget, connect => ({
     connectDropTarget: connect.dropTarget()
   })),
