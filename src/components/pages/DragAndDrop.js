@@ -22,6 +22,9 @@ class DragAndDrop extends Component {
   constructor(props) {
     super(props);
 
+    this.getSongsToReleaseCount = this.getSongsToReleaseCount.bind(this);
+    this.getUnusedSongsCount = this.getUnusedSongsCount.bind(this);
+
     this.state = {
       isSingle: true,
       producerID: null,
@@ -30,7 +33,9 @@ class DragAndDrop extends Component {
       errorAlbum: null,
       finished: null,
       unusedSongs: [],
-      releaseSongs: []
+      releaseSongs: [],
+      unusedSongsCount: 0,
+      releaseSongsCount: 0
     };
   }
 
@@ -41,6 +46,10 @@ class DragAndDrop extends Component {
     this.props.getSongs();
     this.props.getCash();
     this.props.getWeek();
+  }
+
+  componentDidUpdate() {
+    setTimeout(this.getUnusedSongsCount);
   }
 
   pushCard(card) {
@@ -107,6 +116,37 @@ class DragAndDrop extends Component {
     }));
   }
 
+  getSongsToReleaseCount() {
+    let releaseSongsCount = 0;
+    try{
+      releaseSongsCount =  this.songsToRelease.handler.component.state.cards.length
+    } catch(e){
+      console.log(e);
+      releaseSongsCount = 0;
+    }
+
+    if(this.state.releaseSongsCount !== releaseSongsCount) {
+      this.setState({
+        releaseSongsCount
+      });
+    }
+  }
+
+  getUnusedSongsCount() {
+    let unusedSongsCount = 0;
+    try{
+      unusedSongsCount = this.songsList.handler.component.state.cards.length;
+    } catch(e){
+      unusedSongsCount = 0;
+    }
+
+    if(this.state.unusedSongsCount !== unusedSongsCount) {
+      this.setState({
+        unusedSongsCount
+      });
+    }
+  }
+
   render() {
     const {songs} = this.props;
     const {unusedSongs, releaseSongs} = this.state;
@@ -127,7 +167,7 @@ class DragAndDrop extends Component {
               </div>
               <div className="columns">
                 <div className="column col-6 col-mx-auto">
-                  <h5>Unreleased Songs ({songs.length})</h5>
+                  <h5>Unreleased Songs ({this.state.unusedSongsCount})</h5>
                   <Container
                     id="container-unreleased"
                     classes="centered scrollable"
@@ -143,7 +183,8 @@ class DragAndDrop extends Component {
                     ref={(songsList) => this.songsList = songsList}
                     getCards={() => {
                       try{
-                        return this.songList.handler.component.state.cards;
+                        setTimeout(this.getUnusedSongsCount);
+                        return this.songsList.handler.component.state.cards;
                       } catch(e) {
                         return undefined;
                       }
@@ -151,7 +192,7 @@ class DragAndDrop extends Component {
                   />
                 </div>
                 <div className="column col-6 col-mx-auto">
-                  <h5>Songs to Release</h5>
+                  <h5>Songs to Release ({this.state.releaseSongsCount})</h5>
                   <Container
                     id="container-to-release"
                     classes="centered scrollable"
@@ -160,6 +201,7 @@ class DragAndDrop extends Component {
                     ref={(songsToRelease) => this.songsToRelease = songsToRelease}
                     getCards={() => {
                       try{
+                        setTimeout(this.getSongsToReleaseCount);
                         return this.songsToRelease.handler.component.state.cards;
                       } catch(e) {
                         return undefined;

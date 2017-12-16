@@ -105,7 +105,7 @@ const cardTarget = {
     const cards = props.getCards();
 
     if(!_.isArray(cards)) {
-      return true;
+      return false;
     }
 
     return Boolean(cards.length < props.maxSongs);
