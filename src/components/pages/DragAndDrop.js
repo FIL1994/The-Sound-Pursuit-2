@@ -24,6 +24,8 @@ class DragAndDrop extends Component {
 
     this.getSongsToReleaseCount = this.getSongsToReleaseCount.bind(this);
     this.getUnusedSongsCount = this.getUnusedSongsCount.bind(this);
+    this.resetContainers = this.resetContainers.bind(this);
+    this.getMaxSongs = this.getMaxSongs.bind(this);
 
     this.state = {
       isSingle: true,
@@ -33,9 +35,9 @@ class DragAndDrop extends Component {
       errorAlbum: null,
       finished: null,
       unusedSongs: [],
-      releaseSongs: [],
       unusedSongsCount: 0,
-      releaseSongsCount: 0
+      releaseSongsCount: 0,
+      containerKey: 0
     };
   }
 
@@ -48,8 +50,14 @@ class DragAndDrop extends Component {
     this.props.getWeek();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     setTimeout(this.getUnusedSongsCount);
+
+    // if isSingle was changed and releaseSongsCount is more than maxSongs, reset the containers so there are no
+    // songs in songsToRelease
+    if( ( prevState.isSingle !== this.state.isSingle ) && ( this.state.releaseSongsCount > this.getMaxSongs() ) ) {
+      this.resetContainers();
+    }
   }
 
   pushCard(card) {
@@ -147,9 +155,21 @@ class DragAndDrop extends Component {
     }
   }
 
+  getMaxSongs() {
+    return this.state.isSingle ? 3 : 16;
+  }
+
+  resetContainers() {
+    this.setState({containerKey: this.state.containerKey + 1});
+    setTimeout(() => {
+      this.getUnusedSongsCount();
+      this.getSongsToReleaseCount();
+    });
+  }
+
   render() {
     const {songs} = this.props;
-    const {unusedSongs, releaseSongs} = this.state;
+    const {isSingle, unusedSongs, containerKey} = this.state;
     if(_.isEmpty(unusedSongs) && !_.isEmpty(songs)) {
       setTimeout(
         () => this.setState({unusedSongs: songs})
@@ -162,6 +182,12 @@ class DragAndDrop extends Component {
           !_.isArray(songs) ? null :
             <Fragment>
               <div>
+                <Button
+                  onClick={this.resetContainers}
+                >
+                  Reset
+                </Button>
+                <Button onClick={() => this.setState({isSingle: !isSingle})}>Toggle Single</Button>
                 <Button large centered onClick={() => console.log(this.songsToRelease.handler.component.state.cards)}>Release</Button>
                 <br/>
               </div>
@@ -169,6 +195,7 @@ class DragAndDrop extends Component {
                 <div className="column col-6 col-mx-auto">
                   <h5>Unreleased Songs ({this.state.unusedSongsCount})</h5>
                   <Container
+                    key={`${containerKey}-unreleased`}
                     id="container-unreleased"
                     classes="centered scrollable"
                     maxSongs={Number.MAX_SAFE_INTEGER}
@@ -194,9 +221,10 @@ class DragAndDrop extends Component {
                 <div className="column col-6 col-mx-auto">
                   <h5>Songs to Release ({this.state.releaseSongsCount})</h5>
                   <Container
+                    key={`${containerKey}-to-release`}
                     id="container-to-release"
                     classes="centered scrollable"
-                    maxSongs={16}
+                    maxSongs={this.getMaxSongs()}
                     list={[]}
                     ref={(songsToRelease) => this.songsToRelease = songsToRelease}
                     getCards={() => {

@@ -60,6 +60,7 @@ class Container extends Component {
   render() {
     const {cards} = this.state;
     const {canDrop, isOver, connectDropTarget} = this.props;
+    const isHoveringOnMaxItems = isOver && !canDrop;
     const isActive = canDrop && isOver;
     const style = {
       minHeight: "404px",
@@ -70,6 +71,21 @@ class Container extends Component {
 
     return connectDropTarget(
       <div style={{...style, backgroundColor}} className={this.props.classes}>
+        {
+          !isHoveringOnMaxItems
+            ?
+            ''
+            :
+            <div style={{
+              color: '#e83600',
+              backgroundColor: '#b7b5b5',
+              fontWeight: 'bold',
+              position: 'relative',
+              padding: '3px 0px'
+            }}>
+              Max Items Reached
+            </div>
+        }
         {
           cards.map((card, i) =>
             <Card
