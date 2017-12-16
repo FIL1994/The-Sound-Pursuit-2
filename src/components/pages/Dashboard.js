@@ -65,13 +65,14 @@ class Dashboard extends Component {
     const lastShow = Date.now() / 1000;
 
     // check show medals
-    unlockFirstShow();
+    let unlocks = [unlockFirstShow];
     if(newFans > 100) {
-      unlock100NewFans();
+      unlocks.push(unlock100NewFans);
       if(newFans > 200) {
-        unlock200NewFans();
+        unlocks.push(unlock200NewFans);
       }
     }
+    Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
 
     this.setState({
       showShow: true,
@@ -96,7 +97,7 @@ class Dashboard extends Component {
   practice() {
     let {leadMember, members, practices, practicesToLevelUp, totalPractices} = this.props.band;
     const prevPracticesToLevelUp = _.clone(practicesToLevelUp);
-    let practiceToast, timesLeveledUp = 0;
+    let practiceToast, timesLeveledUp = 0, unlocks = [unlockFirstPractice];
 
     practices += 3;
     totalPractices += practices;
@@ -136,13 +137,13 @@ class Dashboard extends Component {
 
     if(_.min(liveSkills) >= 25 && _.min(musicianshipSkills) >= 25
       && _.min(songwritingSkills) >= 25 && _.min(studioSkills) >= 25) {
-      unlockSkills25();
+      unlocks.push(unlockSkills25);
       if(_.min(liveSkills) >= 50 && _.min(musicianshipSkills) >= 50
         && _.min(songwritingSkills) >= 50 && _.min(studioSkills) >= 50) {
-        unlockSkills50();
+        unlocks.push(unlockSkills50);
         if(_.min(liveSkills) >= 75 && _.min(musicianshipSkills) >= 75
           && _.min(songwritingSkills) >= 75 && _.min(studioSkills) >= 75) {
-          unlockSkills75();
+          unlocks.push(unlockSkills75);
         }
       }
     }
@@ -166,7 +167,8 @@ class Dashboard extends Component {
 
     const lastPractice = Date.now() / 1000;
 
-    unlockFirstPractice();
+    // unlock medals
+    Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
 
     this.setState({
       showPractice: true,

@@ -113,7 +113,7 @@ class Songs extends Component {
       written: this.props.week
     };
 
-    unlockWriteSong();
+    setTimeout(unlockWriteSong);
     this.props.writeSong(song);
     this.props.nextWeek();
   }
@@ -197,7 +197,7 @@ class Songs extends Component {
     quality = Number(quality.toFixed(2));
     song.recording = quality;
 
-    unlockRecordSong();
+    setTimeout(unlockRecordSong);
     this.props.saveCash(cash);
     this.props.updateSong(song);
     this.props.nextWeek();

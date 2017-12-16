@@ -92,7 +92,7 @@ const cardTarget = {
    * If positive then push the element. don't need to push elements when the containers are the same
    */
   drop(props, monitor, component) {
-    const {id, pushCard} = props;
+    const {id} = props;
     const sourceObj = monitor.getItem();
     if(id !== sourceObj.listId) {
       component.pushCard(sourceObj.card);

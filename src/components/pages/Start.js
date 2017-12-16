@@ -535,7 +535,7 @@ class Start extends Component {
         leadMember = drums;
       }
 
-      unlockStartBand();
+      setTimeout(unlockStartBand);
       resetDataAsync().then(() => {
         this.props.saveBand({
           name: this.state.bandName,

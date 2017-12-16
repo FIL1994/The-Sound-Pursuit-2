@@ -20,7 +20,7 @@ import {postScore} from '../ng/NG_Connect';
 import {fiveYearScoreboardID, tenYearScoreboardID, bestSellingAlbumsScoreboardID, bestSellingSinglesScoreboardID,
   totalAlbumSalesScoreboardID, totalSingleSalesScoreboardID} from '../config/keys';
 
-const defaultCash = 250;
+const DEFAULT_CASH = 250;
 
 function sendReturn({type, payload, error}) {
   return {
@@ -98,10 +98,12 @@ export function writeSong(song) {
         if(error) {
           dispatch(sendReturn({type: ERROR_SONG, error}));
         } else {
+          // if songs is empty make songs an array and set the id of the song to 0
           if(_.isEmpty(songs)) {
             songs = [];
             song.id = 0;
           } else {
+            // if songs exist then find the maxID to keep IDs unique
             let maxID = 0;
             try {
               maxID = _.maxBy(songs, (s) => {
@@ -115,6 +117,7 @@ export function writeSong(song) {
             }
 
             song.id = maxID + 1;
+            // set single and album to null since the song has not been released yet
             song.single = null;
             song.album = null;
           }
@@ -206,56 +209,61 @@ export function nextWeek(weeks) {
           dispatch(sendReturn({type: ERROR_WEEK, error}));
         } else {
           let years5 = false, years10 = false;
+          // current week
           week = _.defaultTo(Number(week), 0);
+          // weeks to go forward
           weeks = _.isFinite(weeks) ? weeks : 1;
 
-          // get albums and singles
-           dispatch(getAlbums()).then((albums) => {
-             dispatch(getSingles()).then((singles) => {
-               dispatch(getFans()).then((fans) => {
-                 if(_.isEmpty(albums) && _.isEmpty(singles)) {
-                   week += weeks;
-                   localForage.setItem(DATA_WEEK, week);
-                   dispatch(sendReturn({type: GET_WEEK, payload: week}));
-                   return;
-                 }
+          Promise.all([
+            dispatch(getAlbums()),
+            dispatch(getSingles()),
+            dispatch(getFans())
+          ]).then((values) => {
+            let [albums, singles, fans] = values;
+            // if no albums or singles are released there is no need to calculate sales
+            if(_.isEmpty(albums) && _.isEmpty(singles)) {
+              week += weeks;
+              localForage.setItem(DATA_WEEK, week);
+              dispatch(sendReturn({type: GET_WEEK, payload: week}));
+              return;
+            }
 
-                 for (let i = 0; i < weeks; i++) {
-                   week++;
-                   let newData = calculateSales({albums, singles, week: week, fans, dispatch});
-                   albums = newData.albums;
-                   singles = newData.singles;
-                   fans = newData.fans;
+            // albums or singles have been released. for every week calculate sales
+            for (let i = 0; i < weeks; i++) {
+              week++;
+              const newData = calculateSales({albums, singles, week: week, fans, dispatch});
+              albums = newData.albums;
+              singles = newData.singles;
+              fans = newData.fans;
 
-                   if(parseInt(week) === parseInt(52 * 5)) {
-                     years5 = true;
-                     setTimeout(() => {
-                       dispatch(calculateScore({years: 5, albums, singles, fans}));
-                     });
-                   } else if(parseInt(week) === parseInt(52 * 10)) {
-                     years10 = true;
-                     setTimeout(() => {
-                       dispatch(calculateScore({years: 10, albums, singles, fans}));
-                     });
-                   }
-                 }
+              if(parseInt(week) === parseInt(52 * 5)) {
+                years5 = true;
+                setTimeout( () => dispatch(calculateScore( {years: 5, albums, singles, fans} )) );
+              } else if(parseInt(week) === parseInt(52 * 10)) {
+                years10 = true;
+                setTimeout( () => dispatch(calculateScore( {years: 10, albums, singles, fans} )) );
+              }
+            }
 
-                 // check years medals
-                 if(week >= 52 * 5) {
-                   unlock5Years();
-                   if(week >= 52 * 10) {
-                     unlock10Years();
-                     if(week >= 52 * 25) {
-                       unlock25Years();
-                     }
-                   }
-                 }
+            // check years medals
+            let unlocks = [];
+            if(week >= 52 * 5) {
+              unlocks.push(unlock5Years);
+              if(week >= 52 * 10) {
+                unlocks.push(unlock10Years);
+                if(week >= 52 * 25) {
+                  unlocks.push(unlock25Years);
+                }
+              }
+            }
+            // unlock medals
+            Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
 
-                 localForage.setItem(DATA_WEEK, week);
-                 dispatch(sendReturn({type: GET_WEEK, payload: week, years5, years10}));
-               });
-             });
-           });
+            localForage.setItem(DATA_WEEK, week).then(
+              () => dispatch(sendReturn({type: GET_WEEK, payload: week, years5, years10}))
+            );
+
+          });
         }
       }
     );
@@ -263,6 +271,7 @@ export function nextWeek(weeks) {
 
   function calculateSales({albums, singles, week, fans, dispatch}) {
     let newCash = 0, totalSingleSales = 0, totalAlbumSales = 0;
+    let unlocks = []; // unlocks medals for NG
     singles.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
       const salesLast = 16;
@@ -292,35 +301,41 @@ export function nextWeek(weeks) {
         // check single sales medals
         const singleSales = singles[index].sales;
         if(singleSales > 10000) {
-          unlock10kSoldSingles();
+          unlocks.push(unlock10kSoldSingles);
           if(singleSales > 100000) {
-            unlock100kSoldSingles();
+            unlocks.push(unlock100kSoldSingles);
             if(singleSales > 1000000) {
-              unlock1mSoldSingles();
+              unlocks.push(unlock1mSoldSingles);
             }
           }
         }
 
-        postScore(singleSales, bestSellingSinglesScoreboardID);
+        setTimeout(
+          () => postScore(singleSales, bestSellingSinglesScoreboardID)
+        );
       } else if(salesLastWeek !== 0) {
         singles[index].salesLastWeek = 0;
-        postScore(singles[index].sales, bestSellingSinglesScoreboardID);
+        setTimeout(
+          () => postScore(singles[index].sales, bestSellingSinglesScoreboardID)
+        );
       }
       totalSingleSales += singles[index].sales;
     });
 
     // check total single sales medals
     if(totalSingleSales > 100000) {
-      unlock100kTotalSoldSingles();
+      unlocks.push(unlock100kTotalSoldSingles);
       if(totalSingleSales > 1000000) {
-        unlock1mTotalSoldSingles();
+        unlocks.push(unlock1mTotalSoldSingles);
         if(totalSingleSales > 10000000){
-          unlock10mTotalSoldSingles();
+          unlocks.push(unlock10mTotalSoldSingles);
         }
       }
     }
 
-    postScore(totalSingleSales, totalSingleSalesScoreboardID);
+    setTimeout(
+      () => postScore(totalSingleSales, totalSingleSalesScoreboardID)
+    );
 
     albums.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
@@ -337,35 +352,43 @@ export function nextWeek(weeks) {
 
         const albumSales = albums[index].sales;
         if(albumSales > 10000) {
-          unlock10kSoldAlbums();
+          unlocks.push(unlock10kSoldAlbums);
           if(albumSales > 100000) {
-            unlock100kSoldAlbums();
+            unlocks.push(unlock100kSoldAlbums);
             if(albumSales > 1000000) {
-              unlock1mSoldAlbums();
+              unlocks.push(unlock1mSoldAlbums);
             }
           }
         }
 
-        postScore(albumSales, bestSellingAlbumsScoreboardID);
+        setTimeout(
+          () => postScore(albumSales, bestSellingAlbumsScoreboardID)
+        );
       } else if(salesLastWeek !== 0) {
         albums[index].salesLastWeek = 0;
-        postScore(albums[index].sales, bestSellingAlbumsScoreboardID);
+        setTimeout(
+          () => postScore(albums[index].sales, bestSellingAlbumsScoreboardID)
+        );
       }
       totalAlbumSales += albums[index].sales;
     });
 
     // check total album sales medals
     if(totalAlbumSales > 100000) {
-      unlock100kTotalSoldAlbums();
+      unlocks.push(unlock100kTotalSoldAlbums);
       if(totalAlbumSales > 1000000) {
-        unlock1mTotalSoldAlbums();
+        unlocks.push(unlock1mTotalSoldAlbums);
         if(totalAlbumSales > 10000000){
-          unlock10mTotalSoldAlbums();
+          unlocks.push(unlock10mTotalSoldAlbums);
         }
       }
     }
+    // unlock medals
+    Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
 
-    postScore(totalAlbumSales, totalAlbumSalesScoreboardID);
+    setTimeout(
+      () => postScore(totalAlbumSales, totalAlbumSalesScoreboardID)
+    );
 
     if(!_.isEmpty(singles)) {
       dispatch(saveSingles(singles));
@@ -427,18 +450,21 @@ export function addFans(newFans) {
           val = _.defaultTo(Number(val), 0);
           newFans = _.ceil(val + _.defaultTo(Number(newFans), 1));
 
+          let unlocks = [];
           if(newFans > 1000) {
-            unlock1kFans();
+            unlocks.push(unlock1kFans);
             if(newFans > 10000) {
-              unlock10kFans();
+              unlocks.push(unlock10kFans);
               if(newFans > 100000) {
-                unlock100kFans();
+                unlocks.push(unlock100kFans);
                 if(newFans > 1000000) {
-                  unlock1mFans();
+                  unlocks.push(unlock1mFans);
                 }
               }
             }
           }
+          // unlock medals
+          Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
 
           dispatch(saveFans(newFans));
         }
@@ -458,11 +484,11 @@ export function getCash() {
         } else {
           let originalVal = _.clone(val);
           // if val is NaN set val to default cash
-          val = !_.isNaN(val) ? val : defaultCash;
+          val = !_.isNaN(val) ? val : DEFAULT_CASH;
           // if val (as a string) is not more than 0 character set val to default cash
-          val = _.toString(val).length > 0 ? val : defaultCash;
+          val = _.toString(val).length > 0 ? val : DEFAULT_CASH;
           // if val is not a finite number set val to default cash
-          val = _.isFinite(val) ? val : defaultCash;
+          val = _.isFinite(val) ? val : DEFAULT_CASH;
 
           if(originalVal !== val) {
             localForage.setItem(DATA_CASH, val);
@@ -480,7 +506,7 @@ export function saveCash(cash) {
   return dispatch => {
     cash = Number(cash.toFixed(2));
 
-    cash = _.isFinite(cash) ? cash : defaultCash;
+    cash = _.isFinite(cash) ? cash : DEFAULT_CASH;
 
     return localForage.setItem(DATA_CASH, cash).then(
       (val, error) => {
@@ -503,11 +529,11 @@ export function addCash(amount) {
           dispatch(sendReturn({type: ERROR_CASH, error}));
         } else {
           // if val is NaN set val to default cash
-          cash = !_.isNaN(cash) ? cash : defaultCash;
+          cash = !_.isNaN(cash) ? cash : DEFAULT_CASH;
           // if val (as a string) is not more than 0 character set val to default cash
-          cash = _.toString(cash).length > 0 ? cash : defaultCash;
+          cash = _.toString(cash).length > 0 ? cash : DEFAULT_CASH;
           // if val is not a finite number set val to default cash
-          cash = _.isFinite(cash) ? cash : defaultCash;
+          cash = _.isFinite(cash) ? cash : DEFAULT_CASH;
 
           amount = Number(amount);
           cash = Number((cash + amount).toFixed(2));
@@ -527,11 +553,11 @@ export function removeCash(amount) {
           dispatch(sendReturn({type: ERROR_CASH, error}));
         } else {
           // if val is NaN set val to default cash
-          cash = !_.isNaN(cash) ? cash : defaultCash;
+          cash = !_.isNaN(cash) ? cash : DEFAULT_CASH;
           // if val (as a string) is not more than 0 character set val to default cash
-          cash = _.toString(cash).length > 0 ? cash : defaultCash;
+          cash = _.toString(cash).length > 0 ? cash : DEFAULT_CASH;
           // if val is not a finite number set val to default cash
-          cash = _.isFinite(cash) ? cash : defaultCash;
+          cash = _.isFinite(cash) ? cash : DEFAULT_CASH;
 
           amount = Number(amount);
           cash = Number((cash - amount).toFixed(2));
@@ -706,9 +732,9 @@ function calculateScore({years, albums, singles, fans}) {
   score += fans * 5;
 
   const scoreboardID = (years === 5) ? fiveYearScoreboardID : tenYearScoreboardID;
-  setTimeout(() => {
-    postScore(score, scoreboardID);
-  });
+  setTimeout(
+    () => postScore(score, scoreboardID)
+  );
 
   return {
     type: SET_SCORE,

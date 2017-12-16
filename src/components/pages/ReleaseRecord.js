@@ -284,7 +284,7 @@ class ReleaseRecord extends Component {
             song.album = album.id;
           });
 
-          unlockReleaseAlbum();
+          setTimeout(unlockReleaseAlbum);
           this.props.saveSongs(songs).then(() => {
             this.props.nextWeek().then(() => {
               setTimeout(() => {
@@ -349,7 +349,7 @@ class ReleaseRecord extends Component {
       this.changedProducer(true); // isSingle = true
       this.props.removeCash(cost);
 
-      unlockReleaseSingle();
+      setTimeout(unlockReleaseSingle);
       // get id and save song
       this.props.addSingle(single).then(() => {
         this.props.getSingles().then(() => {
