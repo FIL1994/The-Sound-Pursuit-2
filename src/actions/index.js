@@ -6,7 +6,7 @@ import _ from 'lodash';
 import {
   SAVE_BAND, GET_BAND, ERROR_BAND, GET_SONGS, ERROR_SONG, SAVE_SONGS,
   SAVE_CASH, GET_CASH, ERROR_CASH, SAVE_WEEK, GET_WEEK, ERROR_WEEK, GET_FANS, SAVE_FANS, ERROR_FANS, GET_SINGLES,
-  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE
+  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE
 } from './types';
 import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES}
   from '../data/localForage';
@@ -749,3 +749,18 @@ export function getScore() {
 }
 
 // END SCORE
+
+// START IMAGE
+
+function fetchRandomImage() {
+  return fetch("https://picsum.photos/200/?random");
+}
+
+export function getRandomImage() {
+  return dispatch => fetchRandomImage().then(
+    ({url}) => dispatch(sendReturn({type: GET_IMAGE, payload: url})),
+    error => dispatch()
+  );
+}
+
+// END IMAGE

@@ -32,3 +32,6 @@ export const ERROR_ALBUMS = 'error_albums';
 
 export const GET_SCORE = 'get_score';
 export const SET_SCORE = 'set_score';
+
+export const GET_IMAGE = 'get_image';
+export const ERROR_IMAGE = 'error_image';

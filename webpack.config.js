@@ -5,15 +5,6 @@ const prodProps = !isProduction ? [] : [
   new webpack.optimize.ModuleConcatenationPlugin(),
   new webpack.optimize.UglifyJsPlugin({
     mangle: {},
-    mangleProperties: {
-      screw_ie8: false,
-    },
-    compress: {
-      screw_ie8: false,
-    },
-    output: {
-      screw_ie8: false
-    },
     comments: false
   })
 ];

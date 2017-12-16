@@ -11,6 +11,7 @@ import fansReducer from './fansReducer';
 import singlesReducer from './singlesReducer';
 import albumsReducer from './albumsReducer';
 import scoreReducer from './scoreReducer';
+import imageReducer from './imageReducer';
 
 export default combineReducers({
   state: (state = {}) => state,
@@ -21,5 +22,6 @@ export default combineReducers({
   fans: fansReducer,
   singles: singlesReducer,
   albums: albumsReducer,
-  score: scoreReducer
+  score: scoreReducer,
+  image: imageReducer
 });
