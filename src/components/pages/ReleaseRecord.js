@@ -161,8 +161,8 @@ class ReleaseRecord extends Component {
             <label className="form-label" htmlFor="txtAlbumTitle">Album Title:</label>
             <div className="input-group">
               <input className="form-input" type="text" id="txtAlbumTitle" placeholder="Album Title"/>
-              <Button className="input-group-btn" type="button"
-                onClick={() => {$('#txtAlbumTitle').val(getRandomSongName())}}
+              <Button className="input-group-btn"
+                onClick={() => $('#txtAlbumTitle').val(getRandomSongName())}
               >
                 Random
               </Button>
@@ -274,14 +274,12 @@ class ReleaseRecord extends Component {
       // get album id and save songs
       this.props.addAlbum(album).then(() => {
         this.props.getAlbums().then(() => {
-          const {albums, songs} = this.props;
-          console.log(albums);
+          let {albums, songs} = this.props;
           const album = _.maxBy(albums, 'released');
 
           album.songs.forEach((s) => {
             const songIndex = _.findIndex(songs, {'id': s});
-            let song = songs[songIndex];
-            song.album = album.id;
+            songs[songIndex].album = album.id;
           });
 
           setTimeout(unlockReleaseAlbum);
@@ -355,6 +353,7 @@ class ReleaseRecord extends Component {
         this.props.getSingles().then(() => {
           const {singles, songs} = this.props;
           const single = _.maxBy(singles, 'released');
+
           let song = _.find(songs, {'id': single.song});
           song.single = single.id;
           this.props.updateSong(song).then(() => {

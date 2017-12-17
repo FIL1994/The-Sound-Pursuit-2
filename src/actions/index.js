@@ -30,7 +30,7 @@ function sendReturn({type, payload, error}) {
   };
 }
 
-// START BAND
+// region Band
 export function saveBand(band) {
   return dispatch => {
     return localForage.setItem(DATA_BAND, band).then(
@@ -59,9 +59,9 @@ export function getBand() {
     );
   };
 }
-// END BAND
+// endregion
 
-// START SONGS
+// region Songs
 export function getSongs() {
   return dispatch => {
     return localForage.getItem(DATA_SONGS).then(
@@ -167,9 +167,9 @@ export function updateSong(song) {
     )
   }
 }
-// END SONGS
+// endregion
 
-// START WEEK
+// region Week
 export function getWeek() {
   return dispatch => {
     return localForage.getItem(DATA_WEEK).then(
@@ -406,9 +406,9 @@ export function nextWeek(weeks) {
     };
   }
 }
-// END WEEK
+// endregion
 
-// START FANS
+// region Fans
 export function getFans() {
   return dispatch => {
     return localForage.getItem(DATA_FANS).then(
@@ -472,9 +472,9 @@ export function addFans(newFans) {
     );
   }
 }
-// END FANS
+// endregion
 
-// START CASH
+// region Cash
 export function getCash() {
   return dispatch => {
     return localForage.getItem(DATA_CASH).then(
@@ -568,9 +568,9 @@ export function removeCash(amount) {
     );
   };
 }
-// END CASH
+// endregion
 
-// START SINGLES
+// region Singles
 export function getSingles() {
   return dispatch => {
     return localForage.getItem(DATA_SINGLES).then(
@@ -636,9 +636,9 @@ export function addSingle(single) {
     );
   }
 }
-// END SINGLES
+// endregion
 
-// START ALBUMS
+// region Albums
 export function getAlbums() {
   return dispatch => {
     return localForage.getItem(DATA_ALBUMS).then(
@@ -703,10 +703,9 @@ export function addAlbum(album) {
     );
   }
 }
-// END ALBUMS
+// endregion
 
-// START SCORE
-
+// region Score
 function calculateScore({years, albums, singles, fans}) {
   let albumSales = 0, singleSales = 0, bestSellingAlbum = 0, bestSellingSingle = 0;
 
@@ -748,10 +747,9 @@ export function getScore() {
   };
 }
 
-// END SCORE
+// endregion
 
-// START IMAGE
-
+// region Image
 function fetchRandomImage() {
   return fetch("https://picsum.photos/200/?random");
 }
@@ -763,4 +761,4 @@ export function getRandomImage() {
   );
 }
 
-// END IMAGE
+// endregion

@@ -6,8 +6,9 @@ import React, {Component, Fragment} from 'react';
 import update from 'immutability-helper';
 import {connect} from 'react-redux';
 
+import $ from 'jquery';
 import _ from 'lodash';
-import {Divider, Page, Button} from '../SpectreCSS';
+import {Page, Button} from '../SpectreCSS';
 import {getBand, getCash, saveCash, getSongs, updateSong, saveSongs, getSingles, addSingle, getAlbums, addAlbum,
   removeCash, nextWeek, getWeek} from '../../actions';
 import getRandomSongName from '../../data/randomSongName';
@@ -16,16 +17,23 @@ import producers from '../../data/producers';
 import Container from '../drag_and_drop/Container';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import {unlockReleaseAlbum, unlockReleaseSingle} from "../../ng/UnlockMedals";
 
 @DragDropContext(HTML5Backend)
 class DragAndDrop extends Component {
   constructor(props) {
     super(props);
 
+    // region Bind This
     this.getSongsToReleaseCount = this.getSongsToReleaseCount.bind(this);
     this.getUnusedSongsCount = this.getUnusedSongsCount.bind(this);
     this.resetContainers = this.resetContainers.bind(this);
     this.getMaxSongs = this.getMaxSongs.bind(this);
+
+    this.changedProducer = this.changedProducer.bind(this);
+    this.validateSingle = this.validateSingle.bind(this);
+    this.validateAlbum = this.validateAlbum.bind(this);
+    // endregion
 
     this.state = {
       isSingle: true,
@@ -41,6 +49,7 @@ class DragAndDrop extends Component {
     };
   }
 
+  // region Lifecycle Methods
   componentDidMount() {
     this.props.getBand();
     this.props.getSingles();
@@ -53,13 +62,130 @@ class DragAndDrop extends Component {
   componentDidUpdate(prevProps, prevState) {
     setTimeout(this.getUnusedSongsCount);
 
-    // if isSingle was changed and releaseSongsCount is more than maxSongs, reset the containers so there are no
-    // songs in songsToRelease
-    if( ( prevState.isSingle !== this.state.isSingle ) && ( this.state.releaseSongsCount > this.getMaxSongs() ) ) {
+    // if isSingle was changed, reset the containers so there are no songs in songsToRelease
+    if(prevState.isSingle !== this.state.isSingle) {
       this.resetContainers();
     }
   }
+  // endregion
 
+  getSongsEligibleForSingle(songs) {
+    try {
+      songs = songs.filter((s) => {
+        // return songs that are recorded and not on a single
+        return !_.isNumber(s.single) && _.isNumber(s.recording);
+      });
+    } catch(e) {
+      songs = [];
+    }
+
+    return songs;
+  }
+
+  getSongsEligibleForAlbum(songs) {
+    try {
+      songs = songs.filter((s) => {
+        // return songs that are recorded and not on an album
+        return !_.isNumber(s.album) && _.isNumber(s.recording);
+      });
+    } catch(e) {
+      songs = [];
+    }
+
+    return songs;
+  }
+
+  checkEnoughCash(cost) {
+    return cost <= this.props.cash;
+  }
+
+  // region Producers
+  changedProducer(isSingle) {
+    let producerID = $('input[name=producers]:checked').val();
+    producerID = Number(producerID);
+    isSingle = _.isBoolean(isSingle) ? isSingle : this.state.isSingle;
+
+    if(_.isFinite(producerID)) {
+      let errorProducer = null;
+      const {name, cost: {single, album}} = producers[producerID];
+      const hasEnoughCash = this.checkEnoughCash(isSingle ? single : album);
+      if(!hasEnoughCash) {
+        errorProducer = `You don't have enough cash to hire ${name}`;
+      }
+
+      if(this.state.producerID !== producerID || errorProducer !== this.state.errorProducer) {
+        this.setState({
+          producerID,
+          errorProducer
+        })
+      }
+    }
+  }
+
+  renderProducers() {
+    const {errorProducer} = this.state;
+    return(
+      <div>
+        <div className={`form-group centered text-center ${!_.isEmpty(errorProducer) ? 'has-error' : ''}`}
+             onChange={this.changedProducer}
+        >
+          <label className="form-label">Select a producer:</label>
+          {
+            producers.map(({name}, index) => {
+              return(
+                <label className="form-radio" key={index}>
+                  <input type="radio" name="producers" value={index}/>
+                  <i className="form-icon"/> {name}
+                </label>
+              )
+            })
+          }
+        </div>
+        <div className="form-input-hint is-error text-center">
+          {errorProducer}
+        </div>
+      </div>
+    );
+  }
+
+  renderProducerDetails() {
+    const {producerID, isSingle} = this.state;
+    if(!_.isNumber(producerID)){
+      return;
+    }
+    const producer = producers[producerID];
+    return(
+      <div className="text-center">
+        Quality: {producer.quality} <br/>
+        Cost: ${isSingle ? producer.cost.single : producer.cost.album}
+      </div>
+    );
+  }
+
+  changedProducer(isSingle) {
+    let producerID = $('input[name=producers]:checked').val();
+    producerID = Number(producerID);
+    isSingle = _.isBoolean(isSingle) ? isSingle : this.state.isSingle;
+
+    if(_.isFinite(producerID)) {
+      let errorProducer = null;
+      const {name, cost: {single, album}} = producers[producerID];
+      const hasEnoughCash = this.checkEnoughCash(isSingle ? single : album);
+      if(!hasEnoughCash) {
+        errorProducer = `You don't have enough cash to hire ${name}`;
+      }
+
+      if(this.state.producerID !== producerID || errorProducer !== this.state.errorProducer) {
+        this.setState({
+          producerID,
+          errorProducer
+        })
+      }
+    }
+  }
+  // endregion
+
+  // region Drag and Drop
   pushCard(card) {
     this.setState(update(this.state, {
       unusedSongs: {
@@ -127,7 +253,7 @@ class DragAndDrop extends Component {
   getSongsToReleaseCount() {
     let releaseSongsCount = 0;
     try{
-      releaseSongsCount =  this.songsToRelease.handler.component.state.cards.length
+      releaseSongsCount = this.songsToRelease.handler.component.state.cards.length;
     } catch(e){
       console.log(e);
       releaseSongsCount = 0;
@@ -166,6 +292,184 @@ class DragAndDrop extends Component {
       this.getSongsToReleaseCount();
     });
   }
+  // endregion
+
+  validateAlbum() {
+    let errorProducer = null, errorAlbum = null, producer, cost;
+    // album title
+    let albumTitle = $('#txtAlbumTitle').val();
+    if(_.isEmpty(albumTitle)) {
+      albumTitle = getRandomSongName();
+    }
+
+    let cards;
+    // check song selection
+    try {
+      cards = this.songsToRelease.handler.component.state.cards;
+      if(cards.length < 8) {
+        errorAlbum = <div>You must select at least 8 songs.<br/>You selected {cards.length}.</div>;
+      } else if(cards.length > 16) {
+        errorAlbum = <div>You can select a maximum of 16 songs.<br/>You selected {cards.length}.</div>;
+      }
+    } catch(e) {
+      console.log(e);
+      return;
+    }
+
+    // producer select
+    const producerID = Number($('input[name=producers]:checked').val());
+    if(_.isFinite(producerID)) {
+      producer = producers[producerID];
+      cost = producer.cost.album;
+
+      // enough cash check
+      if(!this.checkEnoughCash(cost)) {
+        errorProducer = `You don't have enough cash to hire ${producer.name}`;
+      }
+    } else {
+      errorProducer = "You must select a producer";
+    }
+
+    // if no errors
+    if(_.isEmpty(errorProducer) && _.isEmpty(errorAlbum)) {
+      // calculate quality
+      const {songs} = this.props;
+
+      let sumQuality = 0, avgQuality, quality;
+      cards.forEach(({id}) => {
+        const {quality, recording} = songs.find(s => s.id === id);
+        sumQuality += ((quality * 3) + (recording * 2)) / 5;
+      });
+      avgQuality = sumQuality / cards.length;
+      quality = ((avgQuality * 5) + producer.quality) / 6;
+      quality = Number(quality.toFixed(2));
+
+      let album = {
+        title: albumTitle,
+        songs: cards.map(c => c.id),
+        released: this.props.week,
+        quality,
+        sales: 0,
+        salesLastWeek: 0
+      };
+
+      this.changedProducer(false); // isSingle = false
+      this.props.removeCard(cost);
+
+      // get album id and save songs
+      this.props.addAlbum(album).then(() =>
+        this.props.getAlbums().then(() => {
+          let {albums, songs} = this.props;
+          const album = _.maxBy(albums, 'released');
+
+          album.songs.forEach((s) => {
+            const songIndex = _.findIndex(songs, {'id': s});
+            songs[songIndex].album = album.id;
+          });
+
+          setTimeout(unlockReleaseAlbum);
+          this.props.saveSongs(songs).then(() =>
+            this.props.nextWeek().then(() =>
+              this.setState({finished: "album"})
+            )
+          );
+        })
+      );
+
+      this.resetContainers();
+    }
+
+    this.setState({
+      errorProducer,
+      errorAlbum
+    });
+  }
+
+  validateSingle() {
+    let errorProducer = null, errorSingle = null, producer, cost;
+
+    let cards;
+    // check song selection
+    try {
+      cards = this.songsToRelease.handler.component.state.cards;
+      if(cards.length < 8) {
+        errorSingle = <div>You must select at least 8 songs.<br/>You selected {cards.length}.</div>;
+      } else if(cards.length > 16) {
+        errorSingle = <div>You can select a maximum of 16 songs.<br/>You selected {cards.length}.</div>;
+      }
+    } catch(e) {
+      console.log(e);
+      return;
+    }
+
+    // producer select
+    const producerID = Number($('input[name=producers]:checked').val());
+    if(_.isFinite(producerID)) {
+      producer = producers[producerID];
+      cost = producer.cost.single;
+
+      // enough cash check
+      if(!this.checkEnoughCash(cost)) {
+        errorProducer = `You don't have enough cash to hire ${producer.name}`;
+      }
+    } else {
+      errorProducer = "You must select a producer";
+    }
+
+    // if no errors
+    if(_.isEmpty(errorProducer) && _.isEmpty(errorSingle)) {
+      // calculate quality
+      const {songs} = this.props;
+
+      let sumQuality = 0, avgQuality, quality;
+      cards.forEach(({id}) => {
+        const {quality, recording} = songs.find(s => s.id === id);
+        sumQuality += ((quality * 3) + (recording * 2)) / 5;
+      });
+      avgQuality = sumQuality / cards.length;
+      quality = ((avgQuality * 5) + producer.quality) / 6;
+      quality = Number(quality.toFixed(2));
+
+      let single = {
+        title: songs.find((s) => s.id === cards[0].id).title,
+        songs: cards.map(c => c.id),
+        released: this.props.week,
+        quality,
+        sales: 0,
+        salesLastWeek: 0
+      };
+
+      this.changedProducer(true); // isSingle = true
+      this.props.removeCard(cost);
+
+      // get album id and save songs
+      this.props.addSingle(single).then(() =>
+        this.props.getSingles().then(() => {
+          let {singles, songs} = this.props;
+          const single = _.maxBy(singles, 'released');
+
+          single.songs.forEach((s) => {
+            const songIndex = _.findIndex(songs, {'id': s});
+            songs[songIndex].single = single.id;
+          });
+
+          setTimeout(unlockReleaseSingle);
+          this.props.saveSongs(songs).then(() =>
+            this.props.nextWeek().then(() =>
+              this.setState({finished: "single"})
+            )
+          );
+        })
+      );
+
+      this.resetContainers();
+    }
+
+    this.setState({
+      errorProducer,
+      errorSingle
+    });
+  }
 
   render() {
     const {songs} = this.props;
@@ -176,20 +480,40 @@ class DragAndDrop extends Component {
       );
     }
 
+    console.log(this.props);
+
     return (
       <Page className="centered text-center">
         {
           !_.isArray(songs) ? null :
             <Fragment>
               <div>
+                {
+                  isSingle ? '' :
+                  <div className="form-group">
+                    <div className="form-label" htmlFor="txtAlbumTitle">Title:</div>
+                    <div className="input-group">
+                      <input className="form-input" type="text" id="txtAlbumTitle" placeholder="Album Title"/>
+                      <Button className="input-group-btn"
+                              onClick={() => $('#txtAlbumTitle').val(getRandomSongName())}
+                      >
+                        Random
+                      </Button>
+                    </div>
+                  </div>
+                }
                 <Button
                   onClick={this.resetContainers}
                 >
                   Reset
                 </Button>
-                <Button onClick={() => this.setState({isSingle: !isSingle})}>Toggle Single</Button>
-                <Button large centered onClick={() => console.log(this.songsToRelease.handler.component.state.cards)}>Release</Button>
+                <Button onClick={() => this.setState({isSingle: !isSingle})}>{isSingle ? "Single" : "Album"}</Button>
+                <Button large centered onClick={isSingle ? this.validateSingle : this.validateAlbum}>
+                  Release
+                </Button>
                 <br/>
+                {this.renderProducerDetails()}
+                {this.renderProducers()}
               </div>
               <div className="columns">
                 <div className="column col-6 col-mx-auto">
@@ -200,7 +524,8 @@ class DragAndDrop extends Component {
                     classes="centered scrollable"
                     maxSongs={Number.MAX_SAFE_INTEGER}
                     list={
-                      songs.map(({id, title}) => {
+                      (isSingle ? this.getSongsEligibleForSingle(songs) : this.getSongsEligibleForAlbum(songs))
+                        .map(({id, title}) => {
                         return {id, text: title}
                       })
                     }
