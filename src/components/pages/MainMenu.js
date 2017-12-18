@@ -65,7 +65,7 @@ class MainMenu extends Component {
         };
 
     return(
-      <Page className="centered text-center">
+      <Page centered>
         <h1>The Sound Pursuit</h1>
         <Divider/>
         <div className="spaced">

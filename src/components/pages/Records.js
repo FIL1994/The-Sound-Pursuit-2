@@ -92,7 +92,9 @@ class Records extends Component {
               return(
                 <div className="card" key={id}>
                   <div className="card-header">
-                    <div className="card-title h5">{title}</div>
+                    <div className="card-title h5">
+                      <Link to={`/single/${id}`}>{title}</Link>
+                      </div>
                   </div>
                   <div className="card-body">
                     Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
@@ -147,7 +149,9 @@ class Records extends Component {
               return(
                 <div className="card" key={id}>
                   <div className="card-header">
-                    <div className="card-title h5">{title}</div>
+                    <div className="card-title h5">
+                      <Link to={`/album/${id}`}>{title}</Link>
+                    </div>
                   </div>
                   <div className="card-body">
                     Age: {week - released} weeks<br/>

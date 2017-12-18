@@ -15,10 +15,13 @@ import Dashboard from './components/pages/Dashboard';
 import Start from './components/pages/Start';
 import Songs from './components/pages/Songs';
 import Records from './components/pages/Records';
-import ReleaseRecord from './components/pages/ReleaseRecord';
 import MainMenu from './components/pages/MainMenu';
 import Settings from './components/pages/Settings';
-import DragAndDrop from './components/pages/DragAndDrop';
+import ReleaseRecord_DragAndDrop from './components/pages/DragAndDrop';
+import Single from './components/pages/Single';
+import Album from './components/pages/Album';
+
+import OldReleaseRecord from './components/pages/ReleaseRecord';
 
 class App extends Component {
   constructor(props) {
@@ -82,9 +85,11 @@ class App extends Component {
             <Route path="/dashboard/" component={Dashboard}/>
             <Route path="/songs/" component={Songs}/>
             <Route exact path="/records/" component={Records}/>
-            <Route path="/records/release/" component={ReleaseRecord}/>
+            <Route path="/records/release/" component={ReleaseRecord_DragAndDrop}/>
             <Route path="/settings/" component={Settings}/>
-            <Route path="/drag" component={DragAndDrop}/>
+            <Route path="/single/:id" component={Single}/>
+            <Route path="/album/:id" component={Album}/>
+            <Route path="/old-release" component={OldReleaseRecord}/>
             <Redirect to="/"/>
           </Switch>
           {_.isEmpty(score) ? null : this.renderModalScore()}

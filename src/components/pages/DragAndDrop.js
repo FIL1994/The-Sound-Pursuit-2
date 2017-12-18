@@ -506,7 +506,7 @@ class DragAndDrop extends Component {
     this.checkUnusedSongs(songs);
 
     return (
-      <Page className="centered text-center">
+      <Page centered>
         {
           !_.isArray(songs) ? null :
             <Fragment>

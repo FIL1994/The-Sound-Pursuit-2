@@ -122,10 +122,18 @@ export const Loading = (props) => {
  * @constructor
  */
 export const Page = (props) => {
+  const {centered} = props;
   // add the className prop to the className
   let className = addClass("page container", props.className);
 
-  return <div {...props} className={className}/>;
+  if(centered) {
+    className = addClass(className, "centered text-center");
+  }
+
+  //remove unnecessary props
+  let myProps = _.omit(props, ['centered']);
+
+  return <div {...myProps} className={className}/>;
 };
 
 /**

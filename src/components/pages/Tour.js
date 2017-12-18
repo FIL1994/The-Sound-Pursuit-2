@@ -9,10 +9,8 @@ import {Page, Button} from '../SpectreCSS';
 class Tour extends Component {
   render() {
     return(
-      <Page>
-        <div className="centered text-center">
-          <Button large primary>Go on Tour</Button>
-        </div>
+      <Page centered>
+        <Button large primary>Go on Tour</Button>
         <div className="empty">
           <div className="empty-icon">
             <i className="icon icon-3x icon-people"/>

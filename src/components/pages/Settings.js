@@ -108,7 +108,7 @@ class Settings extends Component {
     const {songID, volume} = this.state;
 
     return(
-      <Page className="centered text-center">
+      <Page centered>
         <h3>Settings</h3>
         <div className="col-8 centered text-center">
           <form>
