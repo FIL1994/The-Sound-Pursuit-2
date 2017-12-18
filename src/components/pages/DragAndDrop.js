@@ -286,7 +286,11 @@ class DragAndDrop extends Component {
   }
 
   resetContainers() {
-    this.setState({containerKey: this.state.containerKey + 1});
+    this.setState({
+      containerKey: this.state.containerKey + 1,
+      errorSingle: null,
+      errorAlbum: null
+    });
     setTimeout(() => {
       this.getUnusedSongsCount();
       this.getSongsToReleaseCount();
@@ -354,7 +358,7 @@ class DragAndDrop extends Component {
       };
 
       this.changedProducer(false); // isSingle = false
-      this.props.removeCard(cost);
+      this.props.removeCash(cost);
 
       // get album id and save songs
       this.props.addAlbum(album).then(() =>
@@ -392,10 +396,10 @@ class DragAndDrop extends Component {
     // check song selection
     try {
       cards = this.songsToRelease.handler.component.state.cards;
-      if(cards.length < 8) {
-        errorSingle = <div>You must select at least 8 songs.<br/>You selected {cards.length}.</div>;
-      } else if(cards.length > 16) {
-        errorSingle = <div>You can select a maximum of 16 songs.<br/>You selected {cards.length}.</div>;
+      if(cards.length < 1) {
+        errorSingle = <div>You must select at least 1 song.</div>;
+      } else if(cards.length > 3) {
+        errorSingle = <div>You can select a maximum of 3 songs.<br/>You selected {cards.length}.</div>;
       }
     } catch(e) {
       console.log(e);
@@ -440,7 +444,7 @@ class DragAndDrop extends Component {
       };
 
       this.changedProducer(true); // isSingle = true
-      this.props.removeCard(cost);
+      this.props.removeCash(cost);
 
       // get album id and save songs
       this.props.addSingle(single).then(() =>
@@ -471,16 +475,35 @@ class DragAndDrop extends Component {
     });
   }
 
-  render() {
-    const {songs} = this.props;
-    const {isSingle, unusedSongs, containerKey} = this.state;
+  checkFinished() {
+    const {finished} = this.state;
+    if(!_.isEmpty(finished)) {
+      if(finished === "album") {
+        this.props.history.push({
+          pathname: "/records",
+          search: "?showAlbum=true"
+        });
+      } else if(finished === "single") {
+        this.props.history.push("/records");
+      }
+    }
+  }
+
+  checkUnusedSongs(songs) {
+    const {unusedSongs} = this.state;
     if(_.isEmpty(unusedSongs) && !_.isEmpty(songs)) {
       setTimeout(
         () => this.setState({unusedSongs: songs})
       );
     }
+  }
 
-    console.log(this.props);
+  render() {
+    const {songs} = this.props;
+    const {isSingle, containerKey, errorSingle, errorAlbum} = this.state;
+
+    this.checkFinished();
+    this.checkUnusedSongs(songs);
 
     return (
       <Page className="centered text-center">
@@ -488,32 +511,37 @@ class DragAndDrop extends Component {
           !_.isArray(songs) ? null :
             <Fragment>
               <div>
-                {
-                  isSingle ? '' :
-                  <div className="form-group">
-                    <div className="form-label" htmlFor="txtAlbumTitle">Title:</div>
-                    <div className="input-group">
-                      <input className="form-input" type="text" id="txtAlbumTitle" placeholder="Album Title"/>
-                      <Button className="input-group-btn"
-                              onClick={() => $('#txtAlbumTitle').val(getRandomSongName())}
-                      >
-                        Random
-                      </Button>
-                    </div>
-                  </div>
-                }
-                <Button
-                  onClick={this.resetContainers}
-                >
-                  Reset
-                </Button>
-                <Button onClick={() => this.setState({isSingle: !isSingle})}>{isSingle ? "Single" : "Album"}</Button>
+                <div className="btn-group btn-group-block centered col-4">
+                  <Button large primary={isSingle}
+                    onClick={() => {this.changedProducer(true); this.setState({isSingle: true, errorSingle: null, errorAlbum: null});}}
+                  >
+                    Single
+                  </Button>
+                  <Button large primary={!isSingle}
+                    onClick={() => {this.changedProducer(false); this.setState({isSingle: false, errorSingle: null, errorAlbum: null})}}
+                  >
+                    Album
+                  </Button>
+                </div>
                 <Button large centered onClick={isSingle ? this.validateSingle : this.validateAlbum}>
                   Release
                 </Button>
-                <br/>
-                {this.renderProducerDetails()}
+                {
+                  isSingle ? '' :
+                    <div className="form-group">
+                      <div className="form-label" htmlFor="txtAlbumTitle">Title:</div>
+                      <div className="input-group">
+                        <input className="form-input" type="text" id="txtAlbumTitle" placeholder="Album Title"/>
+                        <Button className="input-group-btn"
+                          onClick={() => $('#txtAlbumTitle').val(getRandomSongName())}
+                        >
+                          Random
+                        </Button>
+                      </div>
+                    </div>
+                }
                 {this.renderProducers()}
+                {this.renderProducerDetails()}
               </div>
               <div className="columns">
                 <div className="column col-6 col-mx-auto">
@@ -562,6 +590,9 @@ class DragAndDrop extends Component {
                     }}
                   />
                 </div>
+              </div>
+              <div className="form-input-hint is-error text-center">
+                {isSingle ? errorSingle : errorAlbum}
               </div>
             </Fragment>
         }
