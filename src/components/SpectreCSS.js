@@ -63,13 +63,13 @@ let Button = (props) => {
   className = addClass(className, props.className);
 
   // remove unnecessary props
-  let myProps = _.omit(props, ['small', 'large', 'block', 'primary', 'centered', 'disabled']);
+  let myProps = _.omit(props, ['small', 'large', 'block', 'primary', 'centered', 'disabled', 'as']);
 
-  return <button {...myProps} {...otherProps} className={className}/>;
+  return <props.as {...myProps} {...otherProps} className={className}/>;
 };
 
 Button.defaultProps = {
-  type: "button"
+  as: (props) => <button type="button" {...props}/> // type defaults to "button" if no component is provided in props
 };
 
 export {Button};

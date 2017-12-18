@@ -54,7 +54,7 @@ class Dashboard extends Component {
     });
     avgSkill = sumSkill / members.length;
 
-    const performance = Number((_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)).toFixed(2));
+    const performance = Math.ceil((_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)));
 
     const newFans = _.ceil(performance * 0.75);
     const newCash = Number((performance * 1.05).toFixed(2));
@@ -149,9 +149,6 @@ class Dashboard extends Component {
     }
 
     const progress = _.ceil((practices / practicesToLevelUp) * 100);
-    window.practices = practices;
-    window.practicesToLevelUp = practicesToLevelUp;
-    window.prevPracticesToLevelUp = prevPracticesToLevelUp;
     if(timesLeveledUp > 0) {
       practiceToast = <span>Leveled Up!{timesLeveledUp > 1 ? ` (x${timesLeveledUp})` : ''}</span>;
     } else {

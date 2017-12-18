@@ -601,7 +601,6 @@ class DragAndDrop extends Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     band: state.band,

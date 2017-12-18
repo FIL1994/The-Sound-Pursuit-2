@@ -8,7 +8,7 @@ import {NavLink, matchPath, withRouter} from 'react-router-dom';
 import _ from 'lodash';
 import {getFans, getCash, getWeek} from '../actions';
 import localForage, {DATA_BAND} from '../data/localForage';
-import {weeksToYearAndWeeks} from '../data/util';
+import {weeksToYearsAndWeeks} from '../data/util';
 
 const MyNavLink = (props) => {
   return(
@@ -149,7 +149,7 @@ class HeaderNav extends Component {
             {_.isNumber(this.props.cash) ? `$${this.formatNumber(this.props.cash, true)}` : <div className="loading"/>}
           </h6>
           <h6 className="centered p-2">
-            {_.isNumber(this.props.week) ? weeksToYearAndWeeks(this.props.week) : <div className="loading"/>}
+            {_.isNumber(this.props.week) ? weeksToYearsAndWeeks(this.props.week) : <div className="loading"/>}
           </h6>
           <NavLink
             to={{

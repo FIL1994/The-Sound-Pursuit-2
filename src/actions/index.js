@@ -6,7 +6,7 @@ import _ from 'lodash';
 import {
   SAVE_BAND, GET_BAND, ERROR_BAND, GET_SONGS, ERROR_SONG, SAVE_SONGS,
   SAVE_CASH, GET_CASH, ERROR_CASH, SAVE_WEEK, GET_WEEK, ERROR_WEEK, GET_FANS, SAVE_FANS, ERROR_FANS, GET_SINGLES,
-  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE
+  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE, GET_TOUR_RESULTS
 } from './types';
 import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES}
   from '../data/localForage';
@@ -201,14 +201,15 @@ export function saveWeek(week) {
   };
 }
 
-export function nextWeek(weeks) {
+export function nextWeek(weeks, tourDetails = {}) {
   return dispatch => {
     return localForage.getItem(DATA_WEEK).then(
       (week, error) => {
         if(error) {
           dispatch(sendReturn({type: ERROR_WEEK, error}));
         } else {
-          let years5 = false, years10 = false;
+          let years5 = false, years10 = false, tourResults = {newFans: 0, newCash: 0};
+          const onTour = !_.isEmpty(tourDetails);
           // current week
           week = _.defaultTo(Number(week), 0);
           // weeks to go forward
@@ -217,9 +218,10 @@ export function nextWeek(weeks) {
           Promise.all([
             dispatch(getAlbums()),
             dispatch(getSingles()),
-            dispatch(getFans())
+            dispatch(getFans()),
+            dispatch(getBand()),
           ]).then((values) => {
-            let [albums, singles, fans] = values;
+            let [albums, singles, fans, band] = values;
             // if no albums or singles are released there is no need to calculate sales
             if(_.isEmpty(albums) && _.isEmpty(singles)) {
               week += weeks;
@@ -231,10 +233,14 @@ export function nextWeek(weeks) {
             // albums or singles have been released. for every week calculate sales
             for (let i = 0; i < weeks; i++) {
               week++;
+              let tourFans = 0;
+              if(onTour) {
+                calculateTourResults({fans, band, tourDetails, tourResults});
+              }
               const newData = calculateSales({albums, singles, week: week, fans, dispatch});
               albums = newData.albums;
               singles = newData.singles;
-              fans = newData.fans;
+              fans = newData.fans + tourFans;
 
               if(parseInt(week) === parseInt(52 * 5)) {
                 years5 = true;
@@ -405,6 +411,40 @@ export function nextWeek(weeks) {
       albums, singles, fans
     };
   }
+
+  function calculateTourResults({fans, band, tourDetails, tourResults}) {
+    console.log("tour", tourDetails, tourResults);
+    const {continentsToTour, venueSize} = tourDetails;
+    let {newCash, newFans} = tourResults;
+
+    const {leadMember, members: m} = band;
+    const members = [leadMember, ...m];
+
+    let maxSkill = 0, sumSkill = 0, avgSkill;
+
+    members.forEach(({skills: {live, musicianship}}) => {
+      const skill = (live * 3) + musicianship;
+      if(skill > maxSkill) {
+        maxSkill = skill;
+      }
+      sumSkill += skill;
+    });
+    avgSkill = sumSkill / members.length;
+
+    const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)); //* (venueSize * ());
+    console.log(performance);
+
+    // dispatch(addCash(newCash));
+    return tourResults;
+  }
+}
+// endregion
+
+// region Tour
+export function goOnTour({weeksToTour, continentsToTour, venueSize}) {
+  return dispatch => {
+    dispatch(nextWeek(weeksToTour, {continentsToTour, venueSize}));
+  };
 }
 // endregion
 

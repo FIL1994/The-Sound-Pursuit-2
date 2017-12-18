@@ -11,6 +11,7 @@ import fansReducer from './fansReducer';
 import singlesReducer from './singlesReducer';
 import albumsReducer from './albumsReducer';
 import scoreReducer from './scoreReducer';
+import tourReducer from './tourReducer';
 import imageReducer from './imageReducer';
 
 export default combineReducers({
@@ -23,5 +24,6 @@ export default combineReducers({
   singles: singlesReducer,
   albums: albumsReducer,
   score: scoreReducer,
+  tourResults: tourReducer,
   image: imageReducer
 });

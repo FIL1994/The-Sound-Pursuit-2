@@ -35,3 +35,5 @@ export const SET_SCORE = 'set_score';
 
 export const GET_IMAGE = 'get_image';
 export const ERROR_IMAGE = 'error_image';
+
+export const GET_TOUR_RESULTS = 'get_tour_results';

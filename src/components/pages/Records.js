@@ -179,11 +179,11 @@ class Records extends Component {
     return(
       <Page id="page-records">
         <div className="columns">
-          <Link to="/records/release" className="column col-4 col-mx-auto">
-            <Button primary block large>
+          <div className="column col-4 col-mx-auto">
+            <Button as={Link} to="/records/release" primary block large>
               Release New Record
             </Button>
-          </Link>
+          </div>
         </div>
         <br/>
         <div>
