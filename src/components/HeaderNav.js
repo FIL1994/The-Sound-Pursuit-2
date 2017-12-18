@@ -2,12 +2,22 @@
  * @author Philip Van Raalte
  * @date 2017-10-07.
  */
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {NavLink, matchPath, withRouter} from 'react-router-dom';
 import _ from 'lodash';
 import {getFans, getCash, getWeek} from '../actions';
 import localForage, {DATA_BAND} from '../data/localForage';
+
+const MyNavLink = (props) => {
+  return(
+    <NavLink
+      className="btn btn-lg"
+      activeClassName="btn-primary"
+      {...props}
+    />
+  );
+};
 
 class HeaderNav extends Component {
   constructor(props){
@@ -15,7 +25,7 @@ class HeaderNav extends Component {
 
     this.state = {
       hasStarted: false
-    }
+    };
 
     this.isLinkActive = this.isLinkActive.bind(this);
     this.getParamHasStarted = this.getParamHasStarted.bind(this);
@@ -61,35 +71,34 @@ class HeaderNav extends Component {
   }
 
   renderLinks() {
-    return [
-      <NavLink
-        key="dashboard"
-        to="/dashboard"
-        className="btn btn-lg"
-        activeClassName="btn-primary"
-        isActive={this.isLinkActive}
-      >
-        Home
-      </NavLink>,
-      <NavLink
-        key="songs"
-        to="/songs"
-        className="btn btn-lg"
-        activeClassName="btn-primary"
-        isActive={this.isLinkActive}
-      >
-        Songs
-      </NavLink>,
-      <NavLink
-        key="records"
-        to="/records"
-        className="btn btn-lg"
-        activeClassName="btn-primary"
-        isActive={this.isLinkActive}
-      >
-        Records
-      </NavLink>
-    ];
+    return (
+      <Fragment>
+        <MyNavLink
+          to="/dashboard"
+          isActive={this.isLinkActive}
+        >
+          Home
+        </MyNavLink>
+        <MyNavLink
+          to="/songs"
+          isActive={this.isLinkActive}
+        >
+          Songs
+        </MyNavLink>
+        <MyNavLink
+          to="/records"
+          isActive={this.isLinkActive}
+        >
+          Records
+        </MyNavLink>
+        <MyNavLink
+          to="/tour"
+          isActive={this.isLinkActive}
+        >
+          Tour
+        </MyNavLink>
+      </Fragment>
+    );
   }
 
   getParamHasStarted() {

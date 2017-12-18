@@ -25,8 +25,17 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['react', 'env', 'stage-1'],
+          presets: ['react', 'stage-1', ['env', {
+            "targets": {
+              "chrome": 43,
+              "ie": 9,
+              "firefox": 43,
+              "browsers": ["last 5 versions", "safari >= 7"],
+              "uglify-js": true
+            }
+          }]],
           plugins: [
+            ["transform-class-properties", { "spec": false }],
             ["transform-regenerator", {
               "asyncGenerators": true,
               "generators": true,

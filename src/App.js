@@ -20,6 +20,7 @@ import Settings from './components/pages/Settings';
 import ReleaseRecord_DragAndDrop from './components/pages/DragAndDrop';
 import Single from './components/pages/Single';
 import Album from './components/pages/Album';
+import Tour from './components/pages/Tour';
 
 import OldReleaseRecord from './components/pages/ReleaseRecord';
 
@@ -89,6 +90,7 @@ class App extends Component {
             <Route path="/settings/" component={Settings}/>
             <Route path="/single/:id" component={Single}/>
             <Route path="/album/:id" component={Album}/>
+            <Route path="/tour/" component={Tour}/>
             <Route path="/old-release" component={OldReleaseRecord}/>
             <Redirect to="/"/>
           </Switch>
