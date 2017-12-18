@@ -5,12 +5,14 @@
 import localForage from 'localforage';
 
 localForage.config({
-  name: "band-game",
-  version: 1.1
+  name: "sound-pursuit-2",
+  version: 1.0
 });
 
-// For Testing Only
-window.localForage = localForage;
+if(process.env.NODE_ENV !== "production") {
+  // For Testing Only
+  window.localForage = localForage;
+}
 
 export default localForage;
 
