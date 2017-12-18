@@ -17,7 +17,6 @@
     "babel-plugin-import": "^1.6.3",
     "babel-plugin-syntax-async-functions": "^7.0.0-beta.0",
     "babel-plugin-transform-regenerator": "^7.0.0-beta.3",
-    "babel-plugin-transform-class-properties": "^7.0.0-beta.3",
     "babel-polyfill": "^7.0.0-beta.3",
     "babel-preset-env": "^7.0.0-beta.3",
     "babel-preset-react": "^7.0.0-beta.3",
@@ -27,9 +26,8 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "chance": "^1.0.12",
-    "immutability-helper": "^2.6.0",
+    "immutability-helper": "^2.6.2",
     "jquery": "^3.2.1",
     "localforage": "^1.5.5",
     "lodash": "^4.17.4",

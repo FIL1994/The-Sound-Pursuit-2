@@ -18,12 +18,17 @@ class Tour extends Component {
     };
   }
 
+  componentDidMount() {
+    $('input[name=venue-size]')[0].checked = true;
+    // $('input[name=checkbox-container]')[0].checked = true;
+  }
+
   calcCost(weeksToTour, continentsToTour) {
     const venueSize = Number($('input[name=venue-size]:checked').val());
 
-    console.log(weeksToTour, continentsToTour, venueSize);
-
-    return (weeksToTour * venueSize * (1 + (continentsToTour * 0.35))) || 0;
+    return Math.floor(
+      weeksToTour * (Math.pow(1.18 * venueSize, 2.15) * 80) * (1 + (continentsToTour * 0.35))
+    ) || 0;
   }
 
   render() {
@@ -44,7 +49,7 @@ class Tour extends Component {
               {
                 this.continents.map(continent =>
                   <label key={continent} className="form-checkbox">
-                    <input type="checkbox" id={`checkbox-continent-${continent}`}
+                    <input type="checkbox" name="checkbox-container" id={`checkbox-continent-${continent}`}
                        onChange={(e) => this.setState({continentsToTour: continentsToTour + (e.target.checked ? 1 : -1) })}
                     />
                     <i className="form-icon"/> {continent}
@@ -54,7 +59,7 @@ class Tour extends Component {
             </div>
             <label htmlFor="range-weeks-to-tour">Weeks to Tour:</label>
             <input className="slider tooltip" type="range" id="range-weeks-to-tour"
-               min={minWeeksToTour} max={100} value={weeksToTour}
+               min={minWeeksToTour} max={104} value={weeksToTour}
                onChange={({target: {value: weeksToTour}}) => this.setState({weeksToTour})}
             />
             <div className="form-group">
@@ -69,7 +74,7 @@ class Tour extends Component {
               }
             </div>
             <div>
-              Cost: ${this.calcCost(weeksToTour, continentsToTour).toFixed(2)}
+              Cost: ${this.calcCost(weeksToTour, continentsToTour).toLocaleString()}
             </div>
           </form>
         </Panel>
