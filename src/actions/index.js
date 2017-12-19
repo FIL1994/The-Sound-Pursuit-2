@@ -233,11 +233,14 @@ export function nextWeek(weeks, tourDetails = {}) {
             // albums or singles have been released. for every week calculate sales
             for (let i = 0; i < weeks; i++) {
               week++;
-              let tourFans = 0;
+              let tourFans = 0, tourCash = 0;
               if(onTour) {
-                const {newCashFromTour, newFansFromTour} = calculateTourResults({fans, band, tourDetails, /*tourResults*/});
-                tourResults.newFans += newFansFromTour;
-                tourResults.newCash += newCashFromTour;
+                const {newCashFromTour, newFansFromTour} = calculateTourResults({fans, band, tourDetails});
+                tourFans = newFansFromTour;
+                tourCash = newCashFromTour;
+
+                tourResults.newFans += tourFans;
+                tourResults.newCash += tourCash;
               }
               const newData = calculateSales({albums, singles, week: week, fans, dispatch});
               albums = newData.albums;
@@ -252,8 +255,10 @@ export function nextWeek(weeks, tourDetails = {}) {
                 setTimeout( () => dispatch(calculateScore( {years: 10, albums, singles, fans} )) );
               }
             }
+
             if(onTour) {
               dispatch(saveTourResults(tourResults));
+              dispatch(addCash(tourResults.newCash));
             }
 
             // check years medals
@@ -417,8 +422,10 @@ export function nextWeek(weeks, tourDetails = {}) {
   }
 
   function calculateTourResults({fans, band, tourDetails, /*tourResults*/}) {
-    const {continentsToTour, venueSize} = tourDetails;
+    const {continents, venueSize} = tourDetails;
     //let {newCash, newFans} = tourResults;
+
+    console.log("CALC TOUR", continents, tourDetails);
 
     const {leadMember, members: m} = band;
     const members = [leadMember, ...m];
@@ -437,7 +444,7 @@ export function nextWeek(weeks, tourDetails = {}) {
     const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)); //* (venueSize * (continentsToTour.length));
 
     const newFansFromTour = _.ceil(performance * 0.75);
-    const newCashFromTour = Number((performance * 1.05).toFixed(2));
+    const newCashFromTour = performance * (1 + (venueSize / 8));
 
     // newCash += newCashFromTour;
     // newFans += newFansFromTour;
@@ -451,9 +458,9 @@ export function nextWeek(weeks, tourDetails = {}) {
 // endregion
 
 // region Tour
-export function goOnTour({weeksToTour, continentsToTour, venueSize}) {
+export function goOnTour({weeksToTour, continents, venueSize}) {
   return dispatch => {
-    dispatch(nextWeek(weeksToTour, {continentsToTour, venueSize}));
+    dispatch(nextWeek(weeksToTour, {continents, venueSize}));
   };
 }
 

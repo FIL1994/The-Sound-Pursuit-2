@@ -56,8 +56,8 @@ class Dashboard extends Component {
 
     const performance = Math.ceil((_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)));
 
-    const newFans = _.ceil(performance * 0.75);
-    const newCash = Number((performance * 1.05).toFixed(2));
+    const newFans = Math.ceil(performance * 0.75);
+    const newCash = performance * 1.05;
     this.props.addFans(newFans);
     this.props.addCash(newCash);
     this.props.nextWeek();
@@ -235,7 +235,7 @@ class Dashboard extends Component {
                 {
                   !showShow ? null :
                   <Toast centered>
-                    <span>New Fans: {newFans}<br/>Cash: ${newCash}</span>
+                    <span>New Fans: {newFans.toLocaleString()}<br/>Cash: ${newCash.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                   </Toast>
                 }
                 {
