@@ -47,6 +47,10 @@ body {
     height: 530px;
 }
 
+.scrollable.drag-container {
+    height: 270px;
+}
+
 .scrollable-table tbody {
     display: block;
     overflow-x: hidden;

@@ -21,10 +21,10 @@ class TourResults extends Component {
       <div>
         <h5>Tour Results</h5>
         <p>
-          New Fans: {Math.ceil(newFans)} <br/>
-          Tour Cost: ${tourCost.toLocaleString(undefined, {minimumFractionDigits: 2})} <br/>
-          Gross Revenue: ${newCash.toLocaleString(undefined, {minimumFractionDigits: 2})} <br/>
-          Net Revenue: ${(newCash - tourCost).toLocaleString(undefined, {minimumFractionDigits: 2})}
+          New Fans: {Math.ceil(newFans).toLocaleString()} <br/>
+          Tour Cost: {tourCost.toLocaleString(undefined, {style: "currency", currency: "USD"})} <br/>
+          Gross Revenue: {newCash.toLocaleString(undefined, {style: "currency", currency: "USD"})} <br/>
+          Net Revenue: {(newCash - tourCost).toLocaleString(undefined, {style: "currency", currency: "USD"})}
         </p>
       </div>
     );

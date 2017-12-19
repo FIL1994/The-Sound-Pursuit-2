@@ -145,7 +145,9 @@ class HeaderNav extends Component {
               {_.isNumber(this.props.fans) ? this.formatNumber(this.props.fans, false) : <div className="loading"/>}
             </span>
           </h6>
-          <h6 className="centered p-2 tooltip tooltip-bottom" data-tooltip={`$${this.props.cash.toLocaleString()}`}>
+          <h6 className="centered p-2 tooltip tooltip-bottom"
+              data-tooltip={this.props.cash.toLocaleString(undefined, {style: "currency", currency: "USD"})}
+          >
             {_.isNumber(this.props.cash) ? `$${this.formatNumber(this.props.cash, true)}` : <div className="loading"/>}
           </h6>
           <h6 className="centered p-2">

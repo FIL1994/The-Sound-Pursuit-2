@@ -39,15 +39,24 @@ class Tour extends Component {
     this.state = this.defaultState;
   }
 
-  resetTourPage() {
-    this.setState(this.defaultState);
-  }
-
   componentDidMount() {
     this.props.getCash();
 
     $('input[name=venue-size]')[0].checked = true;
     // $('input[name=checkbox-container]')[0].checked = true;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.tourResults !== this.props.tourResults) {
+      this.setState({
+        onTour: false,
+        showTourResults: true
+      });
+    }
+  }
+
+  resetTourPage() {
+    this.setState(this.defaultState);
   }
 
   calcCost(weeksToTour, continentsToTour) {
@@ -119,16 +128,6 @@ class Tour extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.tourResults !== this.props.tourResults) {
-      console.log("Tour Results", nextProps.tourResults);
-      this.setState({
-        onTour: false,
-        showTourResults: true
-      });
-    }
-  }
-
   render() {
     const {weeksToTour, continentsToTour, errorContinents, errorVenueSize, errorWeeksToTour, errorCost, onTour,
       showTourResults, tourCost} = this.state;
@@ -154,8 +153,6 @@ class Tour extends Component {
               </Fragment>
             :
               <Fragment>
-                <Button large primary onClick={this.validateTour}>Go on Tour</Button>
-                <br/><br/>
                 <Panel>
                   <form className="centered col-10">
                     <div className={`form-group ${_.isEmpty(errorContinents) ? '' : 'has-error'}`}>
@@ -201,6 +198,8 @@ class Tour extends Component {
                       {errorCost}
                     </div>
                   </form>
+                  <br/>
+                  <Button large primary onClick={this.validateTour}>Go on Tour</Button>
                 </Panel>
               </Fragment>
         }

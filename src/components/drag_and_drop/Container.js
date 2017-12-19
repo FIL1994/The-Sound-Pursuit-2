@@ -63,14 +63,14 @@ class Container extends Component {
     const isHoveringOnMaxItems = isOver && !canDrop;
     const isActive = canDrop && isOver;
     const style = {
-      minHeight: "404px",
+      minHeight: "200px",
       border: "1px solid gray"
     };
 
     const backgroundColor = isActive ? "#5755d9" : "#FFF";
 
     return connectDropTarget(
-      <div style={{...style, backgroundColor}} className={this.props.classes}>
+      <div style={{...style, backgroundColor}} className={`${this.props.classes} drag-container`}>
         {
           !isHoveringOnMaxItems
             ?

@@ -125,9 +125,9 @@ class DragAndDrop extends Component {
   renderProducers() {
     const {errorProducer} = this.state;
     return(
-      <div>
+      <Fragment>
         <div className={`form-group centered text-center ${!_.isEmpty(errorProducer) ? 'has-error' : ''}`}
-             onChange={this.changedProducer}
+           onChange={this.changedProducer}
         >
           <label className="form-label">Select a producer:</label>
           {
@@ -144,7 +144,7 @@ class DragAndDrop extends Component {
         <div className="form-input-hint is-error text-center">
           {errorProducer}
         </div>
-      </div>
+      </Fragment>
     );
   }
 
@@ -512,24 +512,20 @@ class DragAndDrop extends Component {
             <Fragment>
               <div>
                 <div className="btn-group btn-group-block centered col-4">
-                  <Button large primary={isSingle}
+                  <Button primary={isSingle}
                     onClick={() => {this.changedProducer(true); this.setState({isSingle: true, errorSingle: null, errorAlbum: null});}}
                   >
                     Single
                   </Button>
-                  <Button large primary={!isSingle}
+                  <Button primary={!isSingle}
                     onClick={() => {this.changedProducer(false); this.setState({isSingle: false, errorSingle: null, errorAlbum: null})}}
                   >
                     Album
                   </Button>
                 </div>
-                <Button large centered onClick={isSingle ? this.validateSingle : this.validateAlbum}>
-                  Release
-                </Button>
                 {
                   isSingle ? '' :
-                    <div className="form-group">
-                      <div className="form-label" htmlFor="txtAlbumTitle">Title:</div>
+                    <div className="form-group pt-1">
                       <div className="input-group">
                         <input className="form-input" type="text" id="txtAlbumTitle" placeholder="Album Title"/>
                         <Button className="input-group-btn"
@@ -545,7 +541,7 @@ class DragAndDrop extends Component {
               </div>
               <div className="columns">
                 <div className="column col-6 col-mx-auto">
-                  <h5>Unreleased Songs ({this.state.unusedSongsCount})</h5>
+                  <h6>Unreleased Songs ({this.state.unusedSongsCount})</h6>
                   <Container
                     key={`${containerKey}-unreleased`}
                     id="container-unreleased"
@@ -572,7 +568,7 @@ class DragAndDrop extends Component {
                   />
                 </div>
                 <div className="column col-6 col-mx-auto">
-                  <h5>Songs to Release ({this.state.releaseSongsCount})</h5>
+                  <h6>Songs to Release ({this.state.releaseSongsCount})</h6>
                   <Container
                     key={`${containerKey}-to-release`}
                     id="container-to-release"
@@ -594,6 +590,9 @@ class DragAndDrop extends Component {
               <div className="form-input-hint is-error text-center">
                 {isSingle ? errorSingle : errorAlbum}
               </div>
+              <Button primary large centered onClick={isSingle ? this.validateSingle : this.validateAlbum}>
+                Release
+              </Button>
             </Fragment>
         }
       </Page>

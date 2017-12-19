@@ -423,9 +423,6 @@ export function nextWeek(weeks, tourDetails = {}) {
 
   function calculateTourResults({fans, band, tourDetails, /*tourResults*/}) {
     const {continents, venueSize} = tourDetails;
-    //let {newCash, newFans} = tourResults;
-
-    console.log("CALC TOUR", continents, tourDetails);
 
     const {leadMember, members: m} = band;
     const members = [leadMember, ...m];
@@ -441,17 +438,12 @@ export function nextWeek(weeks, tourDetails = {}) {
     });
     avgSkill = sumSkill / members.length;
 
-    const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)); //* (venueSize * (continentsToTour.length));
+    const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2));
 
-    const newFansFromTour = _.ceil(performance * 0.75);
-    const newCashFromTour = performance * (1 + (venueSize / 8));
+    // get more fans if touring more continents
+    const newFansFromTour = _.ceil((performance * 0.75) * (1 + continents.length / 12)) * (1 + (venueSize / 6));
+    const newCashFromTour = performance * (1 + (venueSize / 9)) * _.max([(1 + (fans / 1000000)), 3]);
 
-    // newCash += newCashFromTour;
-    // newFans += newFansFromTour;
-
-    // console.log("RESULTS", newFans, newFansFromTour, newCash, newCashFromTour);
-
-    // dispatch(addCash(newCash));
     return {newCashFromTour, newFansFromTour};
   }
 }
