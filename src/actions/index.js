@@ -235,7 +235,9 @@ export function nextWeek(weeks, tourDetails = {}) {
               week++;
               let tourFans = 0;
               if(onTour) {
-                calculateTourResults({fans, band, tourDetails, tourResults});
+                const {newCashFromTour, newFansFromTour} = calculateTourResults({fans, band, tourDetails, /*tourResults*/});
+                tourResults.newFans += newFansFromTour;
+                tourResults.newCash += newCashFromTour;
               }
               const newData = calculateSales({albums, singles, week: week, fans, dispatch});
               albums = newData.albums;
@@ -249,6 +251,9 @@ export function nextWeek(weeks, tourDetails = {}) {
                 years10 = true;
                 setTimeout( () => dispatch(calculateScore( {years: 10, albums, singles, fans} )) );
               }
+            }
+            if(onTour) {
+              dispatch(saveTourResults(tourResults));
             }
 
             // check years medals
@@ -264,7 +269,6 @@ export function nextWeek(weeks, tourDetails = {}) {
             }
             // unlock medals
             Promise.all( unlocks.map( (unlockFunction) => new Promise(unlockFunction) ) );
-
             localForage.setItem(DATA_WEEK, week).then(
               () => dispatch(sendReturn({type: GET_WEEK, payload: week, years5, years10}))
             );
@@ -412,10 +416,9 @@ export function nextWeek(weeks, tourDetails = {}) {
     };
   }
 
-  function calculateTourResults({fans, band, tourDetails, tourResults}) {
-    console.log("tour", tourDetails, tourResults);
+  function calculateTourResults({fans, band, tourDetails, /*tourResults*/}) {
     const {continentsToTour, venueSize} = tourDetails;
-    let {newCash, newFans} = tourResults;
+    //let {newCash, newFans} = tourResults;
 
     const {leadMember, members: m} = band;
     const members = [leadMember, ...m];
@@ -431,11 +434,18 @@ export function nextWeek(weeks, tourDetails = {}) {
     });
     avgSkill = sumSkill / members.length;
 
-    const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)); //* (venueSize * ());
-    console.log(performance);
+    const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2)); //* (venueSize * (continentsToTour.length));
+
+    const newFansFromTour = _.ceil(performance * 0.75);
+    const newCashFromTour = Number((performance * 1.05).toFixed(2));
+
+    // newCash += newCashFromTour;
+    // newFans += newFansFromTour;
+
+    // console.log("RESULTS", newFans, newFansFromTour, newCash, newCashFromTour);
 
     // dispatch(addCash(newCash));
-    return tourResults;
+    return {newCashFromTour, newFansFromTour};
   }
 }
 // endregion
@@ -444,6 +454,12 @@ export function nextWeek(weeks, tourDetails = {}) {
 export function goOnTour({weeksToTour, continentsToTour, venueSize}) {
   return dispatch => {
     dispatch(nextWeek(weeksToTour, {continentsToTour, venueSize}));
+  };
+}
+
+function saveTourResults(tourResults) {
+  return dispatch => {
+    dispatch(sendReturn({type: GET_TOUR_RESULTS, payload: tourResults}))
   };
 }
 // endregion

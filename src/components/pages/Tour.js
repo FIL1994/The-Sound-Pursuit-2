@@ -76,10 +76,14 @@ class Tour extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.tourResults !== this.props.tourResults) {
+      console.log("Tour Results", nextProps.tourResults);
+    }
+  }
+
   render() {
     const {weeksToTour, continentsToTour, errorContinents, errorVenueSize, errorWeeksToTour} = this.state;
-
-    console.log("Tour Results", this.props.tourResults);
 
     const minWeeksToTour = continentsToTour * 2;
     if(weeksToTour < minWeeksToTour) {

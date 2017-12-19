@@ -59,7 +59,7 @@ class App extends Component {
             <div className="modal-title h5 text-center">Been Around for {years} Years</div>
             <div className="modal-body">
               <div className="content">
-                You band has latest {years} years! <br/>
+                You band has lasted {years} years! <br/>
                 Your score of {score.toLocaleString()} has been submitted.
               </div>
             </div>

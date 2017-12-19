@@ -24,6 +24,10 @@ body {
     margin-bottom: 5px;
 }
 
+.spaced a {
+    margin-bottom: 5px;
+}
+
 .toast-bottom {
     position: absolute;
     bottom: 5px;

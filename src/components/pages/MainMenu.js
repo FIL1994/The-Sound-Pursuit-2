@@ -66,21 +66,15 @@ class MainMenu extends Component {
 
     return(
       <Page centered>
-        <h1>The Sound Pursuit</h1>
+        <h1>The Sound Pursuit 2</h1>
         <Divider/>
         <div className="spaced">
-          <Link
-            to="/dashboard"
-          >
-            <Button size={8} primary {...disabledButtonProps}>
-              Continue
-            </Button>
-          </Link>
-          <Link to="/start">
-            <Button size={8} primary>
-              Start
-            </Button>
-          </Link>
+          <Button as={Link} to="/dashboard" size={8} primary {...disabledButtonProps}>
+            Continue
+          </Button>
+          <Button as={Link} to="/start" size={8} primary>
+            Start
+          </Button>
           <Button size={8} primary {...resetProps} onClick={this.resetData}>
             Delete Save
           </Button>
@@ -94,8 +88,7 @@ class MainMenu extends Component {
           <div>
             <b>Programming:</b> <a href="https://fil1994.newgrounds.com/" target="_blank">FIL1994</a>
             <br/>
-            <b>Music:</b> <a href="https://sercati.newgrounds.com/" target="_blank">Sercati</a> {`and `}
-            <a href="https://noise4games.newgrounds.com/" target="_blank">Noise4Games</a>
+            <b>Music:</b> <a href="https://ancientorigin.newgrounds.com/" target="_blank">ancientorigin</a>
           </div>
         </div>
         {
