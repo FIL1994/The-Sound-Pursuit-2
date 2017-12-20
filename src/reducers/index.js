@@ -13,6 +13,7 @@ import albumsReducer from './albumsReducer';
 import scoreReducer from './scoreReducer';
 import tourReducer from './tourReducer';
 import imageReducer from './imageReducer';
+import chartsReducer from './chartsReducer';
 
 export default combineReducers({
   state: (state = {}) => state,
@@ -25,5 +26,6 @@ export default combineReducers({
   albums: albumsReducer,
   score: scoreReducer,
   tourResults: tourReducer,
-  image: imageReducer
+  image: imageReducer,
+  charts: chartsReducer
 });

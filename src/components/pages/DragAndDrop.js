@@ -349,12 +349,17 @@ class DragAndDrop extends Component {
       quality = Number(quality.toFixed(2));
 
       let album = {
+        band: "USER",
         title: albumTitle,
         songs: cards.map(c => c.id),
         released: this.props.week,
         quality,
         sales: 0,
-        salesLastWeek: 0
+        salesLastWeek: 0,
+        charts: {
+          peak: -1,
+          lastWeek: -1
+        }
       };
 
       this.changedProducer(false); // isSingle = false
@@ -435,12 +440,17 @@ class DragAndDrop extends Component {
       quality = Number(quality.toFixed(2));
 
       let single = {
+        band: "USER",
         title: songs.find((s) => s.id === cards[0].id).title,
         songs: cards.map(c => c.id),
         released: this.props.week,
         quality,
         sales: 0,
-        salesLastWeek: 0
+        salesLastWeek: 0,
+        charts: {
+          peak: -1,
+          lastWeek: -1
+        }
       };
 
       this.changedProducer(true); // isSingle = true

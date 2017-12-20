@@ -37,3 +37,7 @@ export const GET_IMAGE = 'get_image';
 export const ERROR_IMAGE = 'error_image';
 
 export const GET_TOUR_RESULTS = 'get_tour_results';
+
+export const GET_CHARTS = 'get_charts';
+export const SAVE_CHARTS = 'save_charts';
+export const ERROR_CHARTS = 'error_charts';

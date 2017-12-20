@@ -6,9 +6,10 @@ import _ from 'lodash';
 import {
   SAVE_BAND, GET_BAND, ERROR_BAND, GET_SONGS, ERROR_SONG, SAVE_SONGS,
   SAVE_CASH, GET_CASH, ERROR_CASH, SAVE_WEEK, GET_WEEK, ERROR_WEEK, GET_FANS, SAVE_FANS, ERROR_FANS, GET_SINGLES,
-  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE, GET_TOUR_RESULTS
+  ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE, GET_TOUR_RESULTS,
+  ERROR_CHARTS, GET_CHARTS, SAVE_CHARTS
 } from './types';
-import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES}
+import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES, DATA_CHARTS}
   from '../data/localForage';
 import {
   unlock100kFans, unlock100kSoldSingles, unlock10kFans, unlock10kSoldSingles, unlock10Years, unlock1kFans, unlock1mFans,
@@ -19,6 +20,9 @@ import {
 import {postScore} from '../ng/NG_Connect';
 import {fiveYearScoreboardID, tenYearScoreboardID, bestSellingAlbumsScoreboardID, bestSellingSinglesScoreboardID,
   totalAlbumSalesScoreboardID, totalSingleSalesScoreboardID} from '../config/keys';
+import getRandomBandName from '../data/randomBandName';
+import getRandomSongName from '../data/randomSongName';
+import getRandomName from '../data/names';
 
 const DEFAULT_CASH = 250;
 
@@ -220,8 +224,9 @@ export function nextWeek(weeks, tourDetails = {}) {
             dispatch(getSingles()),
             dispatch(getFans()),
             dispatch(getBand()),
+            dispatch(getCharts())
           ]).then((values) => {
-            let [albums, singles, fans, band] = values;
+            let [albums, singles, fans, band, charts] = values;
             // if no albums or singles are released there is no need to calculate sales
             if(_.isEmpty(albums) && _.isEmpty(singles)) {
               week += weeks;
@@ -242,7 +247,7 @@ export function nextWeek(weeks, tourDetails = {}) {
                 tourResults.newFans += tourFans;
                 tourResults.newCash += tourCash;
               }
-              const newData = calculateSales({albums, singles, week: week, fans, dispatch});
+              const newData = calculateSales({albums, singles, week: week, fans, charts, dispatch});
               albums = newData.albums;
               singles = newData.singles;
               fans = newData.fans + tourFans;
@@ -284,9 +289,15 @@ export function nextWeek(weeks, tourDetails = {}) {
     );
   };
 
-  function calculateSales({albums, singles, week, fans, dispatch}) {
+  function calculateSales({albums, singles, week, fans, charts, dispatch}) {
     let newCash = 0, totalSingleSales = 0, totalAlbumSales = 0;
     let unlocks = []; // unlocks medals for NG
+
+    // remove user singles and albums
+    _.remove(charts.singles, s => s.band === "USER");
+    _.remove(charts.albums, s => s.band === "USER");
+    console.log("CALC SALES", charts);
+
     singles.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
       const salesLast = 16;
@@ -296,6 +307,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         // save sales
         singles[index].salesLastWeek = sales;
         singles[index].sales += sales;
+        charts.singles.push(singles[index]);
 
         // calculate cash
         newCash += sales * .2; // $.2 for each single sold
@@ -330,6 +342,8 @@ export function nextWeek(weeks, tourDetails = {}) {
         );
       } else if(salesLastWeek !== 0) {
         singles[index].salesLastWeek = 0;
+        singles[index].charts.lastWeek = -1;
+
         setTimeout(
           () => postScore(singles[index].sales, bestSellingSinglesScoreboardID)
         );
@@ -361,6 +375,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         // save sales
         albums[index].salesLastWeek = sales;
         albums[index].sales += sales;
+        charts.albums.push(albums[index]);
 
         // calculate cash
         newCash += sales * 1; // $1 for each album sold
@@ -381,6 +396,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         );
       } else if(salesLastWeek !== 0) {
         albums[index].salesLastWeek = 0;
+        albums[index].charts.lastWeek = -1;
         setTimeout(
           () => postScore(albums[index].sales, bestSellingAlbumsScoreboardID)
         );
@@ -404,6 +420,10 @@ export function nextWeek(weeks, tourDetails = {}) {
     setTimeout(
       () => postScore(totalAlbumSales, totalAlbumSalesScoreboardID)
     );
+
+    // HANDLE CHARTS
+    console.log("CHARTS W/ USER DATA", charts);
+    dispatch(saveCharts(charts));
 
     if(!_.isEmpty(singles)) {
       dispatch(saveSingles(singles));
@@ -622,6 +642,83 @@ export function removeCash(amount) {
       }
     );
   };
+}
+// endregion
+
+// region Charts
+export function getCharts() {
+  return dispatch => {
+    return localForage.getItem(DATA_CHARTS).then(
+      (charts, error) => {
+        if(error) {
+          dispatch(sendReturn({type: ERROR_CHARTS, error}));
+        } else {
+          if (_.isEmpty(charts)) {
+            localForage.getItem(DATA_WEEK).then(
+              (week) => {
+                dispatch(saveCharts(createCharts(week)));
+              }
+            );
+          }
+          charts = sortCharts(charts);
+          dispatch(sendReturn({type: GET_CHARTS, payload: charts}));
+          return charts;
+        }
+      }
+    );
+  }
+}
+
+export function saveCharts(charts) {
+  return dispatch => {
+    if(_.isEmpty(charts)) {
+      dispatch(sendReturn({type: ERROR_CHARTS, error: new Error("SAVE CHARTS - charts was empty")}))
+    } else {
+      localForage.setItem(DATA_CHARTS, charts).then(() => {
+        dispatch(sendReturn({type: SAVE_CHARTS, payload: charts}));
+      });
+    }
+  }
+}
+
+function sortCharts(charts) {
+  charts.singles = _.sortBy(charts.singles, s => -s.salesLastWeek);
+  charts.albums = _.sortBy(charts.albums, a => -a.salesLastWeek);
+  return charts;
+}
+
+function createCharts(week) {
+  let charts = {singles: [], albums: []};
+
+  charts.singles = Array.from(new Array(40), (single, index) => {
+    return {
+      id: `${index}-single-cpu`,
+      band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
+      title: getRandomSongName(),
+      quality: _.random(20, 100),
+      released: _.random(20, 40),
+      sales: _.random(20000, 500000),
+      salesLastWeek: _.random(5000, 50000),
+      songs: []
+    }
+  });
+
+  charts.albums = Array.from(new Array(40), (album, index) => {
+    return {
+      id: `${index}-album-cpu`,
+      band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
+      title: getRandomSongName(),
+      quality: _.random(20, 100),
+      released: _.random(20, 40),
+      sales: _.random(20000, 500000),
+      salesLastWeek: _.random(5000, 50000),
+      songs: []
+    }
+  });
+
+  charts = sortCharts(charts);
+
+  return charts;
 }
 // endregion
 
