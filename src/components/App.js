@@ -7,22 +7,23 @@ import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import _ from 'lodash';
-import {getScore} from './actions/index';
+import {getScore} from '../actions/index';
 
-import HasStarted from './components/HasStarted';
-import HeaderNav from './components/HeaderNav';
-import Dashboard from './components/pages/Dashboard';
-import Start from './components/pages/Start';
-import Songs from './components/pages/Songs';
-import Records from './components/pages/Records';
-import MainMenu from './components/pages/MainMenu';
-import Settings from './components/pages/Settings';
-import ReleaseRecord_DragAndDrop from './components/pages/DragAndDrop';
-import Single from './components/pages/Single';
-import Album from './components/pages/Album';
-import Tour from './components/pages/Tour';
+import HasStarted from './HasStarted';
+import HeaderNav from './HeaderNav';
+import Dashboard from './pages/Dashboard';
+import Start from './pages/Start';
+import Songs from './pages/Songs';
+import Records from './pages/Records';
+import MainMenu from './pages/MainMenu';
+import Settings from './pages/Settings';
+import ReleaseRecord_DragAndDrop from './pages/DragAndDrop';
+import Single from './pages/Single';
+import Album from './pages/Album';
+import Tour from './pages/Tour';
+import Charts from './pages/Charts';
 
-import OldReleaseRecord from './components/pages/ReleaseRecord';
+import OldReleaseRecord from './pages/ReleaseRecord';
 
 class App extends Component {
   constructor(props) {
@@ -91,6 +92,7 @@ class App extends Component {
             <Route path="/single/:id" component={Single}/>
             <Route path="/album/:id" component={Album}/>
             <Route path="/tour/" component={Tour}/>
+            <Route path="/charts/" component={Charts}/>
             <Route path="/old-release" component={OldReleaseRecord}/>
             <Redirect to="/"/>
           </Switch>

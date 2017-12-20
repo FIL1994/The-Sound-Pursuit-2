@@ -10,7 +10,7 @@ import ReduxThunk from 'redux-thunk';
 import {startSession, getDateTime, initSession} from './ng/NG_Connect';
 import {NG} from './ng/UnlockMedals';
 
-import App from './App';
+import App from './components/App';
 import reducers from './reducers';
 import './setupSoundJS';
 

@@ -98,6 +98,12 @@ class HeaderNav extends Component {
         >
           Tour
         </MyNavLink>
+        <MyNavLink
+          to="/charts"
+          isActive={this.isLinkActive}
+        >
+          Charts
+        </MyNavLink>
       </Fragment>
     );
   }

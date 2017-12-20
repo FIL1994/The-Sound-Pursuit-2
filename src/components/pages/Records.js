@@ -172,6 +172,8 @@ class Records extends Component {
     const {showAlbums} = this.state;
     const {singles, albums} = this.props;
 
+    console.log(singles, albums);
+
     if(!showAlbums && _.isEmpty(singles)) {
       setTimeout(() => this.setState({showAlbums: true}));
     }
