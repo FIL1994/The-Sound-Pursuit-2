@@ -434,16 +434,34 @@ export function nextWeek(weeks, tourDetails = {}) {
     charts = sortCharts(charts);
 
     // set chart positions
-    charts.singles.map((s, index) => {
+    charts.singles = charts.singles.map((s, index) => {
+      // if not in top 40 don't make any changes
       if(index > 39) {
         return s;
       }
       const {peak} = s.charts;
       const position = index + 1;
-      s.charts.lastWeek = position;
-      if(peak < position) {
+      s.charts.lastWeek = s.charts.thisWeek;
+      s.charts.thisWeek = position;
+      if(peak > position || peak === -1) {
         s.charts.peak = position;
       }
+      return s;
+    });
+
+    charts.albums = charts.albums.map((a, index) => {
+      // if not in top 40 don't make any changes
+      if(index > 39) {
+        return a;
+      }
+      const {peak} = a.charts;
+      const position = index + 1;
+      a.charts.lastWeek = a.charts.thisWeek;
+      a.charts.thisWeek = position;
+      if(peak > position || peak === -1) {
+        a.charts.peak = position;
+      }
+      return a;
     });
 
     console.log("CHARTS", charts);
@@ -741,7 +759,8 @@ function newSingle(index, week) {
     songs: [],
     charts: {
       peak: -1,
-      lastWeek: -1
+      lastWeek: -1,
+      thisWeek: -1
     }
   };
 }
@@ -758,7 +777,8 @@ function newAlbum(index, week) {
     songs: [],
     charts: {
       peak: -1,
-      lastWeek: -1
+      lastWeek: -1,
+      thisWeek: -1
     }
   };
 }

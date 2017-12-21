@@ -3,62 +3,76 @@
  * @date 2017-12-19
  */
 import React, {Component, Fragment} from 'react';
-import {Divider, Page} from '../SpectreCSS';
+import {connect} from 'react-redux';
+import {Divider, Page, Loading, Button} from '../SpectreCSS';
 import _ from 'lodash';
-import getRandomSongName from '../../data/randomSongName';
-import getRandomBandName from '../../data/randomBandName';
-import getRandomName from '../../data/names';
+import {getCharts} from '../../actions';
 
 class Charts extends Component {
   constructor(props) {
     super(props);
 
-    this.singleCharts = Array.from(new Array(40), (single, index) => {
-      return {
-        id: `${index}-cpu`,
-        band: getRandomBandName(),
-        title: getRandomSongName(),
-        quality: _.random(20, 100),
-        released: _.random(20, 40),
-        sales: _.random(20000, 500000),
-        salesLastWeek: _.random(5000, 50000),
-        songs: []
-      }
-    }).sort((a, b) => {
-      return a.salesLastWeek === b.salesLastWeek ? 0 : a.salesLastWeek > b.salesLastWeek ? -1 : 1
-    });
+    this.state = {
+      showSingles: true
+    };
+  }
 
-    this.albumCharts = Array.from(new Array(40), (album, index) => {
-      return {
-        id: `${index}-cpu`,
-        band: getRandomBandName(),
-        title: getRandomSongName(),
-        quality: _.random(20, 100),
-        released: _.random(20, 40),
-        sales: _.random(20000, 500000),
-        salesLastWeek: _.random(5000, 50000),
-        songs: []
-      }
-    }).sort((a, b) => {
-      return a.salesLastWeek === b.salesLastWeek ? 0 : a.salesLastWeek > b.salesLastWeek ? -1 : 1
-    });
+  componentDidMount() {
+    this.props.getCharts();
   }
 
   render() {
+    const {charts} = this.props;
+    const {showSingles} = this.state;
+    console.log(charts);
+
     return(
       <Page centered>
         <h5>Charts</h5>
-        <ul className="scrollable">
-          {this.albumCharts.map(({id, band, title, salesLastWeek}, index) =>
-            <li key={id}>
-              #{index + 1}. {title} - {band} <br/> {salesLastWeek.toLocaleString()}
-              <Divider/>
-            </li>
-          )}
-        </ul>
+        {
+          _.isEmpty(charts)
+            ?
+             <Fragment>
+               Loading Charts
+               <Loading large/>
+             </Fragment>
+            :
+            <Fragment>
+              <div className="btn-group btn-group-block centered col-4">
+                <Button
+                  primary={showSingles}
+                  onClick={() => this.setState({showSingles: true})}
+                >
+                  Single
+                </Button>
+                <Button
+                  primary={!showSingles}
+                  onClick={() => this.setState({showSingles: false})}
+                >
+                  Album
+                </Button>
+              </div>
+              <ul className="scrollable">
+                {(showSingles ? charts.singles : charts.albums).map(
+                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}}, index) =>
+                  <li key={id}>
+                    #{index + 1}. {title} - {band} <br/>
+                    Peak: {peak} | Last Week: {lastWeek} | Sales: {salesLastWeek.toLocaleString()}
+                    <Divider/>
+                  </li>
+                )}
+              </ul>
+            </Fragment>
+        }
       </Page>
     );
   }
 }
 
-export default Charts;
+function mapStateToProps(state) {
+  return {
+    charts: state.charts
+  };
+}
+
+export default connect(mapStateToProps, {getCharts})(Charts);

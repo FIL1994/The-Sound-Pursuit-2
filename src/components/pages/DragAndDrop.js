@@ -360,7 +360,8 @@ class DragAndDrop extends Component {
         salesLastWeek: 0,
         charts: {
           peak: -1,
-          lastWeek: -1
+          lastWeek: -1,
+          thisWeek: -1
         }
       };
 
@@ -451,7 +452,8 @@ class DragAndDrop extends Component {
         salesLastWeek: 0,
         charts: {
           peak: -1,
-          lastWeek: -1
+          lastWeek: -1,
+          thisWeek: -1
         }
       };
 
