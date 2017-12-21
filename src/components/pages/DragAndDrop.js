@@ -157,7 +157,9 @@ class DragAndDrop extends Component {
     return(
       <div className="text-center">
         Quality: {producer.quality} <br/>
-        Cost: ${isSingle ? producer.cost.single : producer.cost.album}
+        Cost: {(isSingle ? producer.cost.single : producer.cost.album).toLocaleString(
+          undefined, {style: "currency", currency: "USD"}
+          )}
       </div>
     );
   }

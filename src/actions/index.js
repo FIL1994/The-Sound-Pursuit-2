@@ -25,6 +25,8 @@ import getRandomSongName from '../data/randomSongName';
 import getRandomName from '../data/names';
 
 const DEFAULT_CASH = 250;
+const SINGLE_SALES_LAST = 16; //weeks singles sell for
+const ALBUM_SALES_LAST = 41; // weeks albums sell for
 
 function sendReturn({type, payload, error}) {
   return {
@@ -227,13 +229,14 @@ export function nextWeek(weeks, tourDetails = {}) {
             dispatch(getCharts())
           ]).then((values) => {
             let [albums, singles, fans, band, charts] = values;
+
             // if no albums or singles are released there is no need to calculate sales
-            if(_.isEmpty(albums) && _.isEmpty(singles)) {
-              week += weeks;
-              localForage.setItem(DATA_WEEK, week);
-              dispatch(sendReturn({type: GET_WEEK, payload: week}));
-              return;
-            }
+            // if(_.isEmpty(albums) && _.isEmpty(singles)) {
+            //   week += weeks;
+            //   localForage.setItem(DATA_WEEK, week);
+            //   dispatch(sendReturn({type: GET_WEEK, payload: week}));
+            //   return;
+            // }
 
             // albums or singles have been released. for every week calculate sales
             for (let i = 0; i < weeks; i++) {
@@ -296,13 +299,16 @@ export function nextWeek(weeks, tourDetails = {}) {
     // remove user singles and albums
     _.remove(charts.singles, s => s.band === "USER");
     _.remove(charts.albums, s => s.band === "USER");
-    console.log("CALC SALES", charts);
+    charts = calcChartSales(charts, week);
 
     singles.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
-      const salesLast = 16;
-      if(age < salesLast) {
-        let sales = _.ceil(((fans * (quality / 120)) * ((salesLast - age)/(salesLast - 1))) * _.random(0.164, 0.231));
+      if(age < SINGLE_SALES_LAST) {
+        let sales = Math.ceil(
+          ((fans * (quality / 120)) *
+          (((SINGLE_SALES_LAST - age)/(SINGLE_SALES_LAST - 1))) + 1) *
+          _.random(0.164, 0.231)
+        );
 
         // save sales
         singles[index].salesLastWeek = sales;
@@ -368,9 +374,12 @@ export function nextWeek(weeks, tourDetails = {}) {
 
     albums.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
-      const salesLast = 41;
-      if(age < salesLast) {
-        let sales = _.ceil(((fans * (quality / 180)) * ((salesLast - age)/(salesLast - 1))) * _.random(.155, .213));
+      if(age < ALBUM_SALES_LAST) {
+        let sales = Math.ceil(
+          ((fans * (quality / 180)) *
+            (((ALBUM_SALES_LAST - age)/(ALBUM_SALES_LAST - 1))) + 1) *
+          _.random(.155, .213)
+        );
 
         // save sales
         albums[index].salesLastWeek = sales;
@@ -378,7 +387,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         charts.albums.push(albums[index]);
 
         // calculate cash
-        newCash += sales * 1; // $1 for each album sold
+        newCash += sales * 0.95; // $0.95 for each album sold
 
         const albumSales = albums[index].sales;
         if(albumSales > 10000) {
@@ -422,13 +431,42 @@ export function nextWeek(weeks, tourDetails = {}) {
     );
 
     // HANDLE CHARTS
-    console.log("CHARTS W/ USER DATA", charts);
+    charts = sortCharts(charts);
+
+    // set chart positions
+    charts.singles.map((s, index) => {
+      if(index > 39) {
+        return s;
+      }
+      const {peak} = s.charts;
+      const position = index + 1;
+      s.charts.lastWeek = position;
+      if(peak < position) {
+        s.charts.peak = position;
+      }
+    });
+
+    console.log("CHARTS", charts);
     dispatch(saveCharts(charts));
 
     if(!_.isEmpty(singles)) {
+      const userSingles = charts.singles.filter(s => s.band === "USER");
+
+      userSingles.map(us => {
+        const index = singles.findIndex(s => s.id === us.id);
+        singles.splice(index, 1, us);
+      });
+
       dispatch(saveSingles(singles));
     }
     if(!_.isEmpty(albums)) {
+      const userAlbums = charts.albums.filter(s => s.band === "USER");
+
+      userAlbums.map(ua => {
+        const index = albums.findIndex(a => a.id === ua.id);
+        albums.splice(index, 1, ua);
+      });
+
       dispatch(saveAlbums(albums));
     }
     dispatch(saveFans(fans));
@@ -654,15 +692,19 @@ export function getCharts() {
           dispatch(sendReturn({type: ERROR_CHARTS, error}));
         } else {
           if (_.isEmpty(charts)) {
-            localForage.getItem(DATA_WEEK).then(
+            return localForage.getItem(DATA_WEEK).then(
               (week) => {
-                dispatch(saveCharts(createCharts(week)));
+                charts = createCharts(week);
+                charts = sortCharts(charts);
+                dispatch(saveCharts(charts));
+                return charts;
               }
             );
+          } else {
+            charts = sortCharts(charts);
+            dispatch(sendReturn({type: GET_CHARTS, payload: charts}));
+            return charts;
           }
-          charts = sortCharts(charts);
-          dispatch(sendReturn({type: GET_CHARTS, payload: charts}));
-          return charts;
         }
       }
     );
@@ -687,36 +729,100 @@ function sortCharts(charts) {
   return charts;
 }
 
+function newSingle(index, week) {
+  return {
+    id: `${index}-single-cpu`,
+    band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
+    title: getRandomSongName(),
+    quality: _.random(40, 100),
+    released: week,
+    sales: 0,
+    salesLastWeek: 0,
+    songs: [],
+    charts: {
+      peak: -1,
+      lastWeek: -1
+    }
+  };
+}
+
+function newAlbum(index, week) {
+  return {
+    id: `${index}-album-cpu`,
+    band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
+    title: getRandomSongName(),
+    quality: _.random(40, 100),
+    released: week,
+    sales: 0,
+    salesLastWeek: 0,
+    songs: [],
+    charts: {
+      peak: -1,
+      lastWeek: -1
+    }
+  };
+}
+
+function calcChartSales(charts, week) {
+  let singleIndexesAdded = [], albumIndexesAdded = [];
+  charts.singles = charts.singles.map(s => {
+    const age = week - s.released;
+    // if single is no longer selling swap it with a new single
+    if(age >= SINGLE_SALES_LAST) {
+      let index = _.max([
+        ...singleIndexesAdded,
+        ...charts.singles.map(c => {
+            return Number(_.toString(c.id).split('-')[0]);
+          }
+        )]) + 1;
+      singleIndexesAdded.push(index);
+      s = newSingle(index, week);
+    }
+    const {quality} = s;
+
+    const sales = Math.ceil(
+      (((SINGLE_SALES_LAST - age)/(SINGLE_SALES_LAST-1)) + 1) * quality * 100000 * _.random(0.004, 0.005)
+    );
+    s.salesLastWeek = sales;
+    s.sales += sales;
+
+    return s;
+  });
+
+  charts.albums = charts.albums.map(a => {
+    const age = week - a.released;
+    // if album is no longer selling swap it with a new album
+    if(age >= ALBUM_SALES_LAST) {
+      let index = _.max([
+        ...albumIndexesAdded,
+        ...charts.albums.map(c => {
+            let i = Number(_.toString(c.id).split('-')[0]);
+            return i;
+          }
+        )]) + 1;
+      albumIndexesAdded.push(index);
+      a = newAlbum(index, week);
+    }
+    const {quality} = a;
+
+    const sales = Math.ceil(
+      (((ALBUM_SALES_LAST - age)/(ALBUM_SALES_LAST-1)) + 1) * quality * 90000 * _.random(0.004, 0.005)
+    );
+    a.salesLastWeek = sales;
+    a.sales += sales;
+
+    return a;
+  });
+
+  return charts;
+}
+
 function createCharts(week) {
   let charts = {singles: [], albums: []};
 
-  charts.singles = Array.from(new Array(40), (single, index) => {
-    return {
-      id: `${index}-single-cpu`,
-      band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
-      title: getRandomSongName(),
-      quality: _.random(20, 100),
-      released: _.random(20, 40),
-      sales: _.random(20000, 500000),
-      salesLastWeek: _.random(5000, 50000),
-      songs: []
-    }
-  });
-
-  charts.albums = Array.from(new Array(40), (album, index) => {
-    return {
-      id: `${index}-album-cpu`,
-      band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
-      title: getRandomSongName(),
-      quality: _.random(20, 100),
-      released: _.random(20, 40),
-      sales: _.random(20000, 500000),
-      salesLastWeek: _.random(5000, 50000),
-      songs: []
-    }
-  });
-
-  charts = sortCharts(charts);
+  charts.singles = Array.from(new Array(40), (single, index) => newSingle(index, week - _.random(1, 10)));
+  charts.albums = Array.from(new Array(40), (album, index) => newAlbum(index, week - _.random(1, 20)));
+  charts = calcChartSales(charts, week);
 
   return charts;
 }
