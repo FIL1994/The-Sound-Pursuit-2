@@ -6,6 +6,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Loading, Page} from '../SpectreCSS';
 import _ from 'lodash';
+import {checkNA} from '../../data/util';
 
 import {getSongs, getSingles} from '../../actions';
 
@@ -57,7 +58,7 @@ class Single extends Component {
       return <Page centered><p>That single could not be found</p></Page>;
     }
 
-    const {quality, released, sales, salesLastWeek, songs, title} = single;
+    const {quality, released, sales, salesLastWeek, songs, title, charts: {peak, lastWeek, thisWeek}} = single;
 
     return(
       <Page centered>
@@ -68,6 +69,12 @@ class Single extends Component {
           Sales: {sales} <br/>
           Sales Last Week: {salesLastWeek}
         </p>
+        <div>
+          <h5>Chart Details</h5>
+          <p>
+            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week: {checkNA(thisWeek)}
+          </p>
+        </div>
         <div>
           <h5>Tracklist:</h5>
           <p>

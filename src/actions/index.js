@@ -243,7 +243,7 @@ export function nextWeek(weeks, tourDetails = {}) {
               week++;
               let tourFans = 0, tourCash = 0;
               if(onTour) {
-                const {newCashFromTour, newFansFromTour} = calculateTourResults({fans, band, tourDetails});
+                const {newCashFromTour, newFansFromTour} = calcTourResults({fans, band, tourDetails});
                 tourFans = newFansFromTour;
                 tourCash = newCashFromTour;
 
@@ -349,6 +349,7 @@ export function nextWeek(weeks, tourDetails = {}) {
       } else if(salesLastWeek !== 0) {
         singles[index].salesLastWeek = 0;
         singles[index].charts.lastWeek = -1;
+        singles[index].charts.thisWeek = -1;
 
         setTimeout(
           () => postScore(singles[index].sales, bestSellingSinglesScoreboardID)
@@ -406,6 +407,8 @@ export function nextWeek(weeks, tourDetails = {}) {
       } else if(salesLastWeek !== 0) {
         albums[index].salesLastWeek = 0;
         albums[index].charts.lastWeek = -1;
+        albums[index].charts.thisWeek = -1;
+
         setTimeout(
           () => postScore(albums[index].sales, bestSellingAlbumsScoreboardID)
         );
@@ -434,7 +437,9 @@ export function nextWeek(weeks, tourDetails = {}) {
     charts = sortCharts(charts);
 
     // set chart positions
-    charts.singles = charts.singles.map((s, index) => {
+    charts.singles = charts.singles.map(setChartPositions);
+    charts.albums = charts.albums.map(setChartPositions);
+    function setChartPositions(s, index) {
       // if not in top 40 don't make any changes
       if(index > 39) {
         return s;
@@ -447,24 +452,8 @@ export function nextWeek(weeks, tourDetails = {}) {
         s.charts.peak = position;
       }
       return s;
-    });
+    }
 
-    charts.albums = charts.albums.map((a, index) => {
-      // if not in top 40 don't make any changes
-      if(index > 39) {
-        return a;
-      }
-      const {peak} = a.charts;
-      const position = index + 1;
-      a.charts.lastWeek = a.charts.thisWeek;
-      a.charts.thisWeek = position;
-      if(peak > position || peak === -1) {
-        a.charts.peak = position;
-      }
-      return a;
-    });
-
-    console.log("CHARTS", charts);
     dispatch(saveCharts(charts));
 
     if(!_.isEmpty(singles)) {
@@ -497,7 +486,7 @@ export function nextWeek(weeks, tourDetails = {}) {
     };
   }
 
-  function calculateTourResults({fans, band, tourDetails, /*tourResults*/}) {
+  function calcTourResults({fans, band, tourDetails, /*tourResults*/}) {
     const {continents, venueSize} = tourDetails;
 
     const {leadMember, members: m} = band;
@@ -517,7 +506,7 @@ export function nextWeek(weeks, tourDetails = {}) {
     const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2));
 
     // get more fans if touring more continents
-    const newFansFromTour = _.ceil((performance * 0.75) * (1 + continents.length / 12)) * (1 + (venueSize / 6));
+    const newFansFromTour = _.ceil((performance * 0.78) * (1 + continents.length / 10)) * (1 + (venueSize / 5));
     const newCashFromTour = performance * (1 + (venueSize / 9)) * _.max([(1 + (fans / 1000000)), 3]);
 
     return {newCashFromTour, newFansFromTour};
@@ -801,7 +790,7 @@ function calcChartSales(charts, week) {
     const {quality} = s;
 
     const sales = Math.ceil(
-      (((SINGLE_SALES_LAST - age)/(SINGLE_SALES_LAST-1)) + 1) * quality * 100000 * _.random(0.004, 0.005)
+      (((SINGLE_SALES_LAST - age)/(SINGLE_SALES_LAST-1)) + 1) * quality * 100000 * _.random(0.0058, 0.0065)
     );
     s.salesLastWeek = sales;
     s.sales += sales;

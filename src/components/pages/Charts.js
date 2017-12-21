@@ -6,7 +6,8 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {Divider, Page, Loading, Button} from '../SpectreCSS';
 import _ from 'lodash';
-import {getCharts} from '../../actions';
+import {getCharts, getBand} from '../../actions';
+import {checkNA} from '../../data/util';
 
 class Charts extends Component {
   constructor(props) {
@@ -19,18 +20,24 @@ class Charts extends Component {
 
   componentDidMount() {
     this.props.getCharts();
+    this.props.getBand();
   }
 
   render() {
-    const {charts} = this.props;
+    const {charts, userBand} = this.props;
     const {showSingles} = this.state;
-    console.log(charts);
+    let songsOnChart = _.isEmpty(charts) || _.isEmpty(userBand) ? 0 : (
+      showSingles
+        ?
+          _.take(charts.singles, 40).filter(c => c.band === "USER").length
+        :
+          _.take(charts.albums, 40).filter(c => c.band === "USER").length
+    );
 
     return(
       <Page centered>
-        <h5>Charts</h5>
         {
-          _.isEmpty(charts)
+          _.isEmpty(charts) || _.isEmpty(userBand)
             ?
              <Fragment>
                Loading Charts
@@ -38,28 +45,37 @@ class Charts extends Component {
              </Fragment>
             :
             <Fragment>
+              <div>{songsOnChart} of your {showSingles ? 'singles' : 'albums'} charted</div>
               <div className="btn-group btn-group-block centered col-4">
                 <Button
                   primary={showSingles}
                   onClick={() => this.setState({showSingles: true})}
                 >
-                  Single
+                  Singles
                 </Button>
                 <Button
                   primary={!showSingles}
                   onClick={() => this.setState({showSingles: false})}
                 >
-                  Album
+                  Albums
                 </Button>
               </div>
               <ul className="scrollable">
-                {(showSingles ? charts.singles : charts.albums).map(
-                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}}, index) =>
-                  <li key={id}>
-                    #{index + 1}. {title} - {band} <br/>
-                    Peak: {peak} | Last Week: {lastWeek} | Sales: {salesLastWeek.toLocaleString()}
-                    <Divider/>
-                  </li>
+                {_.take((showSingles ? charts.singles : charts.albums), 40).map(
+                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}}, index) => {
+                    const isUser = band === "USER";
+                    if(isUser) {
+                      band = userBand.name;
+                    }
+
+                    return (
+                      <li key={id} className={isUser ? 'bg-success' : 'bg-dark'}>
+                      #{index + 1}. {title} - {band} <br/>
+                      Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | Sales: {salesLastWeek.toLocaleString()}
+                      <Divider/>
+                    </li>
+                    );
+                  }
                 )}
               </ul>
             </Fragment>
@@ -71,8 +87,9 @@ class Charts extends Component {
 
 function mapStateToProps(state) {
   return {
-    charts: state.charts
+    charts: state.charts,
+    userBand: state.band
   };
 }
 
-export default connect(mapStateToProps, {getCharts})(Charts);
+export default connect(mapStateToProps, {getCharts, getBand})(Charts);

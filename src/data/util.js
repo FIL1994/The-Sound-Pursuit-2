@@ -8,3 +8,8 @@ export function weeksToYearsAndWeeks(weeks) {
   const leftoverWeeks = weeks % 52;
   return `Y${year} W${leftoverWeeks}`;
 }
+
+// check if not available
+export function checkNA(num) {
+  return num === -1 ? "N/A" : num;
+}

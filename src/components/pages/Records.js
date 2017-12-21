@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import _ from 'lodash';
 import {Page, EmptyState, Button} from '../SpectreCSS';
+import {checkNA} from '../../data/util';
 
 import {getSongs, getSingles, getAlbums, getWeek} from '../../actions';
 
@@ -87,7 +88,7 @@ class Records extends Component {
         </div>
         <div className="scrollable centered full-width">
           {
-            singles.map(({id, title, quality, released, salesLastWeek, sales}) => {
+            singles.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
               const age = week - released;
               return(
                 <div className="card" key={id}>
@@ -101,6 +102,7 @@ class Records extends Component {
                     Quality: {quality}<br/>
                     Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
                     Total Sales: {sales.toLocaleString()}<br/>
+                    Peak Chart Position: {checkNA(peak)}
                   </div>
                 </div>
               );
@@ -145,7 +147,7 @@ class Records extends Component {
         </div>
         <div className="scrollable centered full-width">
           {
-            albums.map(({id, title, quality, released, salesLastWeek, sales}) => {
+            albums.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
               return(
                 <div className="card" key={id}>
                   <div className="card-header">
@@ -158,6 +160,7 @@ class Records extends Component {
                     Quality: {quality}<br/>
                     Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
                     Total Sales: {sales.toLocaleString()}<br/>
+                    Peak Chart Position: {checkNA(peak)}
                   </div>
                 </div>
               );
