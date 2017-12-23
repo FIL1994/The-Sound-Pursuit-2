@@ -13,7 +13,7 @@ import INSTRUMENTS from '../../data/instruments';
 import getRandomBandName from '../../data/randomBandName';
 import getRandomName from '../../data/names';
 import generateBandMember from '../../data/generateBandMember';
-import {saveBand} from '../../actions';
+import {saveBand, getCharts} from '../../actions';
 import {resetDataAsync} from '../../data/resetData';
 import {unlockStartBand} from '../../ng/UnlockMedals';
 
@@ -65,6 +65,10 @@ class Start extends Component {
       {...generateBandMember(skillLevel), instrument: INSTRUMENTS.BASS}, {...generateBandMember(skillLevel), instrument: INSTRUMENTS.BASS}, {...generateBandMember(skillLevel), instrument: INSTRUMENTS.BASS},
       {...generateBandMember(skillLevel), instrument: INSTRUMENTS.DRUMS}, {...generateBandMember(skillLevel), instrument: INSTRUMENTS.DRUMS}, {...generateBandMember(skillLevel), instrument: INSTRUMENTS.DRUMS}
     ]
+  }
+
+  componentDidMount() {
+    this.props.getCharts();
   }
 
   renderSteps() {
@@ -572,4 +576,4 @@ class Start extends Component {
   }
 }
 
-export default withRouter(connect(null, {saveBand})(Start));
+export default withRouter(connect(null, {saveBand, getCharts})(Start));

@@ -7,7 +7,7 @@ import {
   SAVE_BAND, GET_BAND, ERROR_BAND, GET_SONGS, ERROR_SONG, SAVE_SONGS,
   SAVE_CASH, GET_CASH, ERROR_CASH, SAVE_WEEK, GET_WEEK, ERROR_WEEK, GET_FANS, SAVE_FANS, ERROR_FANS, GET_SINGLES,
   ERROR_SINGLES, ERROR_ALBUMS, GET_ALBUMS, SAVE_SINGLES, SAVE_ALBUMS, GET_SCORE, SET_SCORE, GET_IMAGE, GET_TOUR_RESULTS,
-  ERROR_CHARTS, GET_CHARTS, SAVE_CHARTS
+  ERROR_CHARTS, GET_CHARTS, SAVE_CHARTS, ERROR_IMAGE
 } from './types';
 import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES, DATA_CHARTS}
   from '../data/localForage';
@@ -23,6 +23,7 @@ import {fiveYearScoreboardID, tenYearScoreboardID, bestSellingAlbumsScoreboardID
 import getRandomBandName from '../data/randomBandName';
 import getRandomSongName from '../data/randomSongName';
 import getRandomName from '../data/names';
+import {ImageURL} from '../data/util';
 
 const DEFAULT_CASH = 250;
 const SINGLE_SALES_LAST = 16; //weeks singles sell for
@@ -299,7 +300,7 @@ export function nextWeek(weeks, tourDetails = {}) {
     // remove user singles and albums
     _.remove(charts.singles, s => s.band === "USER");
     _.remove(charts.albums, s => s.band === "USER");
-    charts = calcChartSales(charts, week);
+    charts = calcChartSales(charts, week, dispatch);
 
     singles.forEach(({released, quality, salesLastWeek}, index) => {
       const age = week - released;
@@ -701,10 +702,11 @@ export function getCharts() {
           if (_.isEmpty(charts)) {
             return localForage.getItem(DATA_WEEK).then(
               (week) => {
-                charts = createCharts(week);
-                charts = sortCharts(charts);
-                dispatch(saveCharts(charts));
-                return charts;
+                return createCharts(week, dispatch).then(charts => {
+                  charts = sortCharts(charts);
+                  dispatch(saveCharts(charts));
+                  return charts;
+                });
               }
             );
           } else {
@@ -736,7 +738,7 @@ function sortCharts(charts) {
   return charts;
 }
 
-function newSingle(index, week) {
+function newSingle(index, week, imgURL) {
   return {
     id: `${index}-single-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
@@ -746,6 +748,7 @@ function newSingle(index, week) {
     sales: 0,
     salesLastWeek: 0,
     songs: [],
+    imgURL,
     charts: {
       peak: -1,
       lastWeek: -1,
@@ -754,7 +757,7 @@ function newSingle(index, week) {
   };
 }
 
-function newAlbum(index, week) {
+function newAlbum(index, week, imgURL) {
   return {
     id: `${index}-album-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
@@ -764,6 +767,7 @@ function newAlbum(index, week) {
     sales: 0,
     salesLastWeek: 0,
     songs: [],
+    imgURL,
     charts: {
       peak: -1,
       lastWeek: -1,
@@ -772,9 +776,10 @@ function newAlbum(index, week) {
   };
 }
 
-function calcChartSales(charts, week) {
+async function calcChartSales(charts, week, dispatch) {
   let singleIndexesAdded = [], albumIndexesAdded = [];
-  charts.singles = charts.singles.map(s => {
+  for(let i = 0; i < charts.singles.length; i++) {
+    let s = charts.singles[i];
     const age = week - s.released;
     // if single is no longer selling swap it with a new single
     if(age >= SINGLE_SALES_LAST) {
@@ -785,7 +790,7 @@ function calcChartSales(charts, week) {
           }
         )]) + 1;
       singleIndexesAdded.push(index);
-      s = newSingle(index, week);
+      s = newSingle(index, week, await getAsyncImage(dispatch));
     }
     const {quality} = s;
 
@@ -794,11 +799,11 @@ function calcChartSales(charts, week) {
     );
     s.salesLastWeek = sales;
     s.sales += sales;
+    charts.singles[i] = s;
+  }
 
-    return s;
-  });
-
-  charts.albums = charts.albums.map(a => {
+  for(let i = 0; i < charts.albums.length; i++) {
+    let a = charts.albums[i];
     const age = week - a.released;
     // if album is no longer selling swap it with a new album
     if(age >= ALBUM_SALES_LAST) {
@@ -810,7 +815,7 @@ function calcChartSales(charts, week) {
           }
         )]) + 1;
       albumIndexesAdded.push(index);
-      a = newAlbum(index, week);
+      a = newAlbum(index, week, await getAsyncImage(dispatch));
     }
     const {quality} = a;
 
@@ -819,18 +824,27 @@ function calcChartSales(charts, week) {
     );
     a.salesLastWeek = sales;
     a.sales += sales;
-
-    return a;
-  });
+    charts.albums[i] = a;
+  }
 
   return charts;
 }
 
-function createCharts(week) {
+async function createCharts(week, dispatch) {
   let charts = {singles: [], albums: []};
 
-  charts.singles = Array.from(new Array(40), (single, index) => newSingle(index, week - _.random(1, 10)));
-  charts.albums = Array.from(new Array(40), (album, index) => newAlbum(index, week - _.random(1, 20)));
+  charts.singles = new Array(40);
+  for(let i = 0; i < charts.singles.length; i++) {
+    charts.singles[i] = newSingle(i, week - _.random(1, 10),
+      await getAsyncImage(dispatch));
+  }
+
+  charts.albums = new Array(40);
+  for(let i = 0; i < charts.albums.length; i++) {
+    charts.albums[i] = newAlbum(i, week - _.random(1, 20),
+      await getAsyncImage(dispatch));
+  }
+
   charts = calcChartSales(charts, week);
 
   return charts;
@@ -1023,9 +1037,17 @@ function fetchRandomImage() {
 
 export function getRandomImage() {
   return dispatch => fetchRandomImage().then(
-    ({url}) => dispatch(sendReturn({type: GET_IMAGE, payload: url})),
-    error => dispatch()
+    ({url}) => { dispatch(sendReturn({type: GET_IMAGE, payload: url})); return url; },
+    error => {
+      console.log(error);
+      dispatch(sendReturn({type: ERROR_IMAGE, error}));
+      return ImageURL.getURL();
+    }
   );
 }
 
+async function getAsyncImage(dispatch) {
+  let imgURL = ImageURL.getURL();
+  return !_.isError(imgURL) ? imgURL : await dispatch(getRandomImage());
+}
 // endregion

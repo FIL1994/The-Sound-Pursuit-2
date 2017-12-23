@@ -62,18 +62,26 @@ class Charts extends Component {
               </div>
               <ul className="scrollable">
                 {_.take((showSingles ? charts.singles : charts.albums), 40).map(
-                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}}, index) => {
+                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}, imgURL}, index) => {
                     const isUser = band === "USER";
                     if(isUser) {
                       band = userBand.name;
                     }
 
                     return (
-                      <li key={id} className={isUser ? 'bg-success' : 'bg-dark'}>
-                      #{index + 1}. {title} - {band} <br/>
-                      Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | Sales: {salesLastWeek.toLocaleString()}
-                      <Divider/>
-                    </li>
+                      <li key={id} className={`tile ${isUser ? 'bg-success' : 'bg-dark'}`}>
+                        <div className="tile-icon">
+                          <img className="img-fit-contain" src={imgURL} alt={title} height={100} width={100}/>
+                        </div>
+                        <div className="tile-content">
+                          <p className="tile-title">
+                            #{index + 1}. {title} - {band}
+                          </p>
+                          <p className="tile-subtitle text-gray">
+                            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | Sales: {salesLastWeek.toLocaleString()}
+                          </p>
+                        </div>
+                      </li>
                     );
                   }
                 )}

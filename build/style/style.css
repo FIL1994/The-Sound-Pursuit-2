@@ -10,6 +10,14 @@ ul {
     margin-left: .15rem;
 }
 
+ul li.tile {
+    margin-top: 0.1rem;
+}
+
+li.tile img{
+    margin-bottom: -6px;
+}
+
 .page {
     width: 95%;
     margin-top: 10px;

@@ -2,7 +2,7 @@
  * @author Philip Van Raalte
  * @date 2017-10-18.
  */
-import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES}
+import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES, DATA_CHARTS}
   from '../data/localForage';
 
 export default () => {
@@ -17,6 +17,7 @@ export const resetDataAsync = () => {
     localForage.removeItem(DATA_WEEK),
     localForage.removeItem(DATA_FANS),
     localForage.removeItem(DATA_ALBUMS),
-    localForage.removeItem(DATA_SINGLES)
+    localForage.removeItem(DATA_SINGLES),
+    localForage.removeItem(DATA_CHARTS)
   ]);
 };
