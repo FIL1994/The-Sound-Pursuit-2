@@ -16,26 +16,26 @@ export default [
   {
     name: "Total Recordings",
     quality: 40,
-    cost: 800
+    cost: 2000
   },
   {
     name: "Studio X",
     quality: 60,
-    cost: 1500
+    cost: 5000
   },
   {
     name: "Master Tape Studios",
     quality: 80,
-    cost: 3500
+    cost: 10000
   },
   {
     name: "Sand Studios",
     quality: 90,
-    cost: 5000
+    cost: 500000
   },
   {
     name: "Ted's Studio",
     quality: 100,
-    cost: 10000
+    cost: 1000000
   }
 ];

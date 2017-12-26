@@ -4,10 +4,10 @@
  */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {Divider, Page, Loading, Button} from '../SpectreCSS';
+import {Page, Loading, Button} from '../SpectreCSS';
 import _ from 'lodash';
 import {getCharts, getBand} from '../../actions';
-import {checkNA} from '../../data/util';
+import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
 
 class Charts extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ class Charts extends Component {
               </div>
               <ul className="scrollable">
                 {_.take((showSingles ? charts.singles : charts.albums), 40).map(
-                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek}, imgURL}, index) => {
+                  ({id, band, title, salesLastWeek, charts: {peak, lastWeek, firstCharted}, imgURL}, index) => {
                     const isUser = band === "USER";
                     if(isUser) {
                       band = userBand.name;
@@ -79,6 +79,8 @@ class Charts extends Component {
                           </p>
                           <p className="tile-subtitle text-gray">
                             Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | Sales: {salesLastWeek.toLocaleString()}
+                            <br/>
+                            First Charted: {weeksToYearsAndWeeks(firstCharted)}
                           </p>
                         </div>
                       </li>

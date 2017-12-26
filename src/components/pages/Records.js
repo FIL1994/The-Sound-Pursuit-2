@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import _ from 'lodash';
 import {Page, EmptyState, Button} from '../SpectreCSS';
-import {checkNA} from '../../data/util';
+import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
 
 import {getSongs, getSingles, getAlbums, getWeek} from '../../actions';
 
@@ -70,9 +70,9 @@ class Records extends Component {
     }
 
     let totalSingleSales = 0, bestSellingSingle = {sales: 0};
-    singles.forEach(({sales, title}) => {
+    singles.forEach(({sales, title, id}) => {
       if(sales > bestSellingSingle.sales) {
-        bestSellingSingle = {sales, title};
+        bestSellingSingle = {sales, title, id};
       }
       totalSingleSales += sales;
     });
@@ -82,7 +82,7 @@ class Records extends Component {
         <div>
           <span className="float-left">
             Total Single Sales: {totalSingleSales.toLocaleString()} <br/>
-            Best Selling Single: {`${bestSellingSingle.title} - ${bestSellingSingle.sales.toLocaleString()}`}
+            Best Selling Single: <Link to={`/single/${bestSellingSingle.id}`}>{bestSellingSingle.title}</Link> - {bestSellingSingle.sales.toLocaleString()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
@@ -91,14 +91,14 @@ class Records extends Component {
             singles.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
               const age = week - released;
               return(
-                <div className="card" key={id}>
+                <div className="card bg-dark" key={id}>
                   <div className="card-header">
                     <div className="card-title h5">
                       <Link to={`/single/${id}`}>{title}</Link>
                       </div>
                   </div>
                   <div className="card-body">
-                    Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
+                    Released: {weeksToYearsAndWeeks(released)} | Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
                     Quality: {quality}<br/>
                     Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
                     Total Sales: {sales.toLocaleString()}<br/>
@@ -129,9 +129,9 @@ class Records extends Component {
     }
 
     let totalAlbumSales = 0, bestSellingAlbum = {sales: 0};
-    albums.forEach(({sales, title}) => {
+    albums.forEach(({sales, title, id}) => {
       if(sales > bestSellingAlbum.sales) {
-        bestSellingAlbum = {sales, title};
+        bestSellingAlbum = {sales, title, id};
       }
       totalAlbumSales += sales;
     });
@@ -141,22 +141,23 @@ class Records extends Component {
         <div>
           <span className="float-left">
             Total Album Sales: {totalAlbumSales.toLocaleString()} <br/>
-            Best Selling Album: {`${bestSellingAlbum.title} - ${bestSellingAlbum.sales.toLocaleString()}`}
+            Best Selling Album: <Link to={`/album/${bestSellingAlbum.id}`}>{bestSellingAlbum.title}</Link> - {bestSellingAlbum.sales.toLocaleString()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
         <div className="scrollable centered full-width">
           {
             albums.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
+              const age = week - released;
               return(
-                <div className="card" key={id}>
+                <div className="card bg-dark" key={id}>
                   <div className="card-header">
                     <div className="card-title h5">
                       <Link to={`/album/${id}`}>{title}</Link>
                     </div>
                   </div>
                   <div className="card-body">
-                    Age: {week - released} weeks<br/>
+                    Released: {weeksToYearsAndWeeks(released)} | Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
                     Quality: {quality}<br/>
                     Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
                     Total Sales: {sales.toLocaleString()}<br/>

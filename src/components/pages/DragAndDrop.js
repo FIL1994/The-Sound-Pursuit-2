@@ -18,6 +18,15 @@ import Container from '../drag_and_drop/Container';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {unlockReleaseAlbum, unlockReleaseSingle} from "../../ng/UnlockMedals";
+import ErrorDiv from '../ErrorDiv';
+
+const ErrorWrapper = (props) => {
+  return (
+    <div className={`form-group has-error ${props.className || ''}`}>
+      <ErrorDiv {...props}/>
+    </div>
+  )
+};
 
 @DragDropContext(HTML5Backend)
 class DragAndDrop extends Component {
@@ -141,9 +150,7 @@ class DragAndDrop extends Component {
             })
           }
         </div>
-        <div className="form-input-hint is-error text-center">
-          {errorProducer}
-        </div>
+        {errorProducer}
       </Fragment>
     );
   }
@@ -313,9 +320,9 @@ class DragAndDrop extends Component {
     try {
       cards = this.songsToRelease.handler.component.state.cards;
       if(cards.length < 8) {
-        errorAlbum = <div>You must select at least 8 songs.<br/>You selected {cards.length}.</div>;
+        errorAlbum = <ErrorWrapper>You must select at least 8 songs.<br/>You selected {cards.length}.</ErrorWrapper>;
       } else if(cards.length > 16) {
-        errorAlbum = <div>You can select a maximum of 16 songs.<br/>You selected {cards.length}.</div>;
+        errorAlbum = <ErrorWrapper>You can select a maximum of 16 songs.<br/>You selected {cards.length}.</ErrorWrapper>;
       }
     } catch(e) {
       console.log(e);
@@ -330,10 +337,10 @@ class DragAndDrop extends Component {
 
       // enough cash check
       if(!this.checkEnoughCash(cost)) {
-        errorProducer = `You don't have enough cash to hire ${producer.name}`;
+        errorProducer = <ErrorWrapper> You don't have enough cash to hire {producer.name}</ErrorWrapper>;
       }
     } else {
-      errorProducer = "You must select a producer";
+      errorProducer = <ErrorWrapper>You must select a producer</ErrorWrapper>;
     }
 
     // if no errors
@@ -405,9 +412,9 @@ class DragAndDrop extends Component {
     try {
       cards = this.songsToRelease.handler.component.state.cards;
       if(cards.length < 1) {
-        errorSingle = <div>You must select at least 1 song.</div>;
+        errorSingle = <ErrorWrapper>You must select at least 1 song.</ErrorWrapper>;
       } else if(cards.length > 3) {
-        errorSingle = <div>You can select a maximum of 3 songs.<br/>You selected {cards.length}.</div>;
+        errorSingle = <ErrorWrapper>You can select a maximum of 3 songs.<br/>You selected {cards.length}.</ErrorWrapper>;
       }
     } catch(e) {
       console.log(e);
@@ -422,12 +429,11 @@ class DragAndDrop extends Component {
 
       // enough cash check
       if(!this.checkEnoughCash(cost)) {
-        errorProducer = `You don't have enough cash to hire ${producer.name}`;
+        errorProducer = <ErrorWrapper>You don't have enough cash to hire {producer.name}</ErrorWrapper>;
       }
     } else {
-      errorProducer = "You must select a producer";
+      errorProducer = <ErrorWrapper>You must select a producer</ErrorWrapper>;
     }
-
     // if no errors
     if(_.isEmpty(errorProducer) && _.isEmpty(errorSingle)) {
       // calculate quality

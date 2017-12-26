@@ -15,6 +15,13 @@ import {getBand, getCash, saveCash, getSongs, updateSong, saveSongs, getSingles,
 import getRandomSongName from '../../data/randomSongName';
 import producers from '../../data/producers';
 import {unlockReleaseSingle, unlockReleaseAlbum} from '../../ng/UnlockMedals';
+import ErrorDiv from '../ErrorDiv';
+
+const ErrorWrapper = (props) => {
+  return (
+    <div {...props} className={`form-group has-error ${props.className || ''}`}/>
+  )
+};
 
 class ReleaseRecord extends Component {
   constructor(props) {
@@ -226,9 +233,9 @@ class ReleaseRecord extends Component {
       checkboxes.push(Number($( this ).val()));
     });
     if(checkboxes.length < 8) {
-      errorAlbum = <div>You must select at least 8 songs.<br/>You selected {checkboxes.length}.</div>;
+      errorAlbum = <ErrorWrapper><ErrorDiv>You must select at least 8 songs.<br/>You selected {checkboxes.length}.</ErrorDiv></ErrorWrapper>;
     } else if (checkboxes.length > 16) {
-      errorAlbum = <div>You can select a maximum of 16 songs.<br/>You selected {checkboxes.length}.</div>;
+      errorAlbum = <ErrorWrapper><ErrorDiv>You can select a maximum of 16 songs.<br/>You selected {checkboxes.length}.</ErrorDiv></ErrorWrapper>;
     }
 
     // producer select

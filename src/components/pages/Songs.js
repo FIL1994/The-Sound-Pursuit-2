@@ -12,6 +12,7 @@ import getRandomSongName from '../../data/randomSongName';
 import {getBand, getCash, saveCash, getSongs, writeSong, deleteSong, updateSong, getWeek, nextWeek} from '../../actions';
 import studios from '../../data/studios';
 import {unlockWriteSong, unlockRecordSong} from '../../ng/UnlockMedals';
+import {weeksToYearsAndWeeks} from '../../data/util';
 
 class Songs extends Component {
   constructor(props) {
@@ -335,7 +336,7 @@ class Songs extends Component {
                 </div>
               </div>
               <div>
-                Cost: ${studios[this.state.studioID].cost} <br/>
+                Cost: {studios[this.state.studioID].cost.toLocaleString(undefined, {style: "currency", currency: "USD"})} <br/>
                 Quality: {studios[this.state.studioID].quality}
               </div>
             </div>
@@ -432,7 +433,7 @@ class Songs extends Component {
               return(
                 <tr key={s.id}>
                   <td>{s.title}</td>
-                  <td>{s.written}</td>
+                  <td>{weeksToYearsAndWeeks(s.written)}</td>
                   <td>{s.quality}</td>
                   <td>{s.recording}</td>
                   <td>

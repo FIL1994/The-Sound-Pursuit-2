@@ -9,13 +9,8 @@ import _ from 'lodash';
 import $ from 'jquery';
 
 import TourResults from '../tour/TourResults';
+import ErrorDiv from '../ErrorDiv';
 import {goOnTour, getCash, removeCash} from '../../actions/index';
-
-const ErrorDiv = (props) => {
-  return (
-    <div {...props} className={`form-input-hint is-error text-center ${props.className || ''}`}/>
-  )
-};
 
 class Tour extends Component {
   continents = ["North America", "South America", "Africa", "Australia", "Europe", "Asia"];

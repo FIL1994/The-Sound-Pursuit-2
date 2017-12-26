@@ -5,6 +5,9 @@
 import _ from 'lodash';
 
 export function weeksToYearsAndWeeks(weeks) {
+  if(!_.isFinite(weeks)) {
+    return "N/A";
+  }
   const year = Math.floor(weeks / 52);
   const leftoverWeeks = weeks % 52;
   return `Y${year} W${leftoverWeeks}`;

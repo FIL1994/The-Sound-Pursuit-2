@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Page, Loading} from '../SpectreCSS';
 import _ from 'lodash';
-import {checkNA} from '../../data/util';
+import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
 
 import {getSongs, getAlbums} from '../../actions';
 
@@ -64,10 +64,10 @@ class Album extends Component {
       <Page centered>
         <h3>{title}</h3>
         <p>
-          Released: {released} <br/>
+          Released: {weeksToYearsAndWeeks(released)} <br/>
           Quality: {quality} <br/>
-          Sales: {sales} <br/>
-          Sales Last Week: {salesLastWeek}
+          Sales: {sales.toLocaleString()} <br/>
+          Sales Last Week: {salesLastWeek.toLocaleString()}
         </p>
         <div>
           <h5>Chart Details</h5>

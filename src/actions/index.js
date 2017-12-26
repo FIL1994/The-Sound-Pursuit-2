@@ -452,6 +452,9 @@ export function nextWeek(weeks, tourDetails = {}) {
       if(peak > position || peak === -1) {
         s.charts.peak = position;
       }
+      if(!_.isFinite(s.charts.firstCharted)) {
+        s.charts.firstCharted = week;
+      }
       return s;
     }
 
@@ -751,6 +754,7 @@ function newSingle(index, week, imgURL) {
     imgURL,
     charts: {
       peak: -1,
+      firstCharted: "N/A",
       lastWeek: -1,
       thisWeek: -1
     }
@@ -770,6 +774,7 @@ function newAlbum(index, week, imgURL) {
     imgURL,
     charts: {
       peak: -1,
+      firstCharted: "N/A",
       lastWeek: -1,
       thisWeek: -1
     }
