@@ -2,7 +2,7 @@
  * @author Philip Van Raalte
  * @date 2017-10-11.
  */
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
 import $ from 'jquery';
@@ -353,10 +353,13 @@ class Songs extends Component {
 
   renderEmpty() {
     return (
-      <EmptyState
-        icon={<i className="fa fa-music fa-4x"/>}
-        title="You haven't written any songs yet"
-      />
+      <Fragment>
+        <br/>
+        <EmptyState
+          icon={<i className="fa fa-music fa-4x"/>}
+          title="You haven't written any songs yet"
+        />
+      </Fragment>
     );
   }
 

@@ -1,5 +1,5 @@
 body {
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
 }
 
 ul {
@@ -114,7 +114,7 @@ li.tile img{
 
 /*Overrides*/
 .is-error {
-    color: #e85600;
+    /*color: #e85600;*/
 }
 
 .toast {

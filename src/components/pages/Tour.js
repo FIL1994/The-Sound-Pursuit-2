@@ -13,7 +13,7 @@ import {goOnTour, getCash, removeCash} from '../../actions/index';
 
 const ErrorDiv = (props) => {
   return (
-    <div {...props} className="form-input-hint is-error text-center"/>
+    <div {...props} className={`form-input-hint is-error text-center ${props.className || ''}`}/>
   )
 };
 
@@ -72,7 +72,7 @@ class Tour extends Component {
       if(_.isEmpty(errorCost)) {
         setTimeout(() =>
           this.setState({
-            errorCost: <ErrorDiv>You don't have enough cash</ErrorDiv>
+            errorCost: <div className="form-group has-error"><ErrorDiv>You don't have enough cash</ErrorDiv></div>
           })
         );
       }
