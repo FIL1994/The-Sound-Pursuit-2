@@ -13,9 +13,9 @@ import {weeksToYearsAndWeeks} from '../data/util';
 const MyNavLink = (props) => {
   return(
     <NavLink
-      className="btn btn-lg"
-      activeClassName="btn-primary"
       {...props}
+      className={`btn btn-lg ${props.className || ''}`}
+      activeClassName="btn-primary"
     />
   );
 };
@@ -77,32 +77,37 @@ class HeaderNav extends Component {
         <MyNavLink
           to="/dashboard"
           isActive={this.isLinkActive}
+          className="tooltip tooltip-bottom" data-tooltip="Home"
         >
-          Home
+          <i className="fa fa-home" aria-hidden="true"/>
         </MyNavLink>
         <MyNavLink
           to="/songs"
           isActive={this.isLinkActive}
+          className="tooltip tooltip-bottom" data-tooltip="Songs"
         >
-          Songs
+          <i className="fa fa-music" aria-hidden="true"/>
         </MyNavLink>
         <MyNavLink
           to="/records"
           isActive={this.isLinkActive}
+          className="tooltip tooltip-bottom" data-tooltip="Records"
         >
-          Records
+          <i className="fa fa-circle-o" aria-hidden="true"/>
         </MyNavLink>
         <MyNavLink
           to="/tour"
           isActive={this.isLinkActive}
+          className="tooltip tooltip-bottom" data-tooltip="Tour"
         >
-          Tour
+          <i className="fa fa-globe" aria-hidden="true"/>
         </MyNavLink>
         <MyNavLink
           to="/charts"
           isActive={this.isLinkActive}
+          className="tooltip tooltip-bottom" data-tooltip="Charts"
         >
-          Charts
+          <i className="fa fa-th-list" aria-hidden="true"/>
         </MyNavLink>
       </Fragment>
     );

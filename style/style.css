@@ -138,3 +138,7 @@ li.tile img{
 .navbar-section .btn {
     height: 100%;
 }
+
+header i.fa {
+    font-size: 1.32em;
+}

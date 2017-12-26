@@ -776,7 +776,7 @@ function newAlbum(index, week, imgURL) {
   };
 }
 
-async function calcChartSales(charts, week, dispatch) {
+function calcChartSales(charts, week, dispatch) {
   let singleIndexesAdded = [], albumIndexesAdded = [];
   for(let i = 0; i < charts.singles.length; i++) {
     let s = charts.singles[i];
@@ -790,7 +790,7 @@ async function calcChartSales(charts, week, dispatch) {
           }
         )]) + 1;
       singleIndexesAdded.push(index);
-      s = newSingle(index, week, await getAsyncImage(dispatch));
+      s = newSingle(index, week, ImageURL.getURL());
     }
     const {quality} = s;
 
@@ -815,7 +815,7 @@ async function calcChartSales(charts, week, dispatch) {
           }
         )]) + 1;
       albumIndexesAdded.push(index);
-      a = newAlbum(index, week, await getAsyncImage(dispatch));
+      a = newAlbum(index, week, ImageURL.getURL());
     }
     const {quality} = a;
 
