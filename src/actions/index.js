@@ -306,9 +306,9 @@ export function nextWeek(weeks, tourDetails = {}) {
       const age = week - released;
       if(age < SINGLE_SALES_LAST) {
         let sales = Math.ceil(
-          ((fans * (quality / 120)) *
+          ((fans * (quality / 125)) *
           (((SINGLE_SALES_LAST - age)/(SINGLE_SALES_LAST - 1))) + 1) *
-          _.random(0.164, 0.231)
+          _.random(0.158, 0.191)
         );
 
         // save sales
@@ -317,7 +317,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         charts.singles.push(singles[index]);
 
         // calculate cash
-        newCash += sales * .2; // $.2 for each single sold
+        newCash += sales * .12; // $0.12 for each single sold
 
         // calculate new fans
         let multiplier = 0.005;
@@ -380,7 +380,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         let sales = Math.ceil(
           ((fans * (quality / 180)) *
             (((ALBUM_SALES_LAST - age)/(ALBUM_SALES_LAST - 1))) + 1) *
-          _.random(.155, .213)
+          _.random(.135, .193)
         );
 
         // save sales
@@ -389,7 +389,7 @@ export function nextWeek(weeks, tourDetails = {}) {
         charts.albums.push(albums[index]);
 
         // calculate cash
-        newCash += sales * 0.95; // $0.95 for each album sold
+        newCash += sales * 0.85; // $0.85 for each album sold
 
         const albumSales = albums[index].sales;
         if(albumSales > 10000) {
@@ -746,7 +746,7 @@ function newSingle(index, week, imgURL) {
     id: `${index}-single-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
     title: getRandomSongName(),
-    quality: _.random(40, 100),
+    quality: _.random(50, 180),
     released: week,
     sales: 0,
     salesLastWeek: 0,
@@ -766,7 +766,7 @@ function newAlbum(index, week, imgURL) {
     id: `${index}-album-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
     title: getRandomSongName(),
-    quality: _.random(40, 100),
+    quality: _.random(50, 180),
     released: week,
     sales: 0,
     salesLastWeek: 0,
@@ -825,7 +825,7 @@ function calcChartSales(charts, week, dispatch) {
     const {quality} = a;
 
     const sales = Math.ceil(
-      (((ALBUM_SALES_LAST - age)/(ALBUM_SALES_LAST-1)) + 1) * quality * 90000 * _.random(0.004, 0.005)
+      (((ALBUM_SALES_LAST - age)/(ALBUM_SALES_LAST-1)) + 1) * quality * 98000 * _.random(0.004, 0.005)
     );
     a.salesLastWeek = sales;
     a.sales += sales;
@@ -838,13 +838,13 @@ function calcChartSales(charts, week, dispatch) {
 async function createCharts(week, dispatch) {
   let charts = {singles: [], albums: []};
 
-  charts.singles = new Array(40);
+  charts.singles = new Array(100);
   for(let i = 0; i < charts.singles.length; i++) {
     charts.singles[i] = newSingle(i, week - _.random(1, 10),
       await getAsyncImage(dispatch));
   }
 
-  charts.albums = new Array(40);
+  charts.albums = new Array(100);
   for(let i = 0; i < charts.albums.length; i++) {
     charts.albums[i] = newAlbum(i, week - _.random(1, 20),
       await getAsyncImage(dispatch));

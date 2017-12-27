@@ -22,7 +22,7 @@ import ErrorDiv from '../ErrorDiv';
 
 const ErrorWrapper = (props) => {
   return (
-    <div className={`form-group has-error ${props.className || ''}`}>
+    <div className={`form-group has-error small-top-margin ${props.className || ''}`}>
       <ErrorDiv {...props}/>
     </div>
   )
@@ -138,11 +138,11 @@ class DragAndDrop extends Component {
         <div className={`form-group centered text-center ${!_.isEmpty(errorProducer) ? 'has-error' : ''}`}
            onChange={this.changedProducer}
         >
-          <label className="form-label">Select a producer:</label>
+          <label className="form-label small-top-margin">Select a producer:</label>
           {
             producers.map(({name}, index) => {
               return(
-                <label className="form-radio" key={index}>
+                <label className="form-radio small-top-margin" key={index}>
                   <input type="radio" name="producers" value={index}/>
                   <i className="form-icon"/> {name}
                 </label>
@@ -162,8 +162,8 @@ class DragAndDrop extends Component {
     }
     const producer = producers[producerID];
     return(
-      <div className="text-center">
-        Quality: {producer.quality} <br/>
+      <div className="text-center small-top-margin">
+        Quality: {producer.quality} |
         Cost: {(isSingle ? producer.cost.single : producer.cost.album).toLocaleString(
           undefined, {style: "currency", currency: "USD"}
           )}

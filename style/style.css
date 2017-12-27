@@ -142,3 +142,7 @@ li.tile img{
 header i.fa {
     font-size: 1.32em;
 }
+
+.small-top-margin {
+    margin-top: -10px;
+}

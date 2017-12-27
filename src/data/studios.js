@@ -11,7 +11,7 @@ export default [
   {
     name: "Tabitha Studios",
     quality: 20,
-    cost: 250
+    cost: 500
   },
   {
     name: "Total Recordings",

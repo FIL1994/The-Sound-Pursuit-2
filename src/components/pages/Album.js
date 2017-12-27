@@ -77,7 +77,7 @@ class Album extends Component {
         </div>
         <div>
           <h5>Tracklist:</h5>
-          <p>
+          <p className="scrollable">
             {
               songs.map(({id, title}, index) =>
                 <span key={id}>
