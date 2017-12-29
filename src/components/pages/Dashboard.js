@@ -96,7 +96,6 @@ class Dashboard extends Component {
 
   practice() {
     let {leadMember, members, practices, practicesToLevelUp, totalPractices} = this.props.band;
-    const prevPracticesToLevelUp = _.clone(practicesToLevelUp);
     let practiceToast, timesLeveledUp = 0, unlocks = [unlockFirstPractice];
 
     practices += 3;

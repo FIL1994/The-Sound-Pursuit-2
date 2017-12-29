@@ -539,6 +539,10 @@ class Start extends Component {
         leadMember = drums;
       }
 
+      // set base skills for members
+      members = members.map(m => ({ ...m, baseSkills: m.skills }));
+      leadMember.baseSkills = leadMember.skills;
+
       setTimeout(unlockStartBand);
       resetDataAsync().then(() => {
         this.props.saveBand({

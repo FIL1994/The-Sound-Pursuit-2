@@ -19,7 +19,7 @@ import {
 } from '../ng/UnlockMedals';
 import {postScore} from '../ng/NG_Connect';
 import {fiveYearScoreboardID, tenYearScoreboardID, bestSellingAlbumsScoreboardID, bestSellingSinglesScoreboardID,
-  totalAlbumSalesScoreboardID, totalSingleSalesScoreboardID} from '../config/keys';
+  totalAlbumSalesScoreboardID, totalSingleSalesScoreboardID, totalFansScoreboardID} from '../config/keys';
 import getRandomBandName from '../data/randomBandName';
 import getRandomSongName from '../data/randomSongName';
 import getRandomName from '../data/names';
@@ -555,8 +555,11 @@ export function saveFans(fans) {
       (val, error) => {
         if (error) {
           dispatch(sendReturn({type: ERROR_FANS, error}));
-        }
-        else {
+        } else {
+          fans = Number(fans);
+          setTimeout(
+            () => postScore(fans, totalFansScoreboardID)
+          );
           dispatch(sendReturn({type: SAVE_FANS, payload: val}));
         }
       }
@@ -746,7 +749,7 @@ function newSingle(index, week, imgURL) {
     id: `${index}-single-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
     title: getRandomSongName(),
-    quality: _.random(50, 180),
+    quality: _.random(65, 220),
     released: week,
     sales: 0,
     salesLastWeek: 0,
@@ -766,7 +769,7 @@ function newAlbum(index, week, imgURL) {
     id: `${index}-album-cpu`,
     band: _.random(0, 10) % 2 === 0 ? getRandomBandName() : getRandomName(),
     title: getRandomSongName(),
-    quality: _.random(50, 180),
+    quality: _.random(50, 220),
     released: week,
     sales: 0,
     salesLastWeek: 0,
@@ -781,7 +784,7 @@ function newAlbum(index, week, imgURL) {
   };
 }
 
-function calcChartSales(charts, week, dispatch) {
+function calcChartSales(charts, week) {
   let singleIndexesAdded = [], albumIndexesAdded = [];
   for(let i = 0; i < charts.singles.length; i++) {
     let s = charts.singles[i];

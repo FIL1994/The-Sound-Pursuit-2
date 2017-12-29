@@ -5,7 +5,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import _ from 'lodash';
-import {Page, Button} from '../SpectreCSS';
+import {Page, Button, Panel} from '../SpectreCSS';
 import localForage, {PLAY_SONG, PLAY_MAIN_THEME, SONG_VOLUME}
   from '../../data/localForage';
 import SONGS from '../../data/Songs';
@@ -13,22 +13,22 @@ import SONGS from '../../data/Songs';
 class Settings extends Component {
   constructor(props) {
     super(props);
-    let songID = SONGS.PianoLoop.id;
+    let songID = SONGS.Song2.id;
 
     // make sure the right song is selected in the select dropdown
     if(!_.isEmpty(window.songPlaying)) {
-      // if songPlaying exists and the src is not PianoLoop
-      if(window.songPlaying.src !== `assets/${SONGS.PianoLoop.src}`) {
-        songID = SONGS.DeepThinkerIntro.id;
+      // if songPlaying exists and the src is not Song2
+      if(window.songPlaying.src !== `assets/${SONGS.Song2.src}`) {
+        songID = SONGS.Song1.id;
       }
     } else {
       // if songPlaying was empty check again in 400ms --> songPlaying is rarely available before 400ms
       setTimeout(() => {
-        // if songPlaying isn't empty and its src isn't PianoLoop set the id to DeepThinker
-        if(!_.isEmpty(window.songPlaying) && window.songPlaying.src !== `assets/${SONGS.PianoLoop.src}`) {
-          this.setState({songID: SONGS.DeepThinkerIntro.id});
+        // if songPlaying isn't empty and its src isn't Song2 set the id to Song1
+        if(!_.isEmpty(window.songPlaying) && window.songPlaying.src !== `assets/${SONGS.Song2.src}`) {
+          this.setState({songID: SONGS.Song1.id});
         }
-      }, 400);
+      }, 250);
     }
 
     this.state= {
@@ -38,12 +38,12 @@ class Settings extends Component {
 
     this.songs = [
       {
-        id: SONGS.PianoLoop.id,
-        title: "Main Theme"
+        id: SONGS.Song2.id,
+        title: "Song 1 - FIL1994"
       },
       {
-        id: SONGS.DeepThinkerIntro.id,
-        title: "Deep Thinker"
+        id: SONGS.Song1.id,
+        title: "Song 2 - FIL1994"
       }
     ];
 
@@ -87,20 +87,15 @@ class Settings extends Component {
         songID
       });
 
-      window.songPlaying.destroy();
+      try {
+        window.songPlaying.stop();
+      } catch(e) {}
+      try {
+        window.songPlaying.destroy();
+      } catch(e) {}
 
-      if (songID === SONGS.DeepThinkerIntro.id) {
-        window.songPlaying = createjs.Sound.play(SONGS.DeepThinkerIntro.id, {volume: window.VOLUME});
-
-        window.songPlaying.on("complete", () => {
-          window.songPlaying.destroy();
-          window.songPlaying = createjs.Sound.play(SONGS.DeepThinker.id, {loop: -1, volume: window.VOLUME});
-        }, this);
-        localForage.setItem(PLAY_MAIN_THEME, false);
-      } else {
-        window.songPlaying = createjs.Sound.play(songID, {loop: -1, volume: window.VOLUME});
-        localForage.setItem(PLAY_MAIN_THEME, true);
-      }
+      window.songPlaying = createjs.Sound.play(songID, {loop: -1, volume: window.VOLUME});
+      localForage.setItem(PLAY_MAIN_THEME, !(songID === SONGS.Song1.id));
     }
   }
 
@@ -109,8 +104,7 @@ class Settings extends Component {
 
     return(
       <Page centered>
-        <h3>Settings</h3>
-        <div className="col-8 centered text-center">
+        <Panel className="col-8 centered text-center">
           <form>
             <div className="form-group">
               <p className="form-label" htmlFor="selectSong">Select Song:</p>
@@ -145,7 +139,7 @@ class Settings extends Component {
               </Link>
             </div>
           </form>
-        </div>
+        </Panel>
       </Page>
     );
   }

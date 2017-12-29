@@ -1,5 +1,4 @@
 export default {
-  DeepThinkerIntro: {id: "DTI", src: "Deep_Thinker_Intro-Noise4Games.mp3"},
-  DeepThinker: {id: "DT", src: "Deep_Thinker-Noise4Games.mp3"},
-  PianoLoop: {id: "PL", src: "piano_loop-sercati.mp3"}
+  Song1: {id: "S1", src: "song1.ogg"},
+  Song2: {id: "S2", src: "song2.ogg"}
 };

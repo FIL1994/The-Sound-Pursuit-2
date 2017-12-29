@@ -25,6 +25,20 @@ import Charts from './pages/Charts';
 
 import OldReleaseRecord from './pages/ReleaseRecord';
 
+let ROOT_URL = process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
+
+const backgroundImage = `${ROOT_URL}dust_scratches.jpg`;
+  // "https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png";
+/*
+  /assets/bg/
+
+  vintage-concrete.jpg
+  cork-wallet.jpg
+  ep_naturalwhite.jpg
+  crossword.jpg
+  dust_scratches.jpg
+  */
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +92,7 @@ class App extends Component {
 
     return(
       <BrowserRouter>
-        <div id="site" className="site">
+        <div id="site" className="site" style={{background: `url(${backgroundImage})`, minHeight: 620}}>
           <HasStarted/>
           <HeaderNav/>
           <Switch>
