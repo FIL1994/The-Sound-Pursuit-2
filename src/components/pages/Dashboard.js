@@ -12,6 +12,7 @@ import {
   unlock100NewFans, unlock200NewFans, unlockFirstPractice, unlockFirstShow,
   unlockSkills25, unlockSkills50, unlockSkills75
 } from '../../ng/UnlockMedals';
+import {doPractice} from '../../data/bandMember';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -95,35 +96,28 @@ class Dashboard extends Component {
   }
 
   practice() {
-    let {leadMember, members, practices, practicesToLevelUp, totalPractices} = this.props.band;
-    let practiceToast, timesLeveledUp = 0, unlocks = [unlockFirstPractice];
+    let {leadMember, members} = this.props.band;
+    let practiceToast, unlocks = [unlockFirstPractice];
 
-    practices += 3;
-    totalPractices += practices;
-    while(practices >= practicesToLevelUp) {
-      timesLeveledUp++;
-      practices = practices - practicesToLevelUp;
-      practicesToLevelUp = _.ceil(totalPractices/25);
-      // increment value but only allow a maximum of 100
-      function incrementMax100(val) {
-        return Number(_.min([val + 1, 100]));
-      }
-      // Increase members' and lead member's skills
-      members = members.map((m) => {
-        let {skills: {live, musicianship, songwriting, studio}} = m;
+    // Increase members' and lead member's skills
+    members = members.map((m) => {
+      let {skills: {
+        live, musicianship, songwriting, studio
+      }, baseSkills: {
+        live: bLive, musicianship: bMusicianship, songwriting: bSongwriting, studio: bStudio
+      }} = m;
 
-        live = incrementMax100(live);
-        musicianship = incrementMax100(musicianship);
-        songwriting = incrementMax100(songwriting);
-        studio = incrementMax100(studio);
+      live = doPractice(live, bLive);
+      musicianship = doPractice(musicianship, bMusicianship);
+      songwriting = doPractice(songwriting, bSongwriting);
+      studio = doPractice(studio, bStudio);
 
-        return {...m, skills: {live, musicianship, songwriting, studio}};
-      });
-      leadMember.skills.live = incrementMax100(leadMember.skills.live);
-      leadMember.skills.musicianship = incrementMax100(leadMember.skills.musicianship);
-      leadMember.skills.songwriting = incrementMax100(leadMember.skills.songwriting);
-      leadMember.skills.studio = incrementMax100(leadMember.skills.studio);
-    }
+      return {...m, skills: {live, musicianship, songwriting, studio}};
+    });
+    leadMember.skills.live = doPractice(leadMember.skills.live, leadMember.baseSkills.live);
+    leadMember.skills.musicianship = doPractice(leadMember.skills.musicianship, leadMember.baseSkills.musicianship);
+    leadMember.skills.songwriting = doPractice(leadMember.skills.songwriting, leadMember.baseSkills.musicianship);
+    leadMember.skills.studio = doPractice(leadMember.skills.studio, leadMember.baseSkills.musicianship);
 
     // check skill medals
     let liveSkills = [], musicianshipSkills = [], songwritingSkills = [], studioSkills = [];
@@ -147,18 +141,9 @@ class Dashboard extends Component {
       }
     }
 
-    const progress = _.ceil((practices / practicesToLevelUp) * 100);
-    if(timesLeveledUp > 0) {
-      practiceToast = <span>Leveled Up!{timesLeveledUp > 1 ? ` (x${timesLeveledUp})` : ''}</span>;
-    } else {
-      practiceToast = <progress
-        className="progress"
-        value={progress}
-        max="100"
-      />;
-    }
+    practiceToast = <span>Practiced!</span>;
 
-    this.props.saveBand({...this.props.band, leadMember, members, practices, practicesToLevelUp, totalPractices});
+    this.props.saveBand({...this.props.band, leadMember, members});
     this.props.nextWeek();
 
     const lastPractice = Date.now() / 1000;

@@ -12,7 +12,7 @@ import {Page, Button, Divider} from '../SpectreCSS';
 import INSTRUMENTS from '../../data/instruments';
 import getRandomBandName from '../../data/randomBandName';
 import getRandomName from '../../data/names';
-import generateBandMember from '../../data/generateBandMember';
+import generateBandMember from '../../data/bandMember';
 import {saveBand, getCharts} from '../../actions';
 import {resetDataAsync} from '../../data/resetData';
 import {unlockStartBand} from '../../ng/UnlockMedals';
@@ -539,19 +539,15 @@ class Start extends Component {
         leadMember = drums;
       }
 
-      // set base skills for members
-      members = members.map(m => ({ ...m, baseSkills: m.skills }));
-      leadMember.baseSkills = leadMember.skills;
+      // set base skills for lead member - other members base skills are already generated
+      leadMember.baseSkills = {...leadMember.skills};
 
       setTimeout(unlockStartBand);
       resetDataAsync().then(() => {
         this.props.saveBand({
           name: this.state.bandName,
           members,
-          leadMember,
-          practices: 0,
-          practicesToLevelUp: 1,
-          totalPractices: 0
+          leadMember
         }).then(() => {
           this.props.history.push('/dashboard');
         });
