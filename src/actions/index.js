@@ -511,7 +511,7 @@ export function nextWeek(weeks, tourDetails = {}) {
 
     // get more fans if touring more continents
     const newFansFromTour = _.ceil((performance * 0.78) * (1 + continents.length / 10)) * (1 + (venueSize / 5));
-    const newCashFromTour = performance * (1 + (venueSize / 9)) * _.max([(1 + (fans / 1000000)), 3]);
+    const newCashFromTour = performance * (1 + ((venueSize * 3) / 10)) * _.max([(1 + (fans / 1000000)), 3]);
 
     return {newCashFromTour, newFansFromTour};
   }

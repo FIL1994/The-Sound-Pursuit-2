@@ -63,6 +63,7 @@ if (_.isEmpty(window.songPlaying)) {
   createjs.Sound.registerSounds(sounds, assetPath);
 }
 
+/*
 setTimeout(() => {
   if (_.isEmpty(window.songPlaying)) {
     localForage.getItem(SONG_VOLUME).then(songVolume => {
@@ -97,3 +98,4 @@ setTimeout(() => {
     });
   }
 }, 100);
+*/

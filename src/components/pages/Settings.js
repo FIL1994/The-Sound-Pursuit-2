@@ -39,11 +39,11 @@ class Settings extends Component {
     this.songs = [
       {
         id: SONGS.Song2.id,
-        title: "Song 1 - FIL1994"
+        title: "Something Else - FIL1994"
       },
       {
         id: SONGS.Song1.id,
-        title: "Song 2 - FIL1994"
+        title: "A Perilous Journey - FIL1994"
       }
     ];
 
