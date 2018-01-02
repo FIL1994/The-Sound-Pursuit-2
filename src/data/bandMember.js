@@ -3,6 +3,7 @@
  * @date 2017-10-09.
  */
 import getRandomName from './names';
+import _ from 'lodash';
 import {Chance} from 'chance';
 const CHANCE = new Chance(new Date().getTime());
 

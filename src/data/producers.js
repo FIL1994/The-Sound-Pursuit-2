@@ -37,7 +37,7 @@ export default [
   },
   {
     name: "Mateo Rediger",
-    quality: 80,
+    quality: 75,
     cost: {
       single: 50000,
       album: 100000
@@ -45,7 +45,7 @@ export default [
   },
   {
     name: "Floyd Van Dale",
-    quality: 90,
+    quality: 80,
     cost: {
       single: 100000,
       album: 250000
@@ -53,7 +53,7 @@ export default [
   },
   {
     name: "Francis Vogel",
-    quality: 100,
+    quality: 90,
     cost: {
       single: 500000,
       album: 1000000

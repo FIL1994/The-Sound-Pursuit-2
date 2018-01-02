@@ -251,7 +251,7 @@ export function nextWeek(weeks, tourDetails = {}) {
                 tourResults.newFans += tourFans;
                 tourResults.newCash += tourCash;
               }
-              const newData = calculateSales({albums, singles, week: week, fans, charts, dispatch});
+              const newData = calcSales({albums, singles, week: week, fans, charts, dispatch});
               albums = newData.albums;
               singles = newData.singles;
               fans = newData.fans + tourFans;
@@ -293,7 +293,7 @@ export function nextWeek(weeks, tourDetails = {}) {
     );
   };
 
-  function calculateSales({albums, singles, week, fans, charts, dispatch}) {
+  function calcSales({albums, singles, week, fans, charts, dispatch}) {
     let newCash = 0, totalSingleSales = 0, totalAlbumSales = 0;
     let unlocks = []; // unlocks medals for NG
 
@@ -321,14 +321,17 @@ export function nextWeek(weeks, tourDetails = {}) {
 
         // calculate new fans
         let multiplier = 0.005;
-        if(fans < Math.pow(10, 5)) {
-          // less than 100 thousand
-          multiplier = .45;
+        if(fans < Math.pow(10, 5) * 3) {
+          // less than 300 thousand
+          multiplier = .65;
         } else if(fans < Math.pow(10, 6)) {
           // less than 1 million
-          multiplier = .25;
+          multiplier = .20;
+        } else if(fans < Math.pow(10, 6) * 3) {
+          // less than 3 million
+          multiplier = .09;
         } else if(fans < Math.pow(10, 7)) {
-          multiplier = .03;
+          multiplier = .025;
         }
         fans += _.ceil(sales * multiplier);
 
@@ -510,8 +513,8 @@ export function nextWeek(weeks, tourDetails = {}) {
     const performance = Math.ceil(_.random(avgSkill, maxSkill) * _.random(0.8, 1.2));
 
     // get more fans if touring more continents
-    const newFansFromTour = _.ceil((performance * 0.78) * (1 + continents.length / 10)) * (1 + (venueSize / 5));
-    const newCashFromTour = performance * (1 + ((venueSize * 3) / 10)) * _.max([(1 + (fans / 1000000)), 3]);
+    const newFansFromTour = _.ceil((performance * 3.2) * (1 + continents.length / 10)) * (1 + (venueSize / 5));
+    const newCashFromTour = performance * (((1 + venueSize) * 3) / 10) * _.max([(1 + (fans / 1000000)), 3]);
 
     return {newCashFromTour, newFansFromTour};
   }
