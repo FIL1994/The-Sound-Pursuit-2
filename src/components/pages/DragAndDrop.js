@@ -5,10 +5,11 @@
 import React, {Component, Fragment} from 'react';
 import update from 'immutability-helper';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 import $ from 'jquery';
 import _ from 'lodash';
-import {Page, Button} from '../SpectreCSS';
+import {Page, Button, Loading, EmptyState} from '../SpectreCSS';
 import {getBand, getCash, saveCash, getSongs, updateSong, saveSongs, getSingles, addSingle, getAlbums, addAlbum,
   removeCash, nextWeek, getWeek} from '../../actions';
 import getRandomSongName from '../../data/randomSongName';
@@ -528,7 +529,17 @@ class DragAndDrop extends Component {
     return (
       <Page centered>
         {
-          !_.isArray(songs) ? null :
+          !_.isArray(songs) ? <Loading large/> : _.isEmpty(songs) ?
+            <EmptyState
+              icon={<i className="fa fa-music fa-4x"/>}
+              title={
+                <Fragment>
+                  You don't have a song that is eligible for a single.<br/>
+                  Go to the <Link to={"/songs"}>Songs page</Link> and write and record a new song.
+                </Fragment>
+              }
+            />
+            :
             <Fragment>
               <div>
                 <div className="btn-group btn-group-block centered col-4">

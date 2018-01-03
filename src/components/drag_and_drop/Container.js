@@ -67,7 +67,7 @@ class Container extends Component {
       border: "1px solid gray"
     };
 
-    const backgroundColor = isActive ? "#5755d9" : "#FFF";
+    const backgroundColor = isActive ? "#29887f" : "#FFF";
 
     return connectDropTarget(
       <div style={{...style, backgroundColor}} className={`${this.props.classes} drag-container`}>
