@@ -231,14 +231,6 @@ export function nextWeek(weeks, tourDetails = {}) {
           ]).then((values) => {
             let [albums, singles, fans, band, charts] = values;
 
-            // if no albums or singles are released there is no need to calculate sales
-            // if(_.isEmpty(albums) && _.isEmpty(singles)) {
-            //   week += weeks;
-            //   localForage.setItem(DATA_WEEK, week);
-            //   dispatch(sendReturn({type: GET_WEEK, payload: week}));
-            //   return;
-            // }
-
             // albums or singles have been released. for every week calculate sales
             for (let i = 0; i < weeks; i++) {
               week++;
