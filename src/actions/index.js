@@ -838,14 +838,18 @@ async function createCharts(week, dispatch) {
 
   charts.singles = new Array(100);
   for(let i = 0; i < charts.singles.length; i++) {
-    charts.singles[i] = newSingle(i, week - _.random(1, 10),
-      await getAsyncImage(dispatch));
+    charts.singles[i] = newSingle(
+      i, week - _.random(1, 10),
+      await getAsyncImage(dispatch)
+    );
   }
 
   charts.albums = new Array(100);
   for(let i = 0; i < charts.albums.length; i++) {
-    charts.albums[i] = newAlbum(i, week - _.random(1, 20),
-      await getAsyncImage(dispatch));
+    charts.albums[i] = newAlbum(
+      i, week - _.random(1, 20),
+      await getAsyncImage(dispatch)
+    );
   }
 
   charts = calcChartSales(charts, week);

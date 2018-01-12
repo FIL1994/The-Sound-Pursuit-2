@@ -23,8 +23,6 @@ import Album from './pages/Album';
 import Tour from './pages/Tour';
 import Charts from './pages/Charts';
 
-import OldReleaseRecord from './pages/ReleaseRecord';
-
 let ROOT_URL = process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
 
 const backgroundImage = `${ROOT_URL}dust_scratches.jpg`;
@@ -107,7 +105,6 @@ class App extends Component {
             <Route path="/album/:id" component={Album}/>
             <Route path="/tour/" component={Tour}/>
             <Route path="/charts/" component={Charts}/>
-            <Route path="/old-release" component={OldReleaseRecord}/>
             <Redirect to="/"/>
           </Switch>
           {_.isEmpty(score) ? null : this.renderModalScore()}

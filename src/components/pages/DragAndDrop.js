@@ -20,6 +20,7 @@ import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {unlockReleaseAlbum, unlockReleaseSingle} from "../../ng/UnlockMedals";
 import ErrorDiv from '../ErrorDiv';
+import {ImageURL} from '../../data/util';
 
 const ErrorWrapper = (props) => {
   return (
@@ -364,6 +365,7 @@ class DragAndDrop extends Component {
         songs: cards.map(c => c.id),
         released: this.props.week,
         quality,
+        imgURL: ImageURL.getURL(),
         sales: 0,
         salesLastWeek: 0,
         charts: {
@@ -455,6 +457,7 @@ class DragAndDrop extends Component {
         songs: cards.map(c => c.id),
         released: this.props.week,
         quality,
+        imgURL: ImageURL.getURL(),
         sales: 0,
         salesLastWeek: 0,
         charts: {
