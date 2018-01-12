@@ -11,7 +11,7 @@
   "author": "Philip Van Raalte",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.35",
+    "@babel/core": "^7.0.0-beta.37",
     "babel-core": "^7.0.0-beta.3",
     "babel-loader": "^7.1.2",
     "babel-plugin-import": "^1.6.3",
@@ -23,11 +23,11 @@
     "babel-preset-stage-1": "^7.0.0-beta.3",
     "babel-register": "^7.0.0-beta.3",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^2.10.1"
   },
   "dependencies": {
-    "chance": "^1.0.12",
-    "immutability-helper": "^2.6.2",
+    "chance": "^1.0.13",
+    "immutability-helper": "^2.6.4",
     "jquery": "^3.2.1",
     "localforage": "^1.5.5",
     "lodash": "^4.17.4",
