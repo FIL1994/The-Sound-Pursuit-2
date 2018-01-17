@@ -7,6 +7,7 @@
  * Functional components for the Spectre CSS library.
  */
 import React, {Fragment} from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 /**
@@ -26,7 +27,7 @@ function addClass(defaultClass, newClass) {
  * @constructor
  */
 let Button = (props) => {
-  const {small, large, block, primary, centered, disabled} = props;
+  const {small, large, block, primary, centered, disabled, success, error, loading, link, inputGroup} = props;
   let className = "btn";
   let otherProps = {};
 
@@ -49,8 +50,28 @@ let Button = (props) => {
     className = addClass(className, "btn-primary");
   }
 
+  if(success) {
+    className = addClass(className, "btn-success");
+  }
+
+  if(error) {
+    className = addClass(className, "btn-error");
+  }
+
+  if(link) {
+    className = addClass(className, "btn-link")
+  }
+
+  if(loading) {
+    className = addClass(className, "loading");
+  }
+
   if(centered) {
     className = addClass(className, "centered text-center");
+  }
+
+  if(inputGroup) {
+    className = addClass(className, "input-group-btn");
   }
 
   if(disabled) {
@@ -63,13 +84,33 @@ let Button = (props) => {
   className = addClass(className, props.className);
 
   // remove unnecessary props
-  let myProps = _.omit(props, ['small', 'large', 'block', 'primary', 'centered', 'disabled', 'as']);
+  let myProps = _.omit(props,
+    ['small', 'large', 'block', 'primary', 'centered', 'disabled', 'as', 'success', 'error', 'loading', 'link',
+      'inputGroup']
+  );
 
   return <props.as {...myProps} {...otherProps} className={className}/>;
 };
 
 Button.defaultProps = {
   as: (props) => <button type="button" {...props}/> // type defaults to "button" if no component is provided in props
+};
+
+Button.Group = (props) => {
+  const {block} = props;
+  let className = "btn-group";
+
+  if(block) {
+    className = addClass(className, "btn-group-block");
+  }
+
+  // add the className prop to the className
+  className = addClass(className, props.className);
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['block']);
+
+  return <div {...myProps} className={className} />;
 };
 
 export {Button};
@@ -130,11 +171,137 @@ export const Page = (props) => {
     className = addClass(className, "centered text-center");
   }
 
-  //remove unnecessary props
+  // remove unnecessary props
   let myProps = _.omit(props, ['centered']);
 
   return <div {...myProps} className={className}/>;
 };
+
+/**
+ * A table for a data set
+ * @param {Object} props Properties for the component.
+ * @returns {XML} JSX Component
+ * @constructor
+ */
+const Table = (props) => {
+  const {striped, hover, centered} = props;
+  // add the className prop to the className
+  let className = addClass("table", props.className);
+
+  if(striped) {
+    className = addClass(className, "table-striped")
+  }
+
+  if(hover) {
+    className = addClass(className, "table-hover")
+  }
+
+  if(centered) {
+    className = addClass(className, "text-center")
+  }
+
+  // add the className prop to the className
+  className = addClass(className, props.className);
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['striped', 'hover', 'centered']);
+
+  return <table {...myProps} className={className}/>;
+};
+
+Table.Head = (props) => {
+  const {headings, headingProps, onHeadingClick} = props;
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['headings', 'headingProps', 'onHeadingClick']);
+
+  return (
+    <thead {...myProps}>
+    <tr {...headingProps}>
+      {headings.map((h, index) =>
+        _.isArray(h)
+          ?
+          <th
+            key={h[1]}
+            onClick={() => onHeadingClick(h[1])}
+          >
+            {h[0]}
+          </th>
+          :
+          <th
+            key={`heading-${h}-${index}`}
+            onClick={() => onHeadingClick(h)}
+          >
+            {h}
+          </th>
+      )}
+    </tr>
+    </thead>
+  );
+};
+
+Table.Head.propTypes = {
+  headings: PropTypes.array.isRequired,
+  onHeadingClick: PropTypes.func
+};
+
+Table.Head.defaultProps = {
+  onHeadingClick: _.noop
+};
+
+Table.Body = (props) => {
+  return <tbody {...props}/>;
+};
+
+Table.Row = (props) => {
+  return <tr {...props}/>;
+};
+
+export {Table};
+
+/**
+ * A tab for switching between views
+ * @param {Object} props Properties for the component.
+ * @returns {XML} JSX Component
+ * @constructor
+ */
+const Tab = (props) => {
+  const {block} = props;
+  // add the className prop to the className
+  let className = addClass("tab", props.className);
+
+  if(block) {
+    className = addClass(className, "tab-block")
+  }
+
+  // add the className prop to the className
+  className = addClass(className, props.className);
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['block']);
+
+  return <ul {...myProps} className={className}/>;
+};
+
+Tab.Heading = (props) => {
+  const {active} = props;
+  // add the className prop to the className
+  let className = addClass("tab-item", props.className);
+
+  if(active) {
+    className = addClass(className, "active");
+  }
+
+  // add the className prop to the className
+  className = addClass(className, props.className);
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['active']);
+
+  return <li {...myProps} className={className}/>;
+};
+
+export {Tab};
 
 /**
  * A toast to show an alert or information.
@@ -250,11 +417,11 @@ export const EmptyState = (props) => {
       {
         _.isEmpty(icon)
           ?
-            ''
+          ''
           :
-            <div className="empty-icon">
-              {icon}
-            </div>
+          <div className="empty-icon">
+            {icon}
+          </div>
       }
       <div className="empty-title h5">{title}</div>
       <div className="empty-action">
@@ -263,3 +430,71 @@ export const EmptyState = (props) => {
     </div>
   );
 };
+
+/**
+ * @param {Object} props Properties for the component.
+ * @returns {XML} JSX Component
+ * @constructor
+ */
+const Pagination = (props) => {
+  const {activePage, totalPages, centered} = props;
+
+  // add the className prop to the className
+  let className = addClass("pagination", props.className);
+
+  // remove unnecessary props
+  let myProps = _.omit(props, ['children', 'onClick', 'activePage', 'totalPages', 'centered']);
+
+  const pages = Array.from(new Array(_.ceil(totalPages)), () => undefined);
+
+  const prevEnabled = !(activePage <= 1);
+  const nextEnabled = !(activePage >= totalPages);
+  const disabledTab = {tabIndex: "-1"};
+
+  return(
+    <ul style={centered ? {justifyContent: "center"} : {}} {...myProps} className={className}>
+      <li
+        onClick={
+          !prevEnabled ? _.noop :
+            (e) => props.onClick(e, activePage-1)
+        }
+        className={`page-item ${prevEnabled ? '' : 'disabled'}`}
+      >
+        <a style={{cursor: "pointer"}} {...(prevEnabled ? {} : disabledTab)}>{'<'}</a>
+      </li>
+      {
+        pages.map((i, index) =>
+          <li
+            key={index}
+            className={`page-item ${index+1 === activePage ? 'active' : ''}`}
+            onClick={
+              (e) => props.onClick(e, index+1)
+            }
+          >
+            <a style={{cursor: "pointer"}}>{index+1}</a>
+          </li>
+        )
+      }
+      <li
+        onClick={
+          !nextEnabled ? _.noop :
+            (e) => props.onClick(e, activePage+1)
+        }
+        className={`page-item ${nextEnabled ? '' : 'disabled'}`}
+      >
+        <a style={{cursor: "pointer"}} {...(nextEnabled ? {} : disabledTab)}>{'>'}</a>
+      </li>
+    </ul>
+  );
+};
+
+Pagination.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  totalPages: PropTypes.number.isRequired
+};
+
+Pagination.defaultProps = {
+  activePage: 1
+};
+
+export {Pagination};
