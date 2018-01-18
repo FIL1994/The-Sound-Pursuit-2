@@ -126,9 +126,22 @@ class Start extends Component {
           btnPlusProps.tabIndex = "-1";
         }
 
+        const toolTipText = (() => {
+          switch(skill) {
+            case "studio":
+              return "improves recording";
+            case "musicianship":
+              return "improves recording and show results";
+            case "songwriting":
+              return "improves song quality";
+            case "live":
+              return "improves tour and show results";
+          }
+        })();
+
         return[
-          <div key={`${index}A`} className="col-6 text-left">
-            <strong className="text-capitalize">{`${skill}: `}</strong>
+          <div key={`${index}A`} className="col-6 text-left tooltip" data-tooltip={toolTipText}>
+            <p className="text-capitalize">{`${skill}: `}</p>
           </div>,
           <div key={`${index}B`} className="col-6">
             <Button className="btn-action" {...btnMinusProps}
