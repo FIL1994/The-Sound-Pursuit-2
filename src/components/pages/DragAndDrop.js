@@ -30,7 +30,6 @@ const ErrorWrapper = (props) => {
   )
 };
 
-@DragDropContext(HTML5Backend)
 class DragAndDrop extends Component {
   constructor(props) {
     super(props);
@@ -646,4 +645,4 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {getBand, getCash, saveCash, removeCash, getSongs, updateSong, getSingles,
-  addSingle, getAlbums, addAlbum, nextWeek, getWeek, saveSongs})(DragAndDrop);
+  addSingle, getAlbums, addAlbum, nextWeek, getWeek, saveSongs})(DragDropContext(HTML5Backend)(DragAndDrop));
