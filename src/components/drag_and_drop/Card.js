@@ -2,12 +2,12 @@
  * @author Philip Van Raalte
  * @date 2017-12-15
  */
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
-import {DragSource, DropTarget} from 'react-dnd';
-import _ from 'lodash';
-import ItemTypes from './ItemTypes';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { findDOMNode } from "react-dom";
+import { DragSource, DropTarget } from "react-dnd";
+import _ from "lodash";
+import ItemTypes from "./ItemTypes";
 
 const style = {
   border: "1px dashed gray",
@@ -26,14 +26,27 @@ class Card extends Component {
   };
 
   render() {
-    const {card, isDragging, connectDragSource, connectDropTarget} = this.props;
+    const {
+      card,
+      isDragging,
+      connectDragSource,
+      connectDropTarget
+    } = this.props;
     const opacity = isDragging ? 0 : 1;
 
-    return connectDragSource(connectDropTarget(
-      <div style={{...style, opacity, cursor: this.props.canDrag ? "move" : "not-allowed"}}>
-        {card.text}
-      </div>
-    ));
+    return connectDragSource(
+      connectDropTarget(
+        <div
+          style={{
+            ...style,
+            opacity,
+            cursor: this.props.canDrag ? "move" : "not-allowed"
+          }}
+        >
+          {card.text}
+        </div>
+      )
+    );
   }
 }
 
@@ -54,7 +67,7 @@ const cardSource = {
     const item = monitor.getItem();
     const dropResult = monitor.getDropResult();
 
-    if(dropResult && dropResult.listId !== item.listId) {
+    if (dropResult && dropResult.listId !== item.listId) {
       props.removeCard(item.index);
     }
   }
@@ -67,7 +80,7 @@ const cardTarget = {
     const sourceListId = monitor.getItem().listId;
 
     // Don't replace items with themselves
-    if(dragIndex === hoverIndex) {
+    if (dragIndex === hoverIndex) {
       return;
     }
 
@@ -90,17 +103,17 @@ const cardTarget = {
     */
 
     // Dragging downwards
-    if(dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
       return;
     }
 
     // Dragging upwards
-    if(dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
       return;
     }
 
     // Time to actually perform the action
-    if(props.listId === sourceListId) {
+    if (props.listId === sourceListId) {
       props.moveCard(dragIndex, hoverIndex);
 
       /*

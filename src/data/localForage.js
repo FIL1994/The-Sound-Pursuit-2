@@ -2,14 +2,14 @@
  * @author Philip Van Raalte
  * @date 2017-10-10.
  */
-import localForage from 'localforage';
+import localForage from "localforage";
 
 localForage.config({
   name: "sound-pursuit-2",
   version: 1.0
 });
 
-if(process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
   // For Testing Only
   window.localForage = localForage;
 }

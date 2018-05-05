@@ -2,13 +2,13 @@
  * @author Philip Van Raalte
  * @date 2017-12-18
  */
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Page, Loading} from '../SpectreCSS';
-import _ from 'lodash';
-import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Page, Loading } from "../SpectreCSS";
+import _ from "lodash";
+import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
-import {getSongs, getAlbums} from '../../actions';
+import { getSongs, getAlbums } from "../../actions";
 
 class Album extends Component {
   constructor(props) {
@@ -25,10 +25,10 @@ class Album extends Component {
   }
 
   componentDidUpdate() {
-    const {songs, albums} = this.props;
-    const {album} = this.state;
+    const { songs, albums } = this.props;
+    const { album } = this.state;
 
-    if(album === undefined && !_.isEmpty(albums) && !_.isEmpty(songs)) {
+    if (album === undefined && !_.isEmpty(albums) && !_.isEmpty(songs)) {
       this.findAlbum(songs, albums);
     }
   }
@@ -38,7 +38,7 @@ class Album extends Component {
 
     let album = albums.find(a => a.id === id);
 
-    if(album === undefined) {
+    if (album === undefined) {
       album = null;
     } else {
       album.songs = album.songs.map(si => songs.find(s => s.id === si));
@@ -50,42 +50,57 @@ class Album extends Component {
   }
 
   render() {
-    const {album} = this.state;
+    const { album } = this.state;
 
-    if(album === undefined) {
-      return <Page centered><Loading large/></Page>;
-    } else if(album === null) {
-      return <Page centered><p>That album could not be found</p></Page>;
+    if (album === undefined) {
+      return (
+        <Page centered>
+          <Loading large />
+        </Page>
+      );
+    } else if (album === null) {
+      return (
+        <Page centered>
+          <p>That album could not be found</p>
+        </Page>
+      );
     }
 
-    const {quality, released, sales, salesLastWeek, songs, title, charts: {peak, lastWeek, thisWeek}} = album;
+    const {
+      quality,
+      released,
+      sales,
+      salesLastWeek,
+      songs,
+      title,
+      charts: { peak, lastWeek, thisWeek }
+    } = album;
 
-    return(
+    return (
       <Page centered>
         <h3>{title}</h3>
         <p>
-          Released: {weeksToYearsAndWeeks(released)} <br/>
-          Quality: {quality} <br/>
-          Sales: {sales.toLocaleString()} <br/>
+          Released: {weeksToYearsAndWeeks(released)} <br />
+          Quality: {quality} <br />
+          Sales: {sales.toLocaleString()} <br />
           Sales Last Week: {salesLastWeek.toLocaleString()}
         </p>
         <div>
           <h5>Chart Details</h5>
           <p>
-            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week: {checkNA(thisWeek)}
+            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week:{" "}
+            {checkNA(thisWeek)}
           </p>
         </div>
         <div>
           <h5>Tracklist:</h5>
           <p className="scrollable-small">
-            {
-              songs.map(({id, title}, index) =>
-                <span key={id}>
-                  {index + 1}. {title}
-                  <br/>
-                </span>
-              )
-            }
+            {songs.map(({ id, title }, index) => (
+              <span key={id}>
+                {index + 1}. {title}
+                <br />
+              </span>
+            ))}
           </p>
         </div>
       </Page>
@@ -100,4 +115,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getSongs, getAlbums})(Album);
+export default connect(mapStateToProps, { getSongs, getAlbums })(Album);

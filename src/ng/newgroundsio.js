@@ -545,7 +545,7 @@ Newgrounds.io.core.prototype = {
 	 * @function cancelLoginRequest
 	 */
 	cancelLoginRequest: function() {
-		event = new Newgrounds.io.events.OutputEvent("cancelLoginRequest",null,null);
+		let event = new Newgrounds.io.events.OutputEvent("cancelLoginRequest",null,null);
 		this.dispatchEvent(event);
 	},
 	

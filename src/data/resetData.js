@@ -2,12 +2,20 @@
  * @author Philip Van Raalte
  * @date 2017-10-18.
  */
-import localForage, {DATA_BAND, DATA_SONGS, DATA_CASH, DATA_WEEK, DATA_FANS, DATA_ALBUMS, DATA_SINGLES, DATA_CHARTS}
-  from '../data/localForage';
+import localForage, {
+  DATA_BAND,
+  DATA_SONGS,
+  DATA_CASH,
+  DATA_WEEK,
+  DATA_FANS,
+  DATA_ALBUMS,
+  DATA_SINGLES,
+  DATA_CHARTS
+} from "../data/localForage";
 
 export default () => {
   resetDataAsync();
-}
+};
 
 export const resetDataAsync = () => {
   return Promise.all([

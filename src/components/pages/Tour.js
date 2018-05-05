@@ -2,18 +2,25 @@
  * @author Philip Van Raalte
  * @date 2017-10-11.
  */
-import React, {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
-import {Page, Button, Panel, Loading} from '../SpectreCSS';
-import _ from 'lodash';
-import $ from 'jquery';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { Page, Button, Panel, Loading } from "../SpectreCSS";
+import _ from "lodash";
+import $ from "jquery";
 
-import TourResults from '../tour/TourResults';
-import ErrorDiv from '../ErrorDiv';
-import {goOnTour, getCash, removeCash} from '../../actions/index';
+import TourResults from "../tour/TourResults";
+import ErrorDiv from "../ErrorDiv";
+import { goOnTour, getCash, removeCash } from "../../actions/index";
 
 class Tour extends Component {
-  continents = ["North America", "South America", "Africa", "Australia", "Europe", "Asia"];
+  continents = [
+    "North America",
+    "South America",
+    "Africa",
+    "Australia",
+    "Europe",
+    "Asia"
+  ];
   defaultState = {
     weeksToTour: 0,
     continentsToTour: 0,
@@ -37,12 +44,12 @@ class Tour extends Component {
   componentDidMount() {
     this.props.getCash();
 
-    $('input[name=venue-size]')[0].checked = true;
+    $("input[name=venue-size]")[0].checked = true;
     // $('input[name=checkbox-container]')[0].checked = true;
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.tourResults !== this.props.tourResults) {
+    if (nextProps.tourResults !== this.props.tourResults) {
       this.setState({
         onTour: false,
         showTourResults: true
@@ -55,23 +62,30 @@ class Tour extends Component {
   }
 
   calcCost(weeksToTour, continentsToTour) {
-    const venueSize = Number($('input[name=venue-size]:checked').val());
-    const {cash} = this.props;
-    const {errorCost} = this.state;
+    const venueSize = Number($("input[name=venue-size]:checked").val());
+    const { cash } = this.props;
+    const { errorCost } = this.state;
 
-    const cost = Math.floor(
-      weeksToTour * (Math.pow(1.18 * venueSize, 2.15) * 80) * (1 + (continentsToTour * 0.35))
-    ) || 0;
+    const cost =
+      Math.floor(
+        weeksToTour *
+          (Math.pow(1.18 * venueSize, 2.15) * 80) *
+          (1 + continentsToTour * 0.35)
+      ) || 0;
 
-    if(_.isFinite(cash) && cash < cost) {
-      if(_.isEmpty(errorCost)) {
+    if (_.isFinite(cash) && cash < cost) {
+      if (_.isEmpty(errorCost)) {
         setTimeout(() =>
           this.setState({
-            errorCost: <div className="form-group has-error"><ErrorDiv>You don't have enough cash</ErrorDiv></div>
+            errorCost: (
+              <div className="form-group has-error">
+                <ErrorDiv>You don't have enough cash</ErrorDiv>
+              </div>
+            )
           })
         );
       }
-    } else if(!_.isEmpty(errorCost)){
+    } else if (!_.isEmpty(errorCost)) {
       setTimeout(() =>
         this.setState({
           errorCost: null
@@ -83,35 +97,46 @@ class Tour extends Component {
   }
 
   validateTour() {
-    const {weeksToTour, continentsToTour} = this.state;
-    const {cash} = this.props;
-    let errorContinents = null, errorVenueSize = null, errorWeeksToTour = null, continents = [];
+    const { weeksToTour, continentsToTour } = this.state;
+    const { cash } = this.props;
+    let errorContinents = null,
+      errorVenueSize = null,
+      errorWeeksToTour = null,
+      continents = [];
     const tourCost = this.calcCost(weeksToTour, continentsToTour);
     // cash has not been loaded yet or user does not have enough cash
-    if(!_.isFinite(cash) || tourCost > cash) {
+    if (!_.isFinite(cash) || tourCost > cash) {
       return;
     }
 
     // check venue size
-    const venueSize = Number($('input[name=venue-size]:checked')[0].value);
-    if(!_.isFinite(venueSize)) {
+    const venueSize = Number($("input[name=venue-size]:checked")[0].value);
+    if (!_.isFinite(venueSize)) {
       errorVenueSize = <ErrorDiv>You must select a venue size.</ErrorDiv>;
     }
     // check continents
-    if(continentsToTour < 1) {
-      errorContinents = <ErrorDiv>You must select at least one continent.</ErrorDiv>;
+    if (continentsToTour < 1) {
+      errorContinents = (
+        <ErrorDiv>You must select at least one continent.</ErrorDiv>
+      );
     } else {
-      let checkboxContinent = $('input[name=checkbox-continent]:checked');
+      let checkboxContinent = $("input[name=checkbox-continent]:checked");
       // jQuery has its own map function so Lodash's map function is a good alternative to the unavailable ES6 map
       continents = _.map(checkboxContinent, c => c.dataset.name);
     }
     //check weeks to tour
-    if(weeksToTour < 2) {
-      errorWeeksToTour = <ErrorDiv>You must tour for at least two weeks.</ErrorDiv>;
+    if (weeksToTour < 2) {
+      errorWeeksToTour = (
+        <ErrorDiv>You must tour for at least two weeks.</ErrorDiv>
+      );
     }
 
-    if(_.isEmpty(errorVenueSize) && _.isEmpty(errorContinents) && _.isEmpty(errorWeeksToTour)) {
-      this.props.goOnTour({weeksToTour, continents, venueSize});
+    if (
+      _.isEmpty(errorVenueSize) &&
+      _.isEmpty(errorContinents) &&
+      _.isEmpty(errorWeeksToTour)
+    ) {
+      this.props.goOnTour({ weeksToTour, continents, venueSize });
       this.props.removeCash(tourCost);
     }
 
@@ -124,80 +149,127 @@ class Tour extends Component {
   }
 
   render() {
-    const {weeksToTour, continentsToTour, errorContinents, errorVenueSize, errorWeeksToTour, errorCost, onTour,
-      showTourResults, tourCost} = this.state;
+    const {
+      weeksToTour,
+      continentsToTour,
+      errorContinents,
+      errorVenueSize,
+      errorWeeksToTour,
+      errorCost,
+      onTour,
+      showTourResults,
+      tourCost
+    } = this.state;
 
     const minWeeksToTour = continentsToTour * 2;
-    if(weeksToTour < minWeeksToTour) {
-      setTimeout(() => this.setState({weeksToTour: minWeeksToTour}));
+    if (weeksToTour < minWeeksToTour) {
+      setTimeout(() => this.setState({ weeksToTour: minWeeksToTour }));
     }
 
-    if(onTour) {
-      return <Page centered><p>Loading tour results</p><Loading large/></Page>
+    if (onTour) {
+      return (
+        <Page centered>
+          <p>Loading tour results</p>
+          <Loading large />
+        </Page>
+      );
     }
 
-    return(
+    return (
       <Page centered>
-        {
-          showTourResults
-            ?
-              <Fragment>
-                <Button large primary onClick={this.resetTourPage}>Do Another Tour</Button>
-                <br/><br/>
-                <TourResults tourResults={this.props.tourResults} tourCost={tourCost}/>
-              </Fragment>
-            :
-              <Fragment>
-                <Panel>
-                  <form className="centered col-10">
-                    <div className={`form-group ${_.isEmpty(errorContinents) ? '' : 'has-error'}`}>
-                      {
-                        this.continents.map(continent =>
-                          <label key={continent} className="form-checkbox">
-                            <input type="checkbox" name="checkbox-continent"
-                               id={`checkbox-continent-${continent}`} data-name={continent}
-                               onChange={(e) =>
-                                 this.setState({continentsToTour: continentsToTour + (e.target.checked ? 1 : -1) })
-                               }
-                            />
-                            <i className="form-icon"/> {continent}
-                          </label>
-                        )
-                      }
-                      {errorContinents}
-                    </div>
-                    <div className={`form-group ${_.isEmpty(errorWeeksToTour) ? '' : 'has-error'}`}>
-                      <label htmlFor="range-weeks-to-tour">Weeks to Tour:</label>
-                      <input className="slider tooltip" type="range" id="range-weeks-to-tour"
-                         min={minWeeksToTour} max={104} value={weeksToTour}
-                         onChange={({target: {value}}) => this.setState({weeksToTour: Number(value)})}
+        {showTourResults ? (
+          <Fragment>
+            <Button large primary onClick={this.resetTourPage}>
+              Do Another Tour
+            </Button>
+            <br />
+            <br />
+            <TourResults
+              tourResults={this.props.tourResults}
+              tourCost={tourCost}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Panel>
+              <form className="centered col-10">
+                <div
+                  className={`form-group ${
+                    _.isEmpty(errorContinents) ? "" : "has-error"
+                  }`}
+                >
+                  {this.continents.map(continent => (
+                    <label key={continent} className="form-checkbox">
+                      <input
+                        type="checkbox"
+                        name="checkbox-continent"
+                        id={`checkbox-continent-${continent}`}
+                        data-name={continent}
+                        onChange={e =>
+                          this.setState({
+                            continentsToTour:
+                              continentsToTour + (e.target.checked ? 1 : -1)
+                          })
+                        }
                       />
-                      {errorWeeksToTour}
-                    </div>
-                    <div className={`form-group ${_.isEmpty(errorVenueSize) ? '' : 'has-error'}`}>
-                      <div className="form-label">Venue Size:</div>
-                      {
-                        ["Small", "Medium", "Large"].map((size, index) =>
-                          <label key={size} className="form-radio">
-                            <input type="radio" name="venue-size" value={index + 1}
-                               onChange={() => this.forceUpdate()}
-                            />
-                            <i className="form-icon"/> {size}
-                          </label>
-                        )
-                      }
-                      {errorVenueSize}
-                    </div>
-                    <div>
-                      Cost: ${this.calcCost(weeksToTour, continentsToTour).toLocaleString()}
-                      {errorCost}
-                    </div>
-                  </form>
-                  <br/>
-                  <Button large primary onClick={this.validateTour}>Go on Tour</Button>
-                </Panel>
-              </Fragment>
-        }
+                      <i className="form-icon" /> {continent}
+                    </label>
+                  ))}
+                  {errorContinents}
+                </div>
+                <div
+                  className={`form-group ${
+                    _.isEmpty(errorWeeksToTour) ? "" : "has-error"
+                  }`}
+                >
+                  <label htmlFor="range-weeks-to-tour">Weeks to Tour:</label>
+                  <input
+                    className="slider tooltip"
+                    type="range"
+                    id="range-weeks-to-tour"
+                    min={minWeeksToTour}
+                    max={104}
+                    value={weeksToTour}
+                    onChange={({ target: { value } }) =>
+                      this.setState({ weeksToTour: Number(value) })
+                    }
+                  />
+                  {errorWeeksToTour}
+                </div>
+                <div
+                  className={`form-group ${
+                    _.isEmpty(errorVenueSize) ? "" : "has-error"
+                  }`}
+                >
+                  <div className="form-label">Venue Size:</div>
+                  {["Small", "Medium", "Large"].map((size, index) => (
+                    <label key={size} className="form-radio">
+                      <input
+                        type="radio"
+                        name="venue-size"
+                        value={index + 1}
+                        onChange={() => this.forceUpdate()}
+                      />
+                      <i className="form-icon" /> {size}
+                    </label>
+                  ))}
+                  {errorVenueSize}
+                </div>
+                <div>
+                  Cost: ${this.calcCost(
+                    weeksToTour,
+                    continentsToTour
+                  ).toLocaleString()}
+                  {errorCost}
+                </div>
+              </form>
+              <br />
+              <Button large primary onClick={this.validateTour}>
+                Go on Tour
+              </Button>
+            </Panel>
+          </Fragment>
+        )}
       </Page>
     );
   }
@@ -206,8 +278,10 @@ class Tour extends Component {
 function mapStateToProps(state) {
   return {
     tourResults: state.tourResults,
-    cash: state.cash,
+    cash: state.cash
   };
 }
 
-export default connect(mapStateToProps, {goOnTour, getCash, removeCash})(Tour);
+export default connect(mapStateToProps, { goOnTour, getCash, removeCash })(
+  Tour
+);

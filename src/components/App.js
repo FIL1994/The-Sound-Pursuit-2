@@ -2,31 +2,32 @@
  * @author Philip Van Raalte
  * @date 2017-10-07.
  */
-import React, {Component} from 'react';
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
-import _ from 'lodash';
-import {getScore} from '../actions/index';
+import _ from "lodash";
+import { getScore } from "../actions/index";
 
-import HasStarted from './HasStarted';
-import HeaderNav from './HeaderNav';
-import Dashboard from './pages/Dashboard';
-import Start from './pages/Start';
-import Songs from './pages/Songs';
-import Records from './pages/Records';
-import MainMenu from './pages/MainMenu';
-import Settings from './pages/Settings';
-import ReleaseRecord_DragAndDrop from './pages/DragAndDrop';
-import Single from './pages/Single';
-import Album from './pages/Album';
-import Tour from './pages/Tour';
-import Charts from './pages/Charts';
+import HasStarted from "./HasStarted";
+import HeaderNav from "./HeaderNav";
+import Dashboard from "./pages/Dashboard";
+import Start from "./pages/Start";
+import Songs from "./pages/Songs";
+import Records from "./pages/Records";
+import MainMenu from "./pages/MainMenu";
+import Settings from "./pages/Settings";
+import ReleaseRecord_DragAndDrop from "./pages/DragAndDrop";
+import Single from "./pages/Single";
+import Album from "./pages/Album";
+import Tour from "./pages/Tour";
+import Charts from "./pages/Charts";
 
-let ROOT_URL = process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
+let ROOT_URL =
+  process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
 
 const backgroundImage = `${ROOT_URL}dust_scratches.jpg`;
-  // "https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png";
+// "https://www.toptal.com/designers/subtlepatterns/patterns/dust_scratches.png";
 /*
   /assets/bg/
 
@@ -52,32 +53,50 @@ class App extends Component {
   lastScore = {};
 
   hideModalScore() {
-    this.setState({modalActive: false});
+    this.setState({ modalActive: false });
   }
 
   renderModalScore() {
-    if(this.lastScore === this.props.score) {
+    if (this.lastScore === this.props.score) {
       return;
     }
 
     this.lastScore = this.props.score;
-    const {years, score} = this.lastScore;
+    const { years, score } = this.lastScore;
 
     return (
       <div id="modal-score" className={`modal modal-sm active`}>
-        <a href="#site" className="modal-overlay" aria-label="Close" onClick={this.hideModalScore}/>
+        <a
+          href="#site"
+          className="modal-overlay"
+          aria-label="Close"
+          onClick={this.hideModalScore}
+        />
         <div className="modal-container">
           <div className="modal-header">
-            <a href="#site" className="btn btn-clear float-right" aria-label="Close" onClick={this.hideModalScore}/>
-            <div className="modal-title h5 text-center">Been Around for {years} Years</div>
+            <a
+              href="#site"
+              className="btn btn-clear float-right"
+              aria-label="Close"
+              onClick={this.hideModalScore}
+            />
+            <div className="modal-title h5 text-center">
+              Been Around for {years} Years
+            </div>
             <div className="modal-body">
               <div className="content">
-                You band has lasted {years} years! <br/>
+                You band has lasted {years} years! <br />
                 Your score of {score.toLocaleString()} has been submitted.
               </div>
             </div>
             <div className="modal-footer">
-              <a href="#site" className="btn btn-link" onClick={this.hideModalScore}>Okay</a>
+              <a
+                href="#site"
+                className="btn btn-link"
+                onClick={this.hideModalScore}
+              >
+                Okay
+              </a>
             </div>
           </div>
         </div>
@@ -86,26 +105,33 @@ class App extends Component {
   }
 
   render() {
-    const {score} = this.props;
+    const { score } = this.props;
 
-    return(
+    return (
       <BrowserRouter>
-        <div id="site" className="site" style={{background: `url(${backgroundImage})`, minHeight: 620}}>
-          <HasStarted/>
-          <HeaderNav/>
+        <div
+          id="site"
+          className="site"
+          style={{ background: `url(${backgroundImage})`, minHeight: 620 }}
+        >
+          <HasStarted />
+          <HeaderNav />
           <Switch>
-            <Route exact path="/" component={MainMenu}/>
-            <Route path="/start/" component={Start}/>
-            <Route path="/dashboard/" component={Dashboard}/>
-            <Route path="/songs/" component={Songs}/>
-            <Route exact path="/records/" component={Records}/>
-            <Route path="/records/release/" component={ReleaseRecord_DragAndDrop}/>
-            <Route path="/settings/" component={Settings}/>
-            <Route path="/single/:id" component={Single}/>
-            <Route path="/album/:id" component={Album}/>
-            <Route path="/tour/" component={Tour}/>
-            <Route path="/charts/" component={Charts}/>
-            <Redirect to="/"/>
+            <Route exact path="/" component={MainMenu} />
+            <Route path="/start/" component={Start} />
+            <Route path="/dashboard/" component={Dashboard} />
+            <Route path="/songs/" component={Songs} />
+            <Route exact path="/records/" component={Records} />
+            <Route
+              path="/records/release/"
+              component={ReleaseRecord_DragAndDrop}
+            />
+            <Route path="/settings/" component={Settings} />
+            <Route path="/single/:id" component={Single} />
+            <Route path="/album/:id" component={Album} />
+            <Route path="/tour/" component={Tour} />
+            <Route path="/charts/" component={Charts} />
+            <Redirect to="/" />
           </Switch>
           {_.isEmpty(score) ? null : this.renderModalScore()}
         </div>
@@ -120,4 +146,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getScore})(App);
+export default connect(mapStateToProps, { getScore })(App);
