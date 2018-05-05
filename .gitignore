@@ -5,3 +5,5 @@
 /build/assets/
 /build/build.zip
 TO_DO.txt
+/build/
+package-lock.json
