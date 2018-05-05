@@ -2,13 +2,13 @@
  * @author Philip Van Raalte
  * @date 2017-12-18
  */
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Loading, Page} from '../SpectreCSS';
-import _ from 'lodash';
-import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Loading, Page } from "../SpectreCSS";
+import _ from "lodash";
+import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
-import {getSongs, getSingles} from '../../actions';
+import { getSongs, getSingles } from "../../actions";
 
 class Single extends Component {
   constructor(props) {
@@ -25,10 +25,10 @@ class Single extends Component {
   }
 
   componentDidUpdate() {
-    const {songs, singles} = this.props;
-    const {single} = this.state;
+    const { songs, singles } = this.props;
+    const { single } = this.state;
 
-    if(single === undefined && !_.isEmpty(singles) && !_.isEmpty(songs)) {
+    if (single === undefined && !_.isEmpty(singles) && !_.isEmpty(songs)) {
       this.findSingle(songs, singles);
     }
   }
@@ -38,7 +38,7 @@ class Single extends Component {
 
     let single = singles.find(s => s.id === id);
 
-    if(single === undefined) {
+    if (single === undefined) {
       single = null;
     } else {
       single.songs = single.songs.map(si => songs.find(s => s.id === si));
@@ -50,42 +50,57 @@ class Single extends Component {
   }
 
   render() {
-    const {single} = this.state;
+    const { single } = this.state;
 
-    if(single === undefined) {
-      return <Page centered><Loading large/></Page>;
-    } else if(single === null) {
-      return <Page centered><p>That single could not be found</p></Page>;
+    if (single === undefined) {
+      return (
+        <Page centered>
+          <Loading large />
+        </Page>
+      );
+    } else if (single === null) {
+      return (
+        <Page centered>
+          <p>That single could not be found</p>
+        </Page>
+      );
     }
 
-    const {quality, released, sales, salesLastWeek, songs, title, charts: {peak, lastWeek, thisWeek}} = single;
+    const {
+      quality,
+      released,
+      sales,
+      salesLastWeek,
+      songs,
+      title,
+      charts: { peak, lastWeek, thisWeek }
+    } = single;
 
-    return(
+    return (
       <Page centered>
         <h3>{title}</h3>
         <p>
-          Released: {weeksToYearsAndWeeks(released)} <br/>
-          Quality: {quality} <br/>
-          Sales: {sales.toLocaleString()} <br/>
+          Released: {weeksToYearsAndWeeks(released)} <br />
+          Quality: {quality} <br />
+          Sales: {sales.toLocaleString()} <br />
           Sales Last Week: {salesLastWeek.toLocaleString()}
         </p>
         <div>
           <h5>Chart Details</h5>
           <p>
-            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week: {checkNA(thisWeek)}
+            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week:{" "}
+            {checkNA(thisWeek)}
           </p>
         </div>
         <div>
           <h5>Tracklist:</h5>
           <p className="scrollable-small">
-            {
-              songs.map(({id, title}, index) =>
-                <span key={id}>
-                  {index + 1}. {title}
-                  <br/>
-                </span>
-              )
-            }
+            {songs.map(({ id, title }, index) => (
+              <span key={id}>
+                {index + 1}. {title}
+                <br />
+              </span>
+            ))}
           </p>
         </div>
       </Page>
@@ -100,4 +115,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getSongs, getSingles})(Single);
+export default connect(mapStateToProps, { getSongs, getSingles })(Single);

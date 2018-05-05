@@ -2,9 +2,9 @@
  * @author Philip Van Raalte
  * @date 2017-12-20
  */
-import {GET_CHARTS, SAVE_CHARTS, ERROR_CHARTS} from '../actions/types';
+import { GET_CHARTS, SAVE_CHARTS, ERROR_CHARTS } from "../actions/types";
 
-export default function (state = {}, action) {
+export default function(state = {}, action) {
   switch (action.type) {
     case GET_CHARTS:
       return action.payload;

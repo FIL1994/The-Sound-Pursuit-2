@@ -2,14 +2,14 @@
  * @author Philip Van Raalte
  * @date 2017-10-17.
  */
-import React, {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import _ from 'lodash';
-import {Page, EmptyState, Button} from '../SpectreCSS';
-import {checkNA, weeksToYearsAndWeeks} from '../../data/util';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import _ from "lodash";
+import { Page, EmptyState, Button } from "../SpectreCSS";
+import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
-import {getSongs, getSingles, getAlbums, getWeek} from '../../actions';
+import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 
 class Records extends Component {
   constructor(props) {
@@ -21,7 +21,9 @@ class Records extends Component {
 
     this.renderSingles = this.renderSingles.bind(this);
     this.renderAlbums = this.renderAlbums.bind(this);
-    this.renderSinglesOrAlbumsSwitch = this.renderSinglesOrAlbumsSwitch.bind(this);
+    this.renderSinglesOrAlbumsSwitch = this.renderSinglesOrAlbumsSwitch.bind(
+      this
+    );
   }
 
   componentWillMount() {
@@ -39,117 +41,151 @@ class Records extends Component {
   }
 
   renderSinglesOrAlbumsSwitch() {
-    const {showAlbums} = this.state;
-    return(
+    const { showAlbums } = this.state;
+    return (
       <span className="form-group text-right float-right">
         {`Singles `}
         <label className="form-switch">
-          <input type="checkbox"
-             onChange={(e) => {this.setState({showAlbums: e.target.checked})}}
-             checked={showAlbums}
+          <input
+            type="checkbox"
+            onChange={e => {
+              this.setState({ showAlbums: e.target.checked });
+            }}
+            checked={showAlbums}
           />
-          <i className="form-icon"/> Albums
+          <i className="form-icon" /> Albums
         </label>
       </span>
     );
   }
 
   renderSingles() {
-    let {singles, week} = this.props;
-    singles = _.sortBy(singles, (({released}) => {
+    let { singles, week } = this.props;
+    singles = _.sortBy(singles, ({ released }) => {
       return -released;
-    }));
+    });
 
-    if(_.isEmpty(singles)){
+    if (_.isEmpty(singles)) {
       return (
         <EmptyState
-          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true"/>}
+          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />}
           title="You haven't released any singles yet"
         />
       );
     }
 
-    let totalSingleSales = 0, bestSellingSingle = {sales: 0};
-    singles.forEach(({sales, title, id}) => {
-      if(sales > bestSellingSingle.sales) {
-        bestSellingSingle = {sales, title, id};
+    let totalSingleSales = 0,
+      bestSellingSingle = { sales: 0 };
+    singles.forEach(({ sales, title, id }) => {
+      if (sales > bestSellingSingle.sales) {
+        bestSellingSingle = { sales, title, id };
       }
       totalSingleSales += sales;
     });
 
-    return(
+    return (
       <div>
         <div>
           <span className="float-left">
-            Total Single Sales: {totalSingleSales.toLocaleString()} <br/>
-            Best Selling Single: <Link to={`/single/${bestSellingSingle.id}`}>{bestSellingSingle.title}</Link> - {bestSellingSingle.sales.toLocaleString()}
+            Total Single Sales: {totalSingleSales.toLocaleString()} <br />
+            Best Selling Single:{" "}
+            <Link to={`/single/${bestSellingSingle.id}`}>
+              {bestSellingSingle.title}
+            </Link>{" "}
+            - {bestSellingSingle.sales.toLocaleString()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
         <div className="scrollable centered full-width">
-          {
-            singles.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
+          {singles.map(
+            ({
+              id,
+              title,
+              quality,
+              released,
+              salesLastWeek,
+              sales,
+              charts: { peak }
+            }) => {
               const age = week - released;
-              return(
+              return (
                 <div className="card bg-dark" key={id}>
                   <div className="card-header">
                     <div className="card-title h5">
                       <Link to={`/single/${id}`}>{title}</Link>
-                      </div>
+                    </div>
                   </div>
                   <div className="card-body">
-                    Released: {weeksToYearsAndWeeks(released)} | Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
-                    Quality: {quality}<br/>
-                    Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
-                    Total Sales: {sales.toLocaleString()}<br/>
+                    Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                    {`${age} ${age === 1 ? "week" : "weeks"}`}
+                    <br />
+                    Quality: {quality}
+                    <br />
+                    Sales Last Week: {salesLastWeek.toLocaleString()}
+                    <br />
+                    Total Sales: {sales.toLocaleString()}
+                    <br />
                     Peak Chart Position: {checkNA(peak)}
                   </div>
                 </div>
               );
-            })
-          }
+            }
+          )}
         </div>
       </div>
     );
   }
 
   renderAlbums() {
-    let {albums, week} = this.props;
-    albums = _.sortBy(albums, (({released}) => {
+    let { albums, week } = this.props;
+    albums = _.sortBy(albums, ({ released }) => {
       return -released;
-    }));
+    });
 
-    if(_.isEmpty(albums)){
+    if (_.isEmpty(albums)) {
       return (
         <EmptyState
-          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true"/>}
+          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />}
           title="You haven't released any albums yet"
         />
       );
     }
 
-    let totalAlbumSales = 0, bestSellingAlbum = {sales: 0};
-    albums.forEach(({sales, title, id}) => {
-      if(sales > bestSellingAlbum.sales) {
-        bestSellingAlbum = {sales, title, id};
+    let totalAlbumSales = 0,
+      bestSellingAlbum = { sales: 0 };
+    albums.forEach(({ sales, title, id }) => {
+      if (sales > bestSellingAlbum.sales) {
+        bestSellingAlbum = { sales, title, id };
       }
       totalAlbumSales += sales;
     });
 
-    return(
+    return (
       <div>
         <div>
           <span className="float-left">
-            Total Album Sales: {totalAlbumSales.toLocaleString()} <br/>
-            Best Selling Album: <Link to={`/album/${bestSellingAlbum.id}`}>{bestSellingAlbum.title}</Link> - {bestSellingAlbum.sales.toLocaleString()}
+            Total Album Sales: {totalAlbumSales.toLocaleString()} <br />
+            Best Selling Album:{" "}
+            <Link to={`/album/${bestSellingAlbum.id}`}>
+              {bestSellingAlbum.title}
+            </Link>{" "}
+            - {bestSellingAlbum.sales.toLocaleString()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
         <div className="scrollable centered full-width">
-          {
-            albums.map(({id, title, quality, released, salesLastWeek, sales, charts: {peak}}) => {
+          {albums.map(
+            ({
+              id,
+              title,
+              quality,
+              released,
+              salesLastWeek,
+              sales,
+              charts: { peak }
+            }) => {
               const age = week - released;
-              return(
+              return (
                 <div className="card bg-dark" key={id}>
                   <div className="card-header">
                     <div className="card-title h5">
@@ -157,30 +193,35 @@ class Records extends Component {
                     </div>
                   </div>
                   <div className="card-body">
-                    Released: {weeksToYearsAndWeeks(released)} | Age: {`${age} ${age === 1 ? "week" : "weeks"}`}<br/>
-                    Quality: {quality}<br/>
-                    Sales Last Week: {salesLastWeek.toLocaleString()}<br/>
-                    Total Sales: {sales.toLocaleString()}<br/>
+                    Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                    {`${age} ${age === 1 ? "week" : "weeks"}`}
+                    <br />
+                    Quality: {quality}
+                    <br />
+                    Sales Last Week: {salesLastWeek.toLocaleString()}
+                    <br />
+                    Total Sales: {sales.toLocaleString()}
+                    <br />
                     Peak Chart Position: {checkNA(peak)}
                   </div>
                 </div>
               );
-            })
-          }
+            }
+          )}
         </div>
       </div>
     );
   }
 
   render() {
-    const {showAlbums} = this.state;
-    const {singles, albums} = this.props;
+    const { showAlbums } = this.state;
+    const { singles, albums } = this.props;
 
-    if(!showAlbums && _.isEmpty(singles)) {
-      setTimeout(() => this.setState({showAlbums: true}));
+    if (!showAlbums && _.isEmpty(singles)) {
+      setTimeout(() => this.setState({ showAlbums: true }));
     }
 
-    return(
+    return (
       <Page id="page-records">
         <div className="columns">
           <div className="column col-4 col-mx-auto">
@@ -189,26 +230,18 @@ class Records extends Component {
             </Button>
           </div>
         </div>
-        <br/>
+        <br />
         <div>
-          {
-            _.isEmpty(singles) && _.isEmpty(albums)
-            ?
-              <EmptyState
-                icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true"/>}
-                title="You haven't released any records yet"
-              />
-            :
-              <div>
-                {
-                  showAlbums
-                    ?
-                    this.renderAlbums()
-                    :
-                    this.renderSingles()
-                }
-              </div>
-          }
+          {_.isEmpty(singles) && _.isEmpty(albums) ? (
+            <EmptyState
+              icon={
+                <i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />
+              }
+              title="You haven't released any records yet"
+            />
+          ) : (
+            <div>{showAlbums ? this.renderAlbums() : this.renderSingles()}</div>
+          )}
         </div>
       </Page>
     );
@@ -224,4 +257,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getSongs, getSingles, getAlbums, getWeek})(Records);
+export default connect(mapStateToProps, {
+  getSongs,
+  getSingles,
+  getAlbums,
+  getWeek
+})(Records);

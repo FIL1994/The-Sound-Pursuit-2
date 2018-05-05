@@ -2,26 +2,26 @@
  * @author Philip Van Raalte
  * @date 2017-10-07.
  */
-import React, {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
-import {NavLink, matchPath, withRouter} from 'react-router-dom';
-import _ from 'lodash';
-import {getFans, getCash, getWeek} from '../actions';
-import localForage, {DATA_BAND} from '../data/localForage';
-import {weeksToYearsAndWeeks} from '../data/util';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { NavLink, matchPath, withRouter } from "react-router-dom";
+import _ from "lodash";
+import { getFans, getCash, getWeek } from "../actions";
+import localForage, { DATA_BAND } from "../data/localForage";
+import { weeksToYearsAndWeeks } from "../data/util";
 
-const MyNavLink = (props) => {
-  return(
+const MyNavLink = props => {
+  return (
     <NavLink
       {...props}
-      className={`btn btn-lg ${props.className || ''}`}
+      className={`btn btn-lg ${props.className || ""}`}
       activeClassName="btn-primary"
     />
   );
 };
 
 class HeaderNav extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -43,7 +43,7 @@ class HeaderNav extends Component {
       localForage.getItem(DATA_BAND, (err, value) => {
         const hasStarted = _.isEmpty(err) && !_.isEmpty(value);
 
-        if(this.state.hasStarted !== hasStarted) {
+        if (this.state.hasStarted !== hasStarted) {
           this.setState({
             hasStarted
           });
@@ -53,14 +53,14 @@ class HeaderNav extends Component {
   }
 
   isLinkActive(match) {
-    if(!match) {
-      return false
+    if (!match) {
+      return false;
     }
     return !(match.url === "/" && !match.isExact);
   }
 
   formatNumber(number, isFloat) {
-    if(number > 1000000000) {
+    if (number > 1000000000) {
       return `${(number / 1000000000).toFixed(2)}B`;
     } else if (number > 1000000) {
       return `${(number / 1000000).toFixed(2)}M`;
@@ -77,51 +77,59 @@ class HeaderNav extends Component {
         <MyNavLink
           to="/dashboard"
           isActive={this.isLinkActive}
-          className="tooltip tooltip-bottom" data-tooltip="Home"
+          className="tooltip tooltip-bottom"
+          data-tooltip="Home"
         >
-          <i className="fa fa-home" aria-hidden="true"/>
+          <i className="fa fa-home" aria-hidden="true" />
         </MyNavLink>
         <MyNavLink
           to="/songs"
           isActive={this.isLinkActive}
-          className="tooltip tooltip-bottom" data-tooltip="Songs"
+          className="tooltip tooltip-bottom"
+          data-tooltip="Songs"
         >
-          <i className="fa fa-music" aria-hidden="true"/>
+          <i className="fa fa-music" aria-hidden="true" />
         </MyNavLink>
         <MyNavLink
           to="/records"
           isActive={this.isLinkActive}
-          className="tooltip tooltip-bottom" data-tooltip="Records"
+          className="tooltip tooltip-bottom"
+          data-tooltip="Records"
         >
-          <i className="fa fa-circle-o" aria-hidden="true"/>
+          <i className="fa fa-circle-o" aria-hidden="true" />
         </MyNavLink>
         <MyNavLink
           to="/tour"
           isActive={this.isLinkActive}
-          className="tooltip tooltip-bottom" data-tooltip="Tour"
+          className="tooltip tooltip-bottom"
+          data-tooltip="Tour"
         >
-          <i className="fa fa-globe" aria-hidden="true"/>
+          <i className="fa fa-globe" aria-hidden="true" />
         </MyNavLink>
         <MyNavLink
           to="/charts"
           isActive={this.isLinkActive}
-          className="tooltip tooltip-bottom" data-tooltip="Charts"
+          className="tooltip tooltip-bottom"
+          data-tooltip="Charts"
         >
-          <i className="fa fa-th-list" aria-hidden="true"/>
+          <i className="fa fa-th-list" aria-hidden="true" />
         </MyNavLink>
       </Fragment>
     );
   }
 
   getParamHasStarted() {
-    const {search} = this.props.location;
+    const { search } = this.props.location;
     let paramHasStarted = "";
 
-    if(!_.isEmpty(search)) {
+    if (!_.isEmpty(search)) {
       // get the param by decoding the uri to remove strings such as '%20' and split the string on 'hasStarted=' and '&'
       try {
-        paramHasStarted = decodeURI(search).split("hasStarted=")[1].split("&")[0].trim();
-      } catch(e) {
+        paramHasStarted = decodeURI(search)
+          .split("hasStarted=")[1]
+          .split("&")[0]
+          .trim();
+      } catch (e) {
         return true;
       }
     }
@@ -131,7 +139,7 @@ class HeaderNav extends Component {
 
   render() {
     let hasStarted = this.getParamHasStarted();
-    if(!hasStarted) {
+    if (!hasStarted) {
       hasStarted = this.state.hasStarted;
     }
 
@@ -141,28 +149,55 @@ class HeaderNav extends Component {
       isExact: true
     });
 
-    if(this.props.location.pathname === "/") {
+    if (this.props.location.pathname === "/") {
       return null;
     }
-    return(
+    return (
       <header className="navbar bg-dark">
         <section className="navbar-section">
-          {!_.isEmpty(isStart) || !hasStarted ? <NavLink to="/" className="btn btn-lg">Back to Main Menu</NavLink> : this.renderLinks()}
+          {!_.isEmpty(isStart) || !hasStarted ? (
+            <NavLink to="/" className="btn btn-lg">
+              Back to Main Menu
+            </NavLink>
+          ) : (
+            this.renderLinks()
+          )}
         </section>
         <section className="navbar section text-light">
-          <h6 className="centered p-2 tooltip tooltip-bottom" data-tooltip={`${this.props.fans.toLocaleString(undefined, {maximumFractionDigits: 0})} Fans`}>
-            <i className="icon icon-people"/>
+          <h6
+            className="centered p-2 tooltip tooltip-bottom"
+            data-tooltip={`${this.props.fans.toLocaleString(undefined, {
+              maximumFractionDigits: 0
+            })} Fans`}
+          >
+            <i className="icon icon-people" />
             <span className="left-space-1">
-              {_.isNumber(this.props.fans) ? this.formatNumber(this.props.fans, false) : <div className="loading"/>}
+              {_.isNumber(this.props.fans) ? (
+                this.formatNumber(this.props.fans, false)
+              ) : (
+                <div className="loading" />
+              )}
             </span>
           </h6>
-          <h6 className="centered p-2 tooltip tooltip-bottom"
-              data-tooltip={this.props.cash.toLocaleString(undefined, {style: "currency", currency: "USD"})}
+          <h6
+            className="centered p-2 tooltip tooltip-bottom"
+            data-tooltip={this.props.cash.toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD"
+            })}
           >
-            {_.isNumber(this.props.cash) ? `$${this.formatNumber(this.props.cash, true)}` : <div className="loading"/>}
+            {_.isNumber(this.props.cash) ? (
+              `$${this.formatNumber(this.props.cash, true)}`
+            ) : (
+              <div className="loading" />
+            )}
           </h6>
           <h6 className="centered p-2">
-            {_.isNumber(this.props.week) ? weeksToYearsAndWeeks(this.props.week) : <div className="loading"/>}
+            {_.isNumber(this.props.week) ? (
+              weeksToYearsAndWeeks(this.props.week)
+            ) : (
+              <div className="loading" />
+            )}
           </h6>
           <NavLink
             to={{
@@ -172,7 +207,7 @@ class HeaderNav extends Component {
             className="text-light centered p-2 tooltip tooltip-bottom"
             data-tooltip="Settings"
           >
-            <i className="fa fa-cog my-icon" aria-hidden="true"/>
+            <i className="fa fa-cog my-icon" aria-hidden="true" />
           </NavLink>
         </section>
       </header>
@@ -188,4 +223,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, {getFans, getCash, getWeek})(HeaderNav));
+export default withRouter(
+  connect(mapStateToProps, { getFans, getCash, getWeek })(HeaderNav)
+);

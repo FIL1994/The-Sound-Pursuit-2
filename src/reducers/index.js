@@ -2,18 +2,18 @@
  * @author Philip Van Raalte
  * @date 2017-10-10.
  */
-import {combineReducers} from 'redux';
-import bandReducer from './bandReducer';
-import songsReducer from './songsReducer';
-import weekReducer from './weekReducer';
-import cashReducer from './cashReducer';
-import fansReducer from './fansReducer';
-import singlesReducer from './singlesReducer';
-import albumsReducer from './albumsReducer';
-import scoreReducer from './scoreReducer';
-import tourReducer from './tourReducer';
-import imageReducer from './imageReducer';
-import chartsReducer from './chartsReducer';
+import { combineReducers } from "redux";
+import bandReducer from "./bandReducer";
+import songsReducer from "./songsReducer";
+import weekReducer from "./weekReducer";
+import cashReducer from "./cashReducer";
+import fansReducer from "./fansReducer";
+import singlesReducer from "./singlesReducer";
+import albumsReducer from "./albumsReducer";
+import scoreReducer from "./scoreReducer";
+import tourReducer from "./tourReducer";
+import imageReducer from "./imageReducer";
+import chartsReducer from "./chartsReducer";
 
 export default combineReducers({
   state: (state = {}) => state,

@@ -2,8 +2,8 @@
  * @author Philip Van Raalte
  * @date 2017-10-21.
  */
-import _ from 'lodash';
-import {unlockMedal, getMedals, getUser} from './NG_Connect';
+import _ from "lodash";
+import { unlockMedal, getMedals, getUser } from "./NG_Connect";
 
 const medalTimeoutShort = 350;
 const medalTimeoutLong = 2000;
@@ -12,37 +12,37 @@ export class NG {
   static fetchedUser = false;
   static unlockQueue = [];
   static executeQueue() {
-    Promise.all(NG.unlockQueue.map((uq) => new Promise(uq)))
-      .then(() => console.log("UnlockMedal Queue Executed"));
+    Promise.all(NG.unlockQueue.map(uq => new Promise(uq))).then(() =>
+      console.log("UnlockMedal Queue Executed")
+    );
   }
 }
 
 async function forceUnlockMedal(medalName) {
   // if user isn't fetched yet, queue unlocking the medal
-  if(!NG.fetchedUser) {
+  if (!NG.fetchedUser) {
     NG.unlockQueue.push(() => forceUnlockMedal(medalName));
     return;
   }
 
-  if(!_.isString(medalName)) {
+  if (!_.isString(medalName)) {
     return;
   }
   unlockThisMedal();
 
   function unlockThisMedal() {
     console.log("unlock", medalName);
-    getMedals((result) => {
-      if(result.success) {
-        let medal = result.medals.find((m) => {
+    getMedals(result => {
+      if (result.success) {
+        let medal = result.medals.find(m => {
           return m.name === medalName;
         });
-        const isUser = !_ .isEmpty(getUser());
-        if(isUser) {
+        const isUser = !_.isEmpty(getUser());
+        if (isUser) {
           if (!medal.unlocked) {
             unlockMedal(medalName);
             setTimeout(unlockThisMedal, medalTimeoutShort);
-          }
-          else {
+          } else {
             // An error occurred wait longer before making another network request
             setTimeout(unlockThisMedal, medalTimeoutLong);
           }
