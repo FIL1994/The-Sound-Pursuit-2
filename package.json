@@ -11,10 +11,10 @@
   "author": "Philip Van Raalte",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.38",
+    "@babel/core": "^7.0.0-beta.46",
     "babel-core": "^7.0.0-beta.3",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-import": "^1.6.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-import": "^1.7.0",
     "babel-plugin-syntax-async-functions": "^7.0.0-beta.0",
     "babel-plugin-transform-regenerator": "^7.0.0-beta.3",
     "babel-polyfill": "^7.0.0-beta.3",
@@ -22,7 +22,7 @@
     "babel-preset-react": "^7.0.0-beta.3",
     "babel-preset-stage-1": "^7.0.0-beta.3",
     "babel-register": "^7.0.0-beta.3",
-    "webpack": "^3.10.0",
+    "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
