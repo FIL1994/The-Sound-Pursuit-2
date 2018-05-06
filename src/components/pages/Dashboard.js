@@ -6,6 +6,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { Page, Button, Toast, Divider } from "../SpectreCSS";
+import Avatar from "react-avatar";
 
 import {
   getBand,
@@ -32,29 +33,28 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.renderMembers = this.renderMembers.bind(this);
-    this.playShow = _.throttle(this.playShow.bind(this), 18);
-    this.practice = _.throttle(this.practice.bind(this), 18);
-
-    this.state = {
-      showShow: false,
-      newFans: null,
-      newCash: null,
-      showPractice: false,
-      practiceToast: null,
-      lastPractice: 0,
-      lastShow: 0
-    };
+    this.playShow = _.throttle(this.playShow, 18);
+    this.practice = _.throttle(this.practice, 18);
   }
 
-  componentWillMount() {
+  state = {
+    showShow: false,
+    newFans: null,
+    newCash: null,
+    showPractice: false,
+    practiceToast: null,
+    lastPractice: 0,
+    lastShow: 0
+  };
+
+  componentDidMount() {
     this.props.getBand();
     this.props.getCash();
     this.props.getFans();
     this.props.getWeek();
   }
 
-  playShow() {
+  playShow = () => {
     const { leadMember, members: m } = this.props.band;
     const members = [leadMember, ...m];
 
@@ -111,9 +111,9 @@ class Dashboard extends Component {
         });
       }
     }, 3000);
-  }
+  };
 
-  practice() {
+  practice = () => {
     let { leadMember, members } = this.props.band;
     let practiceToast,
       unlocks = [unlockFirstPractice];
@@ -220,16 +220,30 @@ class Dashboard extends Component {
         });
       }
     }, 3000);
-  }
+  };
 
-  renderMembers() {
+  renderMembers = () => {
     const { leadMember, members } = this.props.band;
 
     return (
       <ul>
         {[leadMember, ...members].map((m, index) => {
           return (
-            <li key={index} className="tile">
+            <li
+              key={index}
+              className="tile"
+              style={{
+                width: "30%",
+                marginLeft: "auto",
+                marginRight: "auto",
+                boxShadow: "rgba(224, 224, 224, 0.69) 1px 1px 6px 1px",
+                padding: 15,
+                marginBottom: 5
+              }}
+            >
+              <div className="tile-icon">
+                <Avatar round name={m.name} maxInitials={2} size={50} />
+              </div>
               <div className="tile-content">
                 <strong className="tile-title">
                   {m.name} -{" "}
@@ -240,14 +254,13 @@ class Dashboard extends Component {
                   | Songwriting: {m.skills.songwriting} | Studio:{" "}
                   {m.skills.studio}
                 </p>
-                <Divider size={7} />
               </div>
             </li>
           );
         })}
       </ul>
     );
-  }
+  };
 
   render() {
     const { band } = this.props;
