@@ -13,6 +13,7 @@ import { NG } from "./ng/UnlockMedals";
 import App from "./components/App";
 import reducers from "./reducers";
 import "./setupSoundJS";
+import "./styles/spectre-dark.min.css";
 import "./index.scss";
 
 const store = createStore(reducers, applyMiddleware(ReduxThunk));
