@@ -2,7 +2,11 @@
   "presets": [
     "@babel/preset-env",
     "@babel/preset-react",
-    ["@babel/preset-stage-0", { "decoratorsLegacy": true }],
-    "minify"
-  ]
+    ["@babel/preset-stage-0", { "decoratorsLegacy": true }]
+  ],
+  "env": {
+    "production": {
+      "presets": ["minify"]
+    }
+  }
 }
