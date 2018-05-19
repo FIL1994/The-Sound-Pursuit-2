@@ -28,3 +28,4 @@ export const DATA_CHARTS = "charts";
 export const PLAY_SONG = "playSong";
 export const PLAY_MAIN_THEME = "mainTheme";
 export const SONG_VOLUME = "volume";
+export const SONG_TO_PLAY = "song_to_play";

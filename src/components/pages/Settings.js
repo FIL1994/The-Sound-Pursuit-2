@@ -8,17 +8,21 @@ import _ from "lodash";
 import { Page, Button, Panel } from "../SpectreCSS";
 import localForage, {
   PLAY_SONG,
-  PLAY_MAIN_THEME,
-  SONG_VOLUME
+  SONG_VOLUME,
+  SONG_TO_PLAY
 } from "../../data/localForage";
 import SONGS from "../../data/Songs";
 import { Howler } from "howler";
 
 class Settings extends Component {
   state = {
-    volume: window.VOLUME * 100 || 100,
+    volume: Howler.volume() * 100,
     song: Howler._howls.find(h => h.playing()) || Howler._howls[0]
   };
+
+  async componentDidMount() {
+    setTimeout(() => this.setState({ volume: Howler.volume() * 100 }), 600);
+  }
 
   toggleMusic = () => {
     const { song } = this.state;
@@ -32,7 +36,6 @@ class Settings extends Component {
       volume
     });
     const newVolume = volume / 100;
-    window.VOLUME = newVolume;
     Howler.volume(newVolume);
 
     localForage.setItem(SONG_VOLUME, newVolume);
@@ -44,6 +47,7 @@ class Settings extends Component {
     const song = Howler._howls.find(h => h.title === title);
     song.play();
     this.setState({ song });
+    localForage.setItem(SONG_TO_PLAY, title);
   };
 
   render() {
