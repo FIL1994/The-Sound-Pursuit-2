@@ -1,4 +1,9 @@
-/.idea/
+.idea
+.vscode
+
+.DS_Store
+._.DS_Store
+
 /node_modules/
 /src/config/
 /assets/
@@ -8,3 +13,4 @@ TO_DO.txt
 /build/
 package-lock.json
 bundle.js
+/dist/

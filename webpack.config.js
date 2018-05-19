@@ -1,70 +1,60 @@
-const webpack = require('webpack');
-const isProduction = String(process.env.NODE_ENV).includes("production");
+"use strict";
 
-const prodProps = !isProduction ? [] : [
-  new webpack.optimize.ModuleConcatenationPlugin(),
-  new webpack.optimize.UglifyJsPlugin({
-    mangle: {},
-    comments: false
-  })
-];
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-  entry: [
-    'babel-polyfill',
-    './src/index.js'
-  ],
-  output: {
-    path: __dirname,
-    publicPath: '/',
-    filename: 'bundle.js'
+  entry: ["@babel/polyfill", "./src/index.js"],
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
   },
   module: {
-    loaders: [
+    rules: [
       {
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: [
-            'react',
-            ['env', {
-              "targets": {
-                "browsers": ["last 5 versions", "safari >= 7"],
-                "uglify-js": true
-              }
-            }],
-            'stage-1'
-          ],
-          plugins: [
-            ["transform-regenerator", {
-              "asyncGenerators": true,
-              "generators": true,
-              "async": true
-            }],
-            "syntax-async-functions"
-          ]
+        use: {
+          loader: "babel-loader"
         }
       },
       {
-        test: /\.css$/,  loader: "style-loader!css-loader"
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+            options: { minimize: true }
+          }
+        ]
       },
       {
-        test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"
+        test: /\.s?[ac]ss$/,
+        use: [
+          process.env.NODE_ENV !== "production"
+            ? "style-loader"
+            : MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader"
+        ]
       }
     ]
   },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
-  devServer: {
-    historyApiFallback: true,
-    port: 8080,
-    contentBase: './'
-  },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html"
     }),
-    ...prodProps
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    })
   ]
 };
