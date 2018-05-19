@@ -5,112 +5,80 @@ import localForage, {
   SONG_VOLUME
 } from "./data/localForage";
 import SONGS from "./data/Songs";
+import { WSATYPE_NOT_FOUND } from "constants";
 
-function playSongByID(songID) {
-  try {
-    createjs.Sound.stop();
-  } catch (e) {}
-  window.songPlaying = createjs.Sound.play(songID, {
-    loop: -1,
-    volume: window.VOLUME
-  });
-}
+SONGS.Song1.play();
 
-// prevent starting multiple songs
-if (_.isEmpty(window.songPlaying)) {
-  window.VOLUME = 1;
+window.s1 = SONGS.Song1;
 
-  const assetPath = "assets/";
-  const sounds = [
-    { id: SONGS.Song1.id, src: SONGS.Song1.src },
-    { id: SONGS.Song2.id, src: SONGS.Song2.src }
-  ];
+// function playSongByID(songID) {
+//   try {
+//     createjs.Sound.stop();
+//   } catch (e) {}
+//   window.songPlaying = createjs.Sound.play(songID, {
+//     loop: -1,
+//     volume: window.VOLUME
+//   });
+// }
 
-  let songStarted = false;
-  createjs.Sound.on(
-    "fileload",
-    function(e) {
-      localForage.getItem(SONG_VOLUME).then(songVolume => {
-        if (_.isFinite(songVolume)) {
-          window.VOLUME = Number(songVolume);
-        }
+// // prevent starting multiple songs
+// if (_.isEmpty(window.songPlaying)) {
+//   window.VOLUME = 1;
 
-        localForage.getItem(PLAY_SONG).then(playSong => {
-          if (!songStarted) {
-            // make sure there is only one song playing
-            try {
-              window.songPlaying.destroy();
-            } catch (error) {}
+//   const assetPath = "assets/";
+//   const sounds = [
+//     { id: SONGS.Song1.id, src: SONGS.Song1.src },
+//     { id: SONGS.Song2.id, src: SONGS.Song2.src }
+//   ];
 
-            try {
-              localForage
-                .getItem(PLAY_MAIN_THEME)
-                .then(playMainTheme => {
-                  playMainTheme =
-                    !_.isEmpty(playMainTheme) &&
-                    playMainTheme.toString() === false.toString();
-                  // if playMainTheme isn't empty and is false play the Song1 song
-                  // if playMainTheme is empty or false play the main theme
-                  playSongByID(playMainTheme ? SONGS.Song1.id : SONGS.Song2.id);
-                })
-                .then(() => {
-                  if (playSong) {
-                    if (playSong !== "on") {
-                      window.songPlaying.stop();
-                    }
-                  } else {
-                    localForage.setItem(PLAY_SONG, "on");
-                  }
-                  if (window.songPlaying.playState === "playSucceeded") {
-                    songStarted = true;
-                  }
-                });
-            } catch (error) {
-              console.log("Song Start Error: ", error);
-            }
-          }
-        });
-      });
-    },
-    this
-  );
+//   let songStarted = false;
+//   createjs.Sound.on(
+//     "fileload",
+//     function(e) {
+//       localForage.getItem(SONG_VOLUME).then(songVolume => {
+//         if (_.isFinite(songVolume)) {
+//           window.VOLUME = Number(songVolume);
+//         }
 
-  createjs.Sound.registerSounds(sounds, assetPath);
-}
+//         localForage.getItem(PLAY_SONG).then(playSong => {
+//           if (!songStarted) {
+//             // make sure there is only one song playing
+//             try {
+//               window.songPlaying.destroy();
+//             } catch (error) {}
 
-/*
-setTimeout(() => {
-  if (_.isEmpty(window.songPlaying)) {
-    localForage.getItem(SONG_VOLUME).then(songVolume => {
-      if (_.isFinite(songVolume)) {
-        window.VOLUME = Number(songVolume);
-      }
-      localForage.getItem(PLAY_SONG).then(playSong => {
-        // make sure there is only one song playing
-        try {
-          window.songPlaying.destroy();
-        } catch (error) {}
+//             try {
+//               localForage
+//                 .getItem(PLAY_MAIN_THEME)
+//                 .then(playMainTheme => {
+//                   playMainTheme =
+//                     !_.isEmpty(playMainTheme) &&
+//                     playMainTheme.toString() === false.toString();
+//                   // if playMainTheme isn't empty and is false play the Song1 song
+//                   // if playMainTheme is empty or false play the main theme
+//                   playSongByID(playMainTheme ? SONGS.Song1.id : SONGS.Song2.id);
+//                 })
+//                 .then(() => {
+//                   if (playSong) {
+//                     if (playSong !== "on") {
+//                       window.songPlaying.stop();
+//                     }
+//                   } else {
+//                     localForage.setItem(PLAY_SONG, "on");
+//                   }
+//                   if (window.songPlaying.playState === "playSucceeded") {
+//                     songStarted = true;
+//                   }
+//                 });
+//             } catch (error) {
+//               console.log("Song Start Error: ", error);
+//             }
+//           }
+//         });
+//       });
+//     },
+//     this
+//   );
 
-        try {
-          localForage.getItem(PLAY_MAIN_THEME).then(playMainTheme => {
-            playMainTheme = !_.isEmpty(playMainTheme) && playMainTheme.toString() === false.toString();
-            // if playMainTheme isn't empty and is false play the Song1 song
-            // if playMainTheme is empty or false play the main theme
-            playSongByID(playMainTheme ? SONGS.Song1.id : SONGS.Song2.id);
-          }).then(() => {
-            if (playSong) {
-              if (playSong !== "on") {
-                window.songPlaying.stop();
-              }
-            } else {
-              localForage.setItem(PLAY_SONG, "on");
-            }
-          });
-        } catch (error) {
-          console.log("Song Start Error: ", error);
-        }
-      });
-    });
-  }
-}, 100);
-*/
+//   createjs.Sound.registerSounds(sounds, assetPath);
+// }

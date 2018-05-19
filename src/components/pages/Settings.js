@@ -12,105 +12,42 @@ import localForage, {
   SONG_VOLUME
 } from "../../data/localForage";
 import SONGS from "../../data/Songs";
+import { Howler } from "howler";
 
 class Settings extends Component {
-  constructor(props) {
-    super(props);
-    let songID = SONGS.Song2.id;
+  state = {
+    volume: window.VOLUME * 100 || 100,
+    song: Howler._howls.find(h => h.playing()) || Howler._howls[0]
+  };
 
-    // make sure the right song is selected in the select dropdown
-    if (!_.isEmpty(window.songPlaying)) {
-      // if songPlaying exists and the src is not Song2
-      if (window.songPlaying.src !== `assets/${SONGS.Song2.src}`) {
-        songID = SONGS.Song1.id;
-      }
-    } else {
-      // if songPlaying was empty check again in 400ms --> songPlaying is rarely available before 400ms
-      setTimeout(() => {
-        // if songPlaying isn't empty and its src isn't Song2 set the id to Song1
-        if (
-          !_.isEmpty(window.songPlaying) &&
-          window.songPlaying.src !== `assets/${SONGS.Song2.src}`
-        ) {
-          this.setState({ songID: SONGS.Song1.id });
-        }
-      }, 250);
-    }
+  toggleMusic = () => {
+    const { song } = this.state;
+    song.playing() ? song.stop() : song.play();
+    localForage.setItem(PLAY_SONG, song.playing() ? "on" : "off");
+  };
 
-    this.state = {
-      volume: window.VOLUME * 100 || 100,
-      songID
-    };
-
-    this.songs = [
-      {
-        id: SONGS.Song2.id,
-        title: "Something Else - FIL1994"
-      },
-      {
-        id: SONGS.Song1.id,
-        title: "A Perilous Journey - FIL1994"
-      }
-    ];
-
-    this.volumeChange = this.volumeChange.bind(this);
-    this.toggleMusic = this.toggleMusic.bind(this);
-    this.changeSong = this.changeSong.bind(this);
-  }
-
-  toggleMusic() {
-    const { songPlaying } = window;
-    if (
-      !songPlaying.paused &&
-      songPlaying.playState !== createjs.Sound.PLAY_SUCCEEDED
-    ) {
-      window.songPlaying.play();
-      localForage.setItem(PLAY_SONG, "on");
-    } else if (songPlaying.paused) {
-      window.songPlaying.paused = false;
-      localForage.setItem(PLAY_SONG, "on");
-    } else {
-      window.songPlaying.stop();
-      localForage.setItem(PLAY_SONG, "off");
-    }
-  }
-
-  volumeChange(event) {
+  volumeChange = event => {
     const volume = event.target.value;
     this.setState({
       volume
     });
     const newVolume = volume / 100;
     window.VOLUME = newVolume;
-    window.songPlaying.volume = newVolume;
+    Howler.volume(newVolume);
 
     localForage.setItem(SONG_VOLUME, newVolume);
-  }
+  };
 
-  changeSong(event) {
-    const songID = event.target.value;
-    if (songID !== this.state.songID) {
-      this.setState({
-        songID
-      });
-
-      try {
-        window.songPlaying.stop();
-      } catch (e) {}
-      try {
-        window.songPlaying.destroy();
-      } catch (e) {}
-
-      window.songPlaying = createjs.Sound.play(songID, {
-        loop: -1,
-        volume: window.VOLUME
-      });
-      localForage.setItem(PLAY_MAIN_THEME, !(songID === SONGS.Song1.id));
-    }
-  }
+  changeSong = event => {
+    const title = event.target.value;
+    Howler._howls.map(h => h.stop());
+    const song = Howler._howls.find(h => h.title === title);
+    song.play();
+    this.setState({ song });
+  };
 
   render() {
-    const { songID, volume } = this.state;
+    const { song, volume } = this.state;
 
     return (
       <Page centered>
@@ -120,20 +57,20 @@ class Settings extends Component {
               <p className="form-label" htmlFor="selectSong">
                 Select Song:
               </p>
-              <select
-                id="selectSong"
-                className="form-select"
-                value={songID}
-                onChange={this.changeSong}
-              >
-                {this.songs.map(s => {
-                  return (
-                    <option key={s.id} value={s.id}>
-                      {s.title}
+              <div className="custom-select">
+                <select
+                  id="selectSong"
+                  className="form-select"
+                  value={song.title}
+                  onChange={this.changeSong}
+                >
+                  {Howler._howls.map(h => (
+                    <option key={h.title} value={h.title}>
+                      {h.title}
                     </option>
-                  );
-                })}
-              </select>
+                  ))}
+                </select>
+              </div>
             </div>
             <div>
               <p className="form-label" htmlFor="rangeVolume">
