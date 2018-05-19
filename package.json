@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode=development --port=8080",
-    "build": "NODE_ENV='production' webpack --mode=production",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode=development --port=8080 --progress",
+    "build": "NODE_ENV='production' webpack --mode=production -p --progress --colors",
     "dev": "webpack --mode=development"
   },
   "author": "",
