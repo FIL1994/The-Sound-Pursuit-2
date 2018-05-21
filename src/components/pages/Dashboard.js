@@ -169,24 +169,24 @@ class Dashboard extends Component {
     );
 
     if (
-      _.min(liveSkills) >= 25 &&
-      _.min(musicianshipSkills) >= 25 &&
-      _.min(songwritingSkills) >= 25 &&
-      _.min(studioSkills) >= 25
+      Math.min(...liveSkills) >= 25 &&
+      Math.min(...musicianshipSkills) >= 25 &&
+      Math.min(...songwritingSkills) >= 25 &&
+      Math.min(...studioSkills) >= 25
     ) {
       unlocks.push(unlockSkills25);
       if (
-        _.min(liveSkills) >= 50 &&
-        _.min(musicianshipSkills) >= 50 &&
-        _.min(songwritingSkills) >= 50 &&
-        _.min(studioSkills) >= 50
+        Math.min(...liveSkills) >= 50 &&
+        Math.min(...musicianshipSkills) >= 50 &&
+        Math.min(...songwritingSkills) >= 50 &&
+        Math.min(...studioSkills) >= 50
       ) {
         unlocks.push(unlockSkills50);
         if (
-          _.min(liveSkills) >= 75 &&
-          _.min(musicianshipSkills) >= 75 &&
-          _.min(songwritingSkills) >= 75 &&
-          _.min(studioSkills) >= 75
+          Math.min(...liveSkills) >= 75 &&
+          Math.min(...musicianshipSkills) >= 75 &&
+          Math.min(...songwritingSkills) >= 75 &&
+          Math.min(...studioSkills) >= 75
         ) {
           unlocks.push(unlockSkills75);
         }
