@@ -1,90 +1,23 @@
+@import "utils";
 @import "select";
-
-ul {
-  list-style-type: none;
-}
-
-.left-space-1 {
-  margin-left: 0.15rem;
-}
-
-ul li.tile {
-  margin-top: 0.1rem;
-}
-
-li.tile img {
-  margin-bottom: -6px;
-}
+@import "scrollable";
+@import "lists";
+@import "medals";
+@import "tables";
 
 .page {
   width: 95%;
   margin-top: 10px;
 }
 
+.panel {
+  background-color: #e8e8e8;
+  padding-bottom: 10px;
+  border-radius: 0.3rem;
+}
+
 .panel .divider {
   border-color: #babcbf;
-}
-
-.skill-number {
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
-.spaced button {
-  margin-bottom: 5px;
-}
-
-.spaced a {
-  margin-bottom: 5px;
-}
-
-.toast-bottom {
-  position: absolute;
-  bottom: 5px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 350px;
-  left: 0;
-  right: 0;
-}
-
-.scrollable {
-  overflow-y: scroll;
-  height: 450px;
-}
-
-.scrollable-small {
-  overflow-y: scroll;
-  height: 250px;
-}
-
-.scrollable.start {
-  height: 530px;
-}
-
-.scrollable.drag-container {
-  height: 270px;
-}
-
-.scrollable-table tbody {
-  display: block;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  height: 400px;
-}
-
-.scrollable-table thead {
-  display: block;
-}
-
-.scrollable-table td,
-.scrollable-table th {
-  text-align: center;
-  width: 1%;
-}
-
-.full-width {
-  width: 100%;
 }
 
 .my-icon {
@@ -103,42 +36,6 @@ li.tile img {
   color: #5755d9;
 }
 
-.unlocked-medal {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-.medal-shadow {
-  box-shadow: -1px -1px 2px #999999;
-}
-
-.width-190 {
-  width: 190px;
-}
-
-/*Overrides*/
-.is-error {
-  /*color: #e85600;*/
-}
-
-.toast {
-  margin-top: 5px;
-}
-
-.panel {
-  background-color: #e8e8e8;
-  padding-bottom: 10px;
-  border-radius: 0.3rem;
-}
-
-.table.table-striped tbody tr:nth-of-type(even) {
-  background-color: #edeeef;
-}
-
-.table.table-hover tbody tr:hover {
-  background-color: #e0e1e2;
-}
-
 .navbar-section .btn {
   height: 100%;
 }
@@ -147,6 +44,7 @@ header i.fa {
   font-size: 1.32em;
 }
 
-.small-top-margin {
-  margin-top: -10px;
+/*Overrides*/
+.is-error {
+  /*color: #e85600;*/
 }
