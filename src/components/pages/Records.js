@@ -68,7 +68,7 @@ class Records extends Component {
     if (_.isEmpty(singles)) {
       return (
         <EmptyState
-          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />}
+          icon={<i className="fa fa-file-audio fa-4x" aria-hidden="true" />}
           title="You haven't released any singles yet"
         />
       );
@@ -145,7 +145,7 @@ class Records extends Component {
     if (_.isEmpty(albums)) {
       return (
         <EmptyState
-          icon={<i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />}
+          icon={<i className="fa fa-file-audio fa-4x" aria-hidden="true" />}
           title="You haven't released any albums yet"
         />
       );
@@ -235,7 +235,7 @@ class Records extends Component {
           {_.isEmpty(singles) && _.isEmpty(albums) ? (
             <EmptyState
               icon={
-                <i className="fa fa-file-audio-o fa-4x" aria-hidden="true" />
+                <i className="fa fa-file-audio fa-4x" aria-hidden="true" />
               }
               title="You haven't released any records yet"
             />

@@ -21,18 +21,11 @@ const MyNavLink = props => {
 };
 
 class HeaderNav extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    hasStarted: false
+  };
 
-    this.state = {
-      hasStarted: false
-    };
-
-    this.isLinkActive = this.isLinkActive.bind(this);
-    this.getParamHasStarted = this.getParamHasStarted.bind(this);
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.props.getCash();
     this.props.getFans();
     this.props.getWeek();
@@ -52,12 +45,12 @@ class HeaderNav extends Component {
     });
   }
 
-  isLinkActive(match) {
+  isLinkActive = match => {
     if (!match) {
       return false;
     }
     return !(match.url === "/" && !match.isExact);
-  }
+  };
 
   formatNumber(number, isFloat) {
     if (number > 1000000000) {
@@ -96,7 +89,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Records"
         >
-          <i className="fa fa-circle-o" aria-hidden="true" />
+          <i className="far fa-circle" aria-hidden="true" />
         </MyNavLink>
         <MyNavLink
           to="/tour"
@@ -118,7 +111,7 @@ class HeaderNav extends Component {
     );
   }
 
-  getParamHasStarted() {
+  getParamHasStarted = () => {
     const { search } = this.props.location;
     let paramHasStarted = "";
 
@@ -135,7 +128,7 @@ class HeaderNav extends Component {
     }
 
     return paramHasStarted === "true";
-  }
+  };
 
   render() {
     let hasStarted = this.getParamHasStarted();

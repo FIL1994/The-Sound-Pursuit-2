@@ -19,6 +19,12 @@ import "spectre.css/dist/spectre-exp.css";
 import "./styles/spectre-dark.min.css";
 import "./index.scss";
 
+import fa from "@fortawesome/fontawesome";
+import faSolid from "@fortawesome/fontawesome-free-solid";
+import { faCircle } from "@fortawesome/fontawesome-free-regular";
+
+fa.library.add(faSolid, faCircle);
+
 const store = createStore(reducers, applyMiddleware(ReduxThunk));
 
 ReactDOM.render(
