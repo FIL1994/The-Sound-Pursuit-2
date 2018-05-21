@@ -226,39 +226,33 @@ class Dashboard extends Component {
     const { leadMember, members } = this.props.band;
 
     return (
-      <ul>
-        {[leadMember, ...members].map((m, index) => {
-          return (
-            <li
-              key={index}
-              className="tile"
-              style={{
-                width: "30%",
-                marginLeft: "auto",
-                marginRight: "auto",
-                boxShadow: "rgba(224, 224, 224, 0.69) 1px 1px 6px 1px",
-                padding: 15,
-                marginBottom: 5
-              }}
-            >
-              <div className="tile-icon">
-                <Avatar round name={m.name} maxInitials={2} size={50} />
+      <div className="container">
+        <div className="columns">
+          {[leadMember, ...members].map((m, index) => {
+            return (
+              <div
+                key={index}
+                className="tile column col-6 member-card"
+              >
+                <div className="tile-icon">
+                  <Avatar round name={m.name} maxInitials={2} size={50} />
+                </div>
+                <div className="tile-content">
+                  <strong className="tile-title">
+                    {m.name} -{" "}
+                    <span className="text-capitalize">{m.instrument}</span>
+                  </strong>
+                  <p className="tile-subtitle">
+                    Live: {m.skills.live} | Musicianship:{" "}
+                    {m.skills.musicianship} | Songwriting:{" "}
+                    {m.skills.songwriting} | Studio: {m.skills.studio}
+                  </p>
+                </div>
               </div>
-              <div className="tile-content">
-                <strong className="tile-title">
-                  {m.name} -{" "}
-                  <span className="text-capitalize">{m.instrument}</span>
-                </strong>
-                <p className="tile-subtitle">
-                  Live: {m.skills.live} | Musicianship: {m.skills.musicianship}{" "}
-                  | Songwriting: {m.skills.songwriting} | Studio:{" "}
-                  {m.skills.studio}
-                </p>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+            );
+          })}
+        </div>
+      </div>
     );
   };
 
