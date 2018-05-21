@@ -17,40 +17,39 @@ import { saveBand, getCharts } from "../../actions";
 import { resetDataAsync } from "../../data/resetData";
 import { unlockStartBand } from "../../ng/UnlockMedals";
 
-class Start extends Component {
-  constructor(props) {
-    super(props);
+const getTooltipText = skill =>
+  do {
+    if (skill === "studio") "improves recording";
+    else if (skill === "musicianship") "improves recording and show results";
+    else if (skill === "songwriting") "improves song quality";
+    else if (skill === "live") "improves tour and show results";
+  };
 
-    this.state = {
-      step: 0,
-      error: {
-        bandName: null,
-        yourName: null,
-        instrument: null,
-        points: null,
-        vocals: null,
-        guitar: null,
-        bass: null,
-        drums: null
-      },
-      points: 10,
-      members: this.generateBandMembers(),
+class Start extends Component {
+  state = {
+    step: 0,
+    error: {
       bandName: null,
       yourName: null,
       instrument: null,
-      skills: {
-        live: 0,
-        musicianship: 0,
-        songwriting: 0,
-        studio: 0
-      }
-    };
-
-    this.validateBandName = this.validateBandName.bind(this);
-    this.validateCreate = this.validateCreate.bind(this);
-    this.validateBandMembers = this.validateBandMembers.bind(this);
-    this.renderForm = this.renderForm.bind(this);
-  }
+      points: null,
+      vocals: null,
+      guitar: null,
+      bass: null,
+      drums: null
+    },
+    points: 10,
+    members: this.generateBandMembers(),
+    bandName: null,
+    yourName: null,
+    instrument: null,
+    skills: {
+      live: 0,
+      musicianship: 0,
+      songwriting: 0,
+      studio: 0
+    }
+  };
 
   skillNames = ["songwriting", "musicianship", "live", "studio"];
 
@@ -111,7 +110,7 @@ class Start extends Component {
     );
   }
 
-  renderForm() {
+  renderForm = () => {
     const { step, error, points, skills } = this.state;
 
     const renderSkills = () => {
@@ -127,24 +126,11 @@ class Start extends Component {
           btnPlusProps.tabIndex = "-1";
         }
 
-        const toolTipText = (() => {
-          switch (skill) {
-            case "studio":
-              return "improves recording";
-            case "musicianship":
-              return "improves recording and show results";
-            case "songwriting":
-              return "improves song quality";
-            case "live":
-              return "improves tour and show results";
-          }
-        })();
-
         return [
           <div
             key={`${index}A`}
             className="col-6 text-left tooltip"
-            data-tooltip={toolTipText}
+            data-tooltip={getTooltipText(skill)}
           >
             <p className="text-capitalize">{`${skill}: `}</p>
           </div>,
@@ -499,9 +485,9 @@ class Start extends Component {
           </form>
         );
     }
-  }
+  };
 
-  validateBandName(e) {
+  validateBandName = e => {
     e.preventDefault();
 
     let bandName = $("#txtBandName").val();
@@ -531,9 +517,9 @@ class Start extends Component {
       step,
       bandName
     });
-  }
+  };
 
-  validateCreate(e) {
+  validateCreate = e => {
     e.preventDefault();
 
     let { points } = this.state;
@@ -583,9 +569,9 @@ class Start extends Component {
       yourName,
       instrument
     });
-  }
+  };
 
-  validateBandMembers(e) {
+  validateBandMembers = e => {
     e.preventDefault();
     const { yourName, instrument, skills } = this.state;
     let error = _.cloneDeep(this.state.error);
@@ -687,7 +673,7 @@ class Start extends Component {
       error,
       step
     });
-  }
+  };
 
   render() {
     return (
