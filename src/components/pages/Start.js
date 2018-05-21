@@ -132,7 +132,11 @@ class Start extends Component {
             className="col-6 text-left tooltip"
             data-tooltip={getTooltipText(skill)}
           >
-            <p className="text-capitalize">{`${skill}: `}</p>
+            <i class="fas fa-question-circle" />
+            <p
+              className="text-capitalize"
+              style={{ display: "inline-block", marginLeft: 8 }}
+            >{`${skill}: `}</p>
           </div>,
           <div key={`${index}B`} className="col-6">
             <Button
