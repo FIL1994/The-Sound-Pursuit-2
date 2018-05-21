@@ -21,4 +21,10 @@ import SONGS from "./data/Songs";
   }
 
   SONGS.Song1.play();
+
+  // AudioContext can only be started after user interacts w/ page
+  document.body.onclick = () => {
+    Howler.ctx.resume();
+    document.body.onclick = null;
+  };
 })();

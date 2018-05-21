@@ -15,6 +15,7 @@ import reducers from "./reducers";
 import "./setupSoundJS";
 
 import "fg-select-css/src/select-css.css";
+import "spectre.css/dist/spectre-exp.css";
 import "./styles/spectre-dark.min.css";
 import "./index.scss";
 
