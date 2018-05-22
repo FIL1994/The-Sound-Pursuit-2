@@ -16,6 +16,7 @@ import generateBandMember from "../../data/bandMember";
 import { saveBand, getCharts } from "../../actions";
 import { resetDataAsync } from "../../data/resetData";
 import { unlockStartBand } from "../../ng/UnlockMedals";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 const getTooltipText = skill =>
   do {
@@ -132,7 +133,7 @@ class Start extends Component {
             className="col-6 text-left tooltip"
             data-tooltip={getTooltipText(skill)}
           >
-            <i class="fas fa-question-circle" />
+            <FontAwesomeIcon icon="question-circle" />
             <p
               className="text-capitalize"
               style={{ display: "inline-block", marginLeft: 8 }}

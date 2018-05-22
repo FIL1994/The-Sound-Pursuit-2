@@ -20,6 +20,7 @@ import "./styles/spectre-dark.min.css";
 import "./index.scss";
 
 import fa from "@fortawesome/fontawesome";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faSolid from "@fortawesome/fontawesome-free-solid";
 import { faCircle } from "@fortawesome/fontawesome-free-regular";
 

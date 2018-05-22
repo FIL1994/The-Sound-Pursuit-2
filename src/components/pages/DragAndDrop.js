@@ -34,6 +34,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 import { unlockReleaseAlbum, unlockReleaseSingle } from "../../ng/UnlockMedals";
 import ErrorDiv from "../ErrorDiv";
 import { ImageURL } from "../../data/util";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 const ErrorWrapper = props => {
   return (
@@ -606,7 +607,7 @@ class DragAndDrop extends Component {
           <Loading large />
         ) : _.isEmpty(songs) ? (
           <EmptyState
-            icon={<i className="fa fa-music fa-4x" />}
+            icon={<FontAwesomeIcon icon="music" size="4x" />}
             title={
               <Fragment>
                 You don't have a song that is eligible for a single.<br />

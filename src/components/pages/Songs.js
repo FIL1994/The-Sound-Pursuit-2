@@ -23,6 +23,7 @@ import {
 import studios from "../../data/studios";
 import { unlockWriteSong, unlockRecordSong } from "../../ng/UnlockMedals";
 import { weeksToYearsAndWeeks } from "../../data/util";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 class Songs extends Component {
   constructor(props) {
@@ -44,7 +45,6 @@ class Songs extends Component {
     this.validateStudioSelect = this.validateStudioSelect.bind(this);
     this.handleSort = this.handleSort.bind(this);
     this.sortSongs = this.sortSongs.bind(this);
-    this.renderIcon = this.renderIcon.bind(this);
   }
 
   componentWillMount() {
@@ -443,29 +443,29 @@ class Songs extends Component {
       <Fragment>
         <br />
         <EmptyState
-          icon={<i className="fa fa-music fa-4x" />}
+          icon={<FontAwesomeIcon icon="music" size="4x" />}
           title="You haven't written any songs yet"
         />
       </Fragment>
     );
   }
 
-  renderIcon(thisColumn, isString) {
+  renderIcon = (thisColumn, isString) => {
     const { column, sortAsc } = this.state;
-    let className = "fa fa-sort";
+    let className = "sort";
 
     if (thisColumn === column) {
       if (isString) {
-        className = sortAsc ? "fa fa-sort-alpha-asc " : "fa fa-sort-alpha-desc";
+        className = sortAsc ? "sort-alpha-down" : "sort-alpha-up";
       } else {
-        className = sortAsc
-          ? "fa fa-sort-numeric-asc"
-          : "fa fa-sort-numeric-desc";
+        className = sortAsc ? "sort-numeric-down" : "sort-numeric-up";
       }
     }
 
-    return <i className={className} aria-hidden="true" />;
-  }
+    return <FontAwesomeIcon icon={className} />;
+
+    // return <i className={className} aria-hidden="true" />;
+  };
 
   getUsableSongs(songs) {
     try {
@@ -485,7 +485,7 @@ class Songs extends Component {
     if (songs.length < 1) {
       return (
         <EmptyState
-          icon={<i className="fa fa-pencil fa-4x" />}
+          icon={<FontAwesomeIcon icon="pencil-alt" size="4x" />}
           title="You don't have any unreleased songs"
         />
       );

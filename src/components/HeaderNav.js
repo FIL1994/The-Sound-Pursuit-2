@@ -9,6 +9,8 @@ import _ from "lodash";
 import { getFans, getCash, getWeek } from "../actions";
 import localForage, { DATA_BAND } from "../data/localForage";
 import { weeksToYearsAndWeeks } from "../data/util";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/fontawesome-free-regular";
 
 const MyNavLink = props => {
   return (
@@ -73,7 +75,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Home"
         >
-          <i className="fa fa-home" aria-hidden="true" />
+          <FontAwesomeIcon icon="home" />
         </MyNavLink>
         <MyNavLink
           to="/songs"
@@ -81,7 +83,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Songs"
         >
-          <i className="fa fa-music" aria-hidden="true" />
+          <FontAwesomeIcon icon="music" />
         </MyNavLink>
         <MyNavLink
           to="/records"
@@ -89,7 +91,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Records"
         >
-          <i className="far fa-circle" aria-hidden="true" />
+          <FontAwesomeIcon icon={faCircle} />
         </MyNavLink>
         <MyNavLink
           to="/tour"
@@ -97,7 +99,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Tour"
         >
-          <i className="fa fa-globe" aria-hidden="true" />
+          <FontAwesomeIcon icon="globe" />
         </MyNavLink>
         <MyNavLink
           to="/charts"
@@ -105,7 +107,7 @@ class HeaderNav extends Component {
           className="tooltip tooltip-bottom"
           data-tooltip="Charts"
         >
-          <i className="fa fa-th-list" aria-hidden="true" />
+          <FontAwesomeIcon icon="list-ol" />
         </MyNavLink>
       </Fragment>
     );
@@ -200,7 +202,7 @@ class HeaderNav extends Component {
             className="text-light centered p-2 tooltip tooltip-bottom"
             data-tooltip="Settings"
           >
-            <i className="fa fa-cog my-icon" aria-hidden="true" />
+            <FontAwesomeIcon icon="cog" className="my-icon" />
           </NavLink>
         </section>
       </header>
