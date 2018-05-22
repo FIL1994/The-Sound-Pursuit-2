@@ -26,28 +26,14 @@ import { weeksToYearsAndWeeks } from "../../data/util";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 class Songs extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    errorRecording: null,
+    studioID: 0,
+    column: "written",
+    sortAsc: false
+  };
 
-    this.state = {
-      errorRecording: null,
-      studioID: 0,
-      column: "written",
-      sortAsc: false
-    };
-
-    this.writeSongSubmit = this.writeSongSubmit.bind(this);
-    this.renderSongList = this.renderSongList.bind(this);
-    this.editSongSubmit = this.editSongSubmit.bind(this);
-    this.renderModalEditSong = this.renderModalEditSong.bind(this);
-    this.renderModalRecordSong = this.renderModalRecordSong.bind(this);
-    this.recordSongSubmit = this.recordSongSubmit.bind(this);
-    this.validateStudioSelect = this.validateStudioSelect.bind(this);
-    this.handleSort = this.handleSort.bind(this);
-    this.sortSongs = this.sortSongs.bind(this);
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.props.getBand();
     this.props.getSongs();
     this.props.getCash();
@@ -61,7 +47,7 @@ class Songs extends Component {
     });
   }
 
-  handleSort(clickedColumn) {
+  handleSort = clickedColumn => {
     let { column, sortAsc } = this.state;
 
     if (column !== clickedColumn) {
@@ -74,16 +60,16 @@ class Songs extends Component {
       column: clickedColumn,
       sortAsc
     });
-  }
+  };
 
-  sortSongs() {
+  sortSongs = () => {
     let { songs } = this.props;
     const { column, sortAsc } = this.state;
 
     return _.orderBy(songs, [column], [sortAsc ? "asc" : "desc"]);
-  }
+  };
 
-  writeSongSubmit() {
+  writeSongSubmit = () => {
     let txtSongName = $("#txtSongName");
     if (_.isEmpty(this.props.band)) {
       return;
@@ -130,9 +116,9 @@ class Songs extends Component {
     setTimeout(unlockWriteSong);
     this.props.writeSong(song);
     this.props.nextWeek();
-  }
+  };
 
-  editSongSubmit() {
+  editSongSubmit = () => {
     let id,
       txtNewSongName = $("#txtNewSongName");
     try {
@@ -161,9 +147,9 @@ class Songs extends Component {
 
     song.title = songTitle;
     this.props.updateSong(song);
-  }
+  };
 
-  recordSongSubmit() {
+  recordSongSubmit = () => {
     if (this.state.errorRecording) {
       return;
     }
@@ -222,7 +208,7 @@ class Songs extends Component {
     this.props.saveCash(cash);
     this.props.updateSong(song);
     this.props.nextWeek();
-  }
+  };
 
   renderModalWriteSong() {
     return (
@@ -278,7 +264,7 @@ class Songs extends Component {
     );
   }
 
-  renderModalEditSong() {
+  renderModalEditSong = () => {
     return (
       <div id="modal-edit-song" className="modal modal-sm">
         <a href="#page-songs" className="modal-overlay" aria-label="Close" />
@@ -331,9 +317,9 @@ class Songs extends Component {
         </form>
       </div>
     );
-  }
+  };
 
-  validateStudioSelect(event, initialCheck) {
+  validateStudioSelect = (event, initialCheck) => {
     let studioID,
       errorRecording = null;
 
@@ -361,9 +347,9 @@ class Songs extends Component {
     }
 
     return errorRecording;
-  }
+  };
 
-  renderModalRecordSong() {
+  renderModalRecordSong = () => {
     const errorRecording = this.validateStudioSelect(null, true);
     const buttonSubmitProps = errorRecording
       ? {
@@ -436,7 +422,7 @@ class Songs extends Component {
         </form>
       </div>
     );
-  }
+  };
 
   renderEmpty() {
     return (
@@ -479,7 +465,7 @@ class Songs extends Component {
     return songs;
   }
 
-  renderSongList() {
+  renderSongList = () => {
     let songs = this.getUsableSongs(this.sortSongs());
 
     if (songs.length < 1) {
@@ -575,7 +561,7 @@ class Songs extends Component {
         </tbody>
       </table>
     );
-  }
+  };
 
   render() {
     const { songs } = this.props;

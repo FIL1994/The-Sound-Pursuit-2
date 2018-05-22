@@ -6,27 +6,18 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 
 class Records extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    showAlbums: false
+  };
 
-    this.state = {
-      showAlbums: false
-    };
-
-    this.renderSingles = this.renderSingles.bind(this);
-    this.renderAlbums = this.renderAlbums.bind(this);
-    this.renderSinglesOrAlbumsSwitch = this.renderSinglesOrAlbumsSwitch.bind(
-      this
-    );
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.props.getWeek();
     this.props.getSongs();
     this.props.getSingles();
@@ -40,7 +31,7 @@ class Records extends Component {
     });
   }
 
-  renderSinglesOrAlbumsSwitch() {
+  renderSinglesOrAlbumsSwitch = () => {
     const { showAlbums } = this.state;
     return (
       <span className="form-group text-right float-right">
@@ -57,9 +48,9 @@ class Records extends Component {
         </label>
       </span>
     );
-  }
+  };
 
-  renderSingles() {
+  renderSingles = () => {
     let { singles, week } = this.props;
     singles = _.sortBy(singles, ({ released }) => {
       return -released;
@@ -134,9 +125,9 @@ class Records extends Component {
         </div>
       </div>
     );
-  }
+  };
 
-  renderAlbums() {
+  renderAlbums = () => {
     let { albums, week } = this.props;
     albums = _.sortBy(albums, ({ released }) => {
       return -released;
@@ -211,7 +202,7 @@ class Records extends Component {
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     const { showAlbums } = this.state;
@@ -234,9 +225,7 @@ class Records extends Component {
         <div>
           {_.isEmpty(singles) && _.isEmpty(albums) ? (
             <EmptyState
-              icon={
-                <FontAwesomeIcon icon="file-audio" size="4x" />
-              }
+              icon={<FontAwesomeIcon icon="file-audio" size="4x" />}
               title="You haven't released any records yet"
             />
           ) : (
