@@ -381,19 +381,23 @@ class Songs extends Component {
             <div className="content">
               <div className="form-group">
                 <label htmlFor="#selectStudio">Select Studio:</label>
-                <select
-                  id="selectStudio"
-                  className={`form-select ${errorRecording ? "is-error" : ""}`}
-                  onChange={this.validateStudioSelect}
-                >
-                  {studios.map(({ name }, index) => {
-                    return (
-                      <option key={name} value={index}>
-                        {name}
-                      </option>
-                    );
-                  })}
-                </select>
+                <div className="custom-select">
+                  <select
+                    id="selectStudio"
+                    className={`form-select ${
+                      errorRecording ? "is-error" : ""
+                    }`}
+                    onChange={this.validateStudioSelect}
+                  >
+                    {studios.map(({ name }, index) => {
+                      return (
+                        <option key={name} value={index}>
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
                 <div className="form-input-hint">{errorRecording}</div>
               </div>
               <div>
