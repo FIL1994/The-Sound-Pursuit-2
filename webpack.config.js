@@ -5,9 +5,11 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
+const isProduction = String(process.env.NODE_ENV).includes("production");
+
 module.exports = {
   entry: ["@babel/polyfill", "./src/index.js"],
-  ...(process.env.NODE_ENV !== "production"
+  ...(!isProduction
     ? {
         output: {
           path: __dirname,
@@ -46,9 +48,7 @@ module.exports = {
       {
         test: /\.s?[ac]ss$/,
         use: [
-          process.env.NODE_ENV !== "production"
-            ? "style-loader"
-            : MiniCssExtractPlugin.loader,
+          !isProduction ? "style-loader" : MiniCssExtractPlugin.loader,
           "css-loader",
           "sass-loader"
         ]

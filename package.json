@@ -8,7 +8,7 @@
     "build":
       "NODE_ENV='production' webpack --mode=production -p --progress --colors && java -jar closure-compiler-v20180506.jar --js_output_file=dist/min.js dist/main.js && mv dist/min.js dist/main.js && cp -R assets dist/assets",
     "build:win":
-      "set NODE_ENV='production' && webpack --mode=production -p --progress --colors && scripts\\build.cmd",
+      "set NODE_ENV=production && webpack --mode=production -p --progress --colors && scripts\\build.cmd",
     "dev": "webpack --mode=development"
   },
   "author": "",
