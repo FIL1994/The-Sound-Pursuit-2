@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode=development --port=8080 --progress",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode=development --port=8080 --progress",
     "build":
       "NODE_ENV='production' webpack --mode=production -p --progress --colors && java -jar closure-compiler-v20180506.jar --js_output_file=dist/min.js dist/main.js && mv dist/min.js dist/main.js && cp -R assets dist/assets",
     "build:win":

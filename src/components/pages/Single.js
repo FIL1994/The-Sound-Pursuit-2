@@ -11,13 +11,9 @@ import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 import { getSongs, getSingles } from "../../actions";
 
 class Single extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      single: undefined
-    };
-  }
+  state = {
+    single: undefined
+  };
 
   componentDidMount() {
     this.props.getSongs();

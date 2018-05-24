@@ -11,13 +11,9 @@ import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 import { getSongs, getAlbums } from "../../actions";
 
 class Album extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      album: undefined
-    };
-  }
+  state = {
+    album: undefined
+  };
 
   componentDidMount() {
     this.props.getSongs();
