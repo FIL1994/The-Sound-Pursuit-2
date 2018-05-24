@@ -7,6 +7,14 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   entry: ["@babel/polyfill", "./src/index.js"],
+  ...(process.env.NODE_ENV !== "production"
+    ? {
+        output: {
+          path: __dirname,
+          publicPath: "/"
+        }
+      }
+    : {}),
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
