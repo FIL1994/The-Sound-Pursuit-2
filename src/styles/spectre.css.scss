@@ -1,0 +1,14 @@
+@import url(http://fonts.googleapis.com/css?family=IBM+Plex+Sans);
+
+$primary-color: #2d948a; // #5755d9
+$dark-color: #435359; // #454d5d
+// $light-color: #e0e0e0; // #fff
+
+$success-color: #17421c; // #32b643
+$warning-color: #ffb700; // #ffb700
+$error-color: #e82d00; // #e85600
+
+$base-font-family:  "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+
+@import "~spectre.css/src/spectre-icons";
+@import "~spectre.css/src/spectre";
