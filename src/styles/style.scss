@@ -9,6 +9,15 @@ $box-shadow: rgba(224, 224, 224, 0.69) 1px 1px 6px 1px;
 @import "cards";
 @import "gradients";
 
+body {
+  margin-top: -10px;
+}
+
+#site {
+  padding-top: 10px;
+  min-height: 620px;
+}
+
 .page {
   width: 95%;
   margin-top: 10px;

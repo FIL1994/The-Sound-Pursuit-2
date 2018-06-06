@@ -8,16 +8,16 @@ import _ from "lodash";
 import localForage, { DATA_BAND } from "../data/localForage";
 
 class HasStarted extends Component {
-  constructor(props) {
-    super(props);
+  async componentDidMount() {
+    try {
+      const value = await localForage.getItem(DATA_BAND);
 
-    localForage.getItem(DATA_BAND, (err, value) => {
-      if (err) {
-        console.log("Local Forage Error", err);
-      } else if (_.isEmpty(value)) {
+      if (_.isEmpty(value)) {
         this.props.history.push("/start");
       }
-    });
+    } catch (err) {
+      console.log("Local Forage Error", err);
+    }
   }
 
   render() {

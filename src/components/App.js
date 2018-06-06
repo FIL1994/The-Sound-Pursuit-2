@@ -39,24 +39,17 @@ const backgroundImage = `${ROOT_URL}dust_scratches.jpg`;
   */
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderModalScore = this.renderModalScore.bind(this);
-    this.hideModalScore = this.hideModalScore.bind(this);
-
-    this.state = {
-      modalActive: true
-    };
-  }
+  state = {
+    modalActive: true
+  };
 
   lastScore = {};
 
-  hideModalScore() {
+  hideModalScore = () => {
     this.setState({ modalActive: false });
-  }
+  };
 
-  renderModalScore() {
+  renderModalScore = () => {
     if (this.lastScore === this.props.score) {
       return;
     }
@@ -102,7 +95,7 @@ class App extends Component {
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     const { score } = this.props;
@@ -112,7 +105,7 @@ class App extends Component {
         <div
           id="site"
           className="site"
-          style={{ background: `url(${backgroundImage})`, minHeight: 620 }}
+          style={{ background: `url(${backgroundImage})` }}
         >
           <HasStarted />
           <HeaderNav />
@@ -146,4 +139,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { getScore })(App);
+export default connect(
+  mapStateToProps,
+  { getScore }
+)(App);
