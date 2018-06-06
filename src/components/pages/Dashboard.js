@@ -230,12 +230,15 @@ class Dashboard extends Component {
         <div className="columns">
           {[leadMember, ...members].map((m, index) => {
             return (
-              <div
-                key={index}
-                className="tile column col-6 member-card"
-              >
+              <div key={index} className="tile column col-6 member-card">
                 <div className="tile-icon">
-                  <Avatar round name={m.name} maxInitials={2} size={50} />
+                  <Avatar
+                    className="avatar"
+                    round
+                    name={m.name}
+                    maxInitials={2}
+                    size={50}
+                  />
                 </div>
                 <div className="tile-content">
                   <strong className="tile-title">
@@ -312,13 +315,16 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  getBand,
-  saveBand,
-  getFans,
-  getCash,
-  getWeek,
-  addFans,
-  addCash,
-  nextWeek
-})(Dashboard);
+export default connect(
+  mapStateToProps,
+  {
+    getBand,
+    saveBand,
+    getFans,
+    getCash,
+    getWeek,
+    addFans,
+    addCash,
+    nextWeek
+  }
+)(Dashboard);
