@@ -6,6 +6,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import numeral from "numeral";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
@@ -78,12 +79,12 @@ class Records extends Component {
       <div>
         <div>
           <span className="float-left">
-            Total Single Sales: {totalSingleSales.toLocaleString()} <br />
+            Total Single Sales: {numeral(totalSingleSales).format()} <br />
             Best Selling Single:{" "}
             <Link to={`/single/${bestSellingSingle.id}`}>
               {bestSellingSingle.title}
             </Link>{" "}
-            - {bestSellingSingle.sales.toLocaleString()}
+            - {numeral(bestSellingSingle.sales).format()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
@@ -112,9 +113,9 @@ class Records extends Component {
                     <br />
                     Quality: {quality}
                     <br />
-                    Sales Last Week: {salesLastWeek.toLocaleString()}
+                    Sales Last Week: {numeral(salesLastWeek).format()}
                     <br />
-                    Total Sales: {sales.toLocaleString()}
+                    Total Sales: {numeral(sales).format()}
                     <br />
                     Peak Chart Position: {checkNA(peak)}
                   </div>
@@ -155,12 +156,12 @@ class Records extends Component {
       <div>
         <div>
           <span className="float-left">
-            Total Album Sales: {totalAlbumSales.toLocaleString()} <br />
+            Total Album Sales: {numeral(totalAlbumSales).format()} <br />
             Best Selling Album:{" "}
             <Link to={`/album/${bestSellingAlbum.id}`}>
               {bestSellingAlbum.title}
             </Link>{" "}
-            - {bestSellingAlbum.sales.toLocaleString()}
+            - {numeral(bestSellingAlbum.sales).format()}
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
@@ -189,9 +190,9 @@ class Records extends Component {
                     <br />
                     Quality: {quality}
                     <br />
-                    Sales Last Week: {salesLastWeek.toLocaleString()}
+                    Sales Last Week: {numeral(salesLastWeek).format()}
                     <br />
-                    Total Sales: {sales.toLocaleString()}
+                    Total Sales: {numeral(sales).format()}
                     <br />
                     Peak Chart Position: {checkNA(peak)}
                   </div>
@@ -246,9 +247,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  getSongs,
-  getSingles,
-  getAlbums,
-  getWeek
-})(Records);
+export default connect(
+  mapStateToProps,
+  {
+    getSongs,
+    getSingles,
+    getAlbums,
+    getWeek
+  }
+)(Records);

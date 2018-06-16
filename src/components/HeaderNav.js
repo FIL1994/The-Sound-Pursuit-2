@@ -11,6 +11,7 @@ import localForage, { DATA_BAND } from "../data/localForage";
 import { weeksToYearsAndWeeks } from "../data/util";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/fontawesome-free-regular";
+import numeral from "numeral";
 
 const MyNavLink = props => {
   return (
@@ -161,9 +162,7 @@ class HeaderNav extends Component {
         <section className="navbar section text-light">
           <h6
             className="centered p-2 tooltip tooltip-bottom"
-            data-tooltip={`${this.props.fans.toLocaleString(undefined, {
-              maximumFractionDigits: 0
-            })} Fans`}
+            data-tooltip={`${numeral(this.props.fans).format()} Fans`}
           >
             <i className="icon icon-people" />
             <span className="left-space-1">
@@ -176,10 +175,7 @@ class HeaderNav extends Component {
           </h6>
           <h6
             className="centered p-2 tooltip tooltip-bottom"
-            data-tooltip={this.props.cash.toLocaleString(undefined, {
-              style: "currency",
-              currency: "USD"
-            })}
+            data-tooltip={numeral(this.props.cash).format("$0,0.00")}
           >
             {_.isNumber(this.props.cash) ? (
               `$${this.formatNumber(this.props.cash, true)}`

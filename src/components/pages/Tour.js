@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { Page, Button, Panel, Loading } from "../SpectreCSS";
 import _ from "lodash";
 import $ from "jquery";
+import numeral from "numeral";
 
 import TourResults from "../tour/TourResults";
 import ErrorDiv from "../ErrorDiv";
@@ -256,10 +257,10 @@ class Tour extends Component {
                   {errorVenueSize}
                 </div>
                 <div>
-                  Cost: ${this.calcCost(
-                    weeksToTour,
-                    continentsToTour
-                  ).toLocaleString()}
+                  Cost:{" "}
+                  {numeral(this.calcCost(weeksToTour, continentsToTour)).format(
+                    "$0,0.00"
+                  )}
                   {errorCost}
                 </div>
               </form>
@@ -282,6 +283,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { goOnTour, getCash, removeCash })(
-  Tour
-);
+export default connect(
+  mapStateToProps,
+  { goOnTour, getCash, removeCash }
+)(Tour);

@@ -6,6 +6,7 @@ import React, { Component, Fragment } from "react";
 import update from "immutability-helper";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import numeral from "numeral";
 
 import $ from "jquery";
 import _ from "lodash";
@@ -191,9 +192,8 @@ class DragAndDrop extends Component {
     return (
       <div className="text-center small-top-margin">
         Quality: {producer.quality} | Cost:{" "}
-        {(isSingle ? producer.cost.single : producer.cost.album).toLocaleString(
-          undefined,
-          { style: "currency", currency: "USD" }
+        {numeral(isSingle ? producer.cost.single : producer.cost.album).format(
+          "$0,0.00"
         )}
       </div>
     );
@@ -749,18 +749,21 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  getBand,
-  getCash,
-  saveCash,
-  removeCash,
-  getSongs,
-  updateSong,
-  getSingles,
-  addSingle,
-  getAlbums,
-  addAlbum,
-  nextWeek,
-  getWeek,
-  saveSongs
-})(DragDropContext(HTML5Backend)(DragAndDrop));
+export default connect(
+  mapStateToProps,
+  {
+    getBand,
+    getCash,
+    saveCash,
+    removeCash,
+    getSongs,
+    updateSong,
+    getSingles,
+    addSingle,
+    getAlbums,
+    addAlbum,
+    nextWeek,
+    getWeek,
+    saveSongs
+  }
+)(DragDropContext(HTML5Backend)(DragAndDrop));

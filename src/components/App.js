@@ -22,6 +22,7 @@ import Single from "./pages/Single";
 import Album from "./pages/Album";
 import Tour from "./pages/Tour";
 import Charts from "./pages/Charts";
+import numeral from "numeral";
 
 let ROOT_URL =
   process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
@@ -79,7 +80,7 @@ class App extends Component {
             <div className="modal-body">
               <div className="content">
                 You band has lasted {years} years! <br />
-                Your score of {score.toLocaleString()} has been submitted.
+                Your score of {numeral(score).format()} has been submitted.
               </div>
             </div>
             <div className="modal-footer">

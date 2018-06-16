@@ -6,6 +6,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Loading, Page } from "../SpectreCSS";
 import _ from "lodash";
+import numeral from "numeral";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 import { getSongs, getSingles } from "../../actions";
@@ -78,8 +79,8 @@ class Single extends Component {
         <p>
           Released: {weeksToYearsAndWeeks(released)} <br />
           Quality: {quality} <br />
-          Sales: {sales.toLocaleString()} <br />
-          Sales Last Week: {salesLastWeek.toLocaleString()}
+          Sales: {numeral(sales).format()} <br />
+          Sales Last Week: {numeral(salesLastWeek).format()}
         </p>
         <div>
           <h5>Chart Details</h5>
@@ -111,4 +112,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { getSongs, getSingles })(Single);
+export default connect(
+  mapStateToProps,
+  { getSongs, getSingles }
+)(Single);

@@ -6,6 +6,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Page, Loading, Button } from "../SpectreCSS";
 import _ from "lodash";
+import numeral from "numeral";
 import { getCharts, getBand } from "../../actions";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
@@ -98,7 +99,7 @@ class Charts extends Component {
                         </p>
                         <p className="tile-subtitle text-gray">
                           Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)}{" "}
-                          | Sales: {salesLastWeek.toLocaleString()}
+                          | Sales: {numeral(salesLastWeek).format()}
                           <br />
                           First Charted: {weeksToYearsAndWeeks(firstCharted)}
                         </p>

@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import { Page, Button, Toast, Divider } from "../SpectreCSS";
 import Avatar from "react-avatar";
+import numeral from "numeral";
 
 import {
   getBand,
@@ -286,10 +287,8 @@ class Dashboard extends Component {
                 {!showShow ? null : (
                   <Toast centered>
                     <span>
-                      New Fans: {newFans.toLocaleString()}
-                      <br />Cash: ${newCash.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                      })}
+                      New Fans: {numeral(newFans).format()}
+                      <br />Cash: {numeral(newCash).format("$0,0.00")}
                     </span>
                   </Toast>
                 )}

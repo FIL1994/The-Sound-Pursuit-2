@@ -24,6 +24,7 @@ import studios from "../../data/studios";
 import { unlockWriteSong, unlockRecordSong } from "../../ng/UnlockMedals";
 import { weeksToYearsAndWeeks } from "../../data/util";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import numeral from "numeral";
 
 class Songs extends Component {
   state = {
@@ -402,10 +403,7 @@ class Songs extends Component {
               </div>
               <div>
                 Cost:{" "}
-                {studios[this.state.studioID].cost.toLocaleString(undefined, {
-                  style: "currency",
-                  currency: "USD"
-                })}{" "}
+                {numeral(studios[this.state.studioID].cost).format("$0,0.00")}{" "}
                 <br />
                 Quality: {studios[this.state.studioID].quality}
               </div>

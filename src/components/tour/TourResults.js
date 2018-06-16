@@ -4,6 +4,7 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import numeral from "numeral";
 
 class TourResults extends Component {
   static propTypes = {
@@ -24,24 +25,15 @@ class TourResults extends Component {
       <div>
         <h5>Tour Results</h5>
         <p>
-          New Fans: {Math.ceil(newFans).toLocaleString()} <br />
+          New Fans: {numeral(newFans).format()} <br />
           Tour Cost:{" "}
-          {tourCost.toLocaleString(undefined, {
-            style: "currency",
-            currency: "USD"
-          })}{" "}
+          {numeral(tourCost).format("$0,0.00")}{" "}
           <br />
           Gross Revenue:{" "}
-          {newCash.toLocaleString(undefined, {
-            style: "currency",
-            currency: "USD"
-          })}{" "}
+          {numeral(newCash).format("$0,0.00")}{" "}
           <br />
           Net Revenue:{" "}
-          {(newCash - tourCost).toLocaleString(undefined, {
-            style: "currency",
-            currency: "USD"
-          })}
+          {numeral(newCash - tourCost).format("$0,0.00")}
         </p>
       </div>
     );
