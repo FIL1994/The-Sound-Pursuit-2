@@ -7,27 +7,23 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { Button, Divider, Page, Parallax, Toast } from "../SpectreCSS";
+import LightSpeed from "react-reveal/LightSpeed";
+import Bounce from "react-reveal/Bounce";
 
 import { getBand } from "../../actions";
 import { resetDataAsync } from "../../data/resetData";
 
 class MainMenu extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    resettingData: false,
+    showToastDeleted: false
+  };
 
-    this.state = {
-      resettingData: false,
-      showToastDeleted: false
-    };
-
-    this.resetData = this.resetData.bind(this);
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.props.getBand();
   }
 
-  resetData() {
+  resetData = () => {
     this.setState({ resettingData: true });
     resetDataAsync().then(() => {
       this.props.getBand();
@@ -38,7 +34,7 @@ class MainMenu extends Component {
         });
       }, 3000);
     });
-  }
+  };
 
   render() {
     const { resettingData, showToastDeleted } = this.state;
@@ -60,24 +56,30 @@ class MainMenu extends Component {
 
     return (
       <Page centered>
-        <h1>The Sound Pursuit 2</h1>
+        <h1>
+          <LightSpeed left cascade onReveal={() => console.log("Reveal")}>
+            The Sound Pursuit 2
+          </LightSpeed>
+        </h1>
         <Divider />
         <div className="spaced">
-          <Button
-            as={Link}
-            to="/dashboard"
-            size={8}
-            primary
-            {...disabledButtonProps}
-          >
-            Continue
-          </Button>
-          <Button as={Link} to="/start" size={8} primary>
-            Start
-          </Button>
-          <Button size={8} primary {...resetProps} onClick={this.resetData}>
-            Delete Save
-          </Button>
+          <Bounce left delay={350}>
+            <Button
+              as={Link}
+              to="/dashboard"
+              size={8}
+              primary
+              {...disabledButtonProps}
+            >
+              Continue
+            </Button>
+            <Button as={Link} to="/start" size={8} primary>
+              Start
+            </Button>
+            <Button size={8} primary {...resetProps} onClick={this.resetData}>
+              Delete Save
+            </Button>
+          </Bounce>
         </div>
         <br />
         <div className="centered text-center">
@@ -116,4 +118,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { getBand })(MainMenu);
+export default connect(
+  mapStateToProps,
+  { getBand }
+)(MainMenu);
