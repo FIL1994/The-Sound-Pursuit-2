@@ -10,6 +10,7 @@ import numeral from "numeral";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
+import { Trail, animated } from "react-spring";
 
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 
@@ -89,40 +90,53 @@ class Records extends Component {
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
         <div className="scrollable centered full-width">
-          {singles.map(
-            ({
-              id,
-              title,
-              quality,
-              released,
-              salesLastWeek,
-              sales,
-              charts: { peak }
-            }) => {
-              const age = week - released;
-              return (
-                <div className="card bg-dark" key={id}>
-                  <div className="card-header">
-                    <div className="card-title h5">
-                      <Link to={`/single/${id}`}>{title}</Link>
+          <Trail
+            native
+            from={{ opacity: 0, x: -100 }}
+            to={{ opacity: 1, x: 0 }}
+            keys={singles.map(s => "s" + s.id)}
+          >
+            {singles.map(
+              ({
+                id,
+                title,
+                quality,
+                released,
+                salesLastWeek,
+                sales,
+                charts: { peak }
+              }) => ({ x, opacity }) => {
+                const age = week - released;
+                return (
+                  <animated.div
+                    className="card bg-dark"
+                    style={{
+                      opacity,
+                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                    }}
+                  >
+                    <div className="card-header">
+                      <div className="card-title h5">
+                        <Link to={`/single/${id}`}>{title}</Link>
+                      </div>
                     </div>
-                  </div>
-                  <div className="card-body">
-                    Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                    {`${age} ${age === 1 ? "week" : "weeks"}`}
-                    <br />
-                    Quality: {quality}
-                    <br />
-                    Sales Last Week: {numeral(salesLastWeek).format()}
-                    <br />
-                    Total Sales: {numeral(sales).format()}
-                    <br />
-                    Peak Chart Position: {checkNA(peak)}
-                  </div>
-                </div>
-              );
-            }
-          )}
+                    <div className="card-body">
+                      Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                      {`${age} ${age === 1 ? "week" : "weeks"}`}
+                      <br />
+                      Quality: {quality}
+                      <br />
+                      Sales Last Week: {numeral(salesLastWeek).format()}
+                      <br />
+                      Total Sales: {numeral(sales).format()}
+                      <br />
+                      Peak Chart Position: {checkNA(peak)}
+                    </div>
+                  </animated.div>
+                );
+              }
+            )}
+          </Trail>
         </div>
       </div>
     );
@@ -166,40 +180,53 @@ class Records extends Component {
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
         <div className="scrollable centered full-width">
-          {albums.map(
-            ({
-              id,
-              title,
-              quality,
-              released,
-              salesLastWeek,
-              sales,
-              charts: { peak }
-            }) => {
-              const age = week - released;
-              return (
-                <div className="card bg-dark" key={id}>
-                  <div className="card-header">
-                    <div className="card-title h5">
-                      <Link to={`/album/${id}`}>{title}</Link>
+          <Trail
+            native
+            from={{ opacity: 0, x: 100 }}
+            to={{ opacity: 1, x: 0 }}
+            keys={albums.map(a => "a" + a.id)}
+          >
+            {albums.map(
+              ({
+                id,
+                title,
+                quality,
+                released,
+                salesLastWeek,
+                sales,
+                charts: { peak }
+              }) => ({ x, opacity }) => {
+                const age = week - released;
+                return (
+                  <animated.div
+                    className="card bg-dark"
+                    style={{
+                      opacity,
+                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                    }}
+                  >
+                    <div className="card-header">
+                      <div className="card-title h5">
+                        <Link to={`/album/${id}`}>{title}</Link>
+                      </div>
                     </div>
-                  </div>
-                  <div className="card-body">
-                    Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                    {`${age} ${age === 1 ? "week" : "weeks"}`}
-                    <br />
-                    Quality: {quality}
-                    <br />
-                    Sales Last Week: {numeral(salesLastWeek).format()}
-                    <br />
-                    Total Sales: {numeral(sales).format()}
-                    <br />
-                    Peak Chart Position: {checkNA(peak)}
-                  </div>
-                </div>
-              );
-            }
-          )}
+                    <div className="card-body">
+                      Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                      {`${age} ${age === 1 ? "week" : "weeks"}`}
+                      <br />
+                      Quality: {quality}
+                      <br />
+                      Sales Last Week: {numeral(salesLastWeek).format()}
+                      <br />
+                      Total Sales: {numeral(sales).format()}
+                      <br />
+                      Peak Chart Position: {checkNA(peak)}
+                    </div>
+                  </animated.div>
+                );
+              }
+            )}
+          </Trail>
         </div>
       </div>
     );
