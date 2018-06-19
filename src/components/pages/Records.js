@@ -8,9 +8,9 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import numeral from "numeral";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import { Trail, animated } from "react-spring";
 import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
-import { Trail, animated } from "react-spring";
 
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 
