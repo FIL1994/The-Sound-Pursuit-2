@@ -50,7 +50,7 @@
     "localforage": "^1.7.2",
     "lodash": "^4.17.10",
     "numeral": "^2.0.6",
-    "prop-types": "^15.6.1",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-avatar": "^3.0.2",
     "react-dnd": "^4.0.5",
@@ -60,9 +60,9 @@
     "react-reveal": "^1.2.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-spring": "^5.3.17",
+    "react-spring": "^5.3.18",
     "redux": "4.0.0",
     "redux-thunk": "^2.3.0",
-    "spectre.css": "^0.5.2"
+    "spectre.css": "^0.5.3"
   }
 }

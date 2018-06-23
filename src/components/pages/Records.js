@@ -13,6 +13,7 @@ import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
+import { NumberEase } from "../../helpers";
 
 class Records extends Component {
   state = {
@@ -170,12 +171,20 @@ class Records extends Component {
       <div>
         <div>
           <span className="float-left">
-            Total Album Sales: {numeral(totalAlbumSales).format()} <br />
+            Total Album Sales:{" "}
+            <NumberEase
+              value={totalAlbumSales}
+              format={v => numeral(v).format()}
+            />{" "}
+            <br />
             Best Selling Album:{" "}
             <Link to={`/album/${bestSellingAlbum.id}`}>
               {bestSellingAlbum.title}
             </Link>{" "}
-            - {numeral(bestSellingAlbum.sales).format()}
+            - <NumberEase
+              value={bestSellingAlbum.sales}
+              format={v => numeral(v).format()}
+            />
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
