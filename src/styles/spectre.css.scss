@@ -12,3 +12,9 @@ $base-font-family: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
 
 @import "~spectre.css/src/spectre-icons";
 @import "~spectre.css/src/spectre";
+
+.form-checkbox,
+.form-radio,
+.form-switch {
+  display: inline;
+}

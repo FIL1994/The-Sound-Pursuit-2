@@ -49,33 +49,18 @@ const ErrorWrapper = props => {
 };
 
 class DragAndDrop extends Component {
-  constructor(props) {
-    super(props);
-
-    // region Bind This
-    this.getSongsToReleaseCount = this.getSongsToReleaseCount.bind(this);
-    this.getUnusedSongsCount = this.getUnusedSongsCount.bind(this);
-    this.resetContainers = this.resetContainers.bind(this);
-    this.getMaxSongs = this.getMaxSongs.bind(this);
-
-    this.changedProducer = this.changedProducer.bind(this);
-    this.validateSingle = this.validateSingle.bind(this);
-    this.validateAlbum = this.validateAlbum.bind(this);
-    // endregion
-
-    this.state = {
-      isSingle: true,
-      producerID: null,
-      errorProducer: null,
-      errorSingle: null,
-      errorAlbum: null,
-      finished: null,
-      unusedSongs: [],
-      unusedSongsCount: 0,
-      releaseSongsCount: 0,
-      containerKey: 0
-    };
-  }
+  state = {
+    isSingle: true,
+    producerID: null,
+    errorProducer: null,
+    errorSingle: null,
+    errorAlbum: null,
+    finished: null,
+    unusedSongs: [],
+    unusedSongsCount: 0,
+    releaseSongsCount: 0,
+    containerKey: 0
+  };
 
   // region Lifecycle Methods
   componentDidMount() {
@@ -97,7 +82,7 @@ class DragAndDrop extends Component {
   }
   // endregion
 
-  getSongsEligibleForSingle(songs) {
+  getSongsEligibleForSingle = songs => {
     try {
       songs = songs.filter(s => {
         // return songs that are recorded and not on a single
@@ -108,9 +93,9 @@ class DragAndDrop extends Component {
     }
 
     return songs;
-  }
+  };
 
-  getSongsEligibleForAlbum(songs) {
+  getSongsEligibleForAlbum = songs => {
     try {
       songs = songs.filter(s => {
         // return songs that are recorded and not on an album
@@ -121,14 +106,12 @@ class DragAndDrop extends Component {
     }
 
     return songs;
-  }
+  };
 
-  checkEnoughCash(cost) {
-    return cost <= this.props.cash;
-  }
+  checkEnoughCash = cost => cost <= this.props.cash;
 
   // region Producers
-  changedProducer(isSingle) {
+  changedProducer = isSingle => {
     let producerID = $("input[name=producers]:checked").val();
     producerID = Number(producerID);
     isSingle = _.isBoolean(isSingle) ? isSingle : this.state.isSingle;
@@ -154,9 +137,9 @@ class DragAndDrop extends Component {
         });
       }
     }
-  }
+  };
 
-  renderProducers() {
+  renderProducers = () => {
     const { errorProducer } = this.state;
     return (
       <Fragment>
@@ -181,9 +164,9 @@ class DragAndDrop extends Component {
         {errorProducer}
       </Fragment>
     );
-  }
+  };
 
-  renderProducerDetails() {
+  renderProducerDetails = () => {
     const { producerID, isSingle } = this.state;
     if (!_.isNumber(producerID)) {
       return;
@@ -197,9 +180,9 @@ class DragAndDrop extends Component {
         )}
       </div>
     );
-  }
+  };
 
-  changedProducer(isSingle) {
+  changedProducer = isSingle => {
     let producerID = $("input[name=producers]:checked").val();
     producerID = Number(producerID);
     isSingle = _.isBoolean(isSingle) ? isSingle : this.state.isSingle;
@@ -225,7 +208,7 @@ class DragAndDrop extends Component {
         });
       }
     }
-  }
+  };
   // endregion
 
   // region Drag and Drop
@@ -295,7 +278,7 @@ class DragAndDrop extends Component {
     );
   }
 
-  getSongsToReleaseCount() {
+  getSongsToReleaseCount = () => {
     let releaseSongsCount = 0;
     try {
       releaseSongsCount = this.songsToRelease.handler.component.state.cards
@@ -310,9 +293,9 @@ class DragAndDrop extends Component {
         releaseSongsCount
       });
     }
-  }
+  };
 
-  getUnusedSongsCount() {
+  getUnusedSongsCount = () => {
     let unusedSongsCount = 0;
     try {
       unusedSongsCount = this.songsList.handler.component.state.cards.length;
@@ -325,13 +308,11 @@ class DragAndDrop extends Component {
         unusedSongsCount
       });
     }
-  }
+  };
 
-  getMaxSongs() {
-    return this.state.isSingle ? 3 : 16;
-  }
+  getMaxSongs = () => (this.state.isSingle ? 3 : 16);
 
-  resetContainers() {
+  resetContainers = () => {
     this.setState({
       containerKey: this.state.containerKey + 1,
       errorSingle: null,
@@ -341,10 +322,10 @@ class DragAndDrop extends Component {
       this.getUnusedSongsCount();
       this.getSongsToReleaseCount();
     });
-  }
+  };
   // endregion
 
-  validateAlbum() {
+  validateAlbum = () => {
     let errorProducer = null,
       errorAlbum = null,
       producer,
@@ -461,9 +442,9 @@ class DragAndDrop extends Component {
       errorProducer,
       errorAlbum
     });
-  }
+  };
 
-  validateSingle() {
+  validateSingle = () => {
     let errorProducer = null,
       errorSingle = null,
       producer,
@@ -571,9 +552,9 @@ class DragAndDrop extends Component {
       errorProducer,
       errorSingle
     });
-  }
+  };
 
-  checkFinished() {
+  checkFinished = () => {
     const { finished } = this.state;
     if (!_.isEmpty(finished)) {
       if (finished === "album") {
@@ -585,14 +566,14 @@ class DragAndDrop extends Component {
         this.props.history.push("/records");
       }
     }
-  }
+  };
 
-  checkUnusedSongs(songs) {
+  checkUnusedSongs = songs => {
     const { unusedSongs } = this.state;
     if (_.isEmpty(unusedSongs) && !_.isEmpty(songs)) {
       setTimeout(() => this.setState({ unusedSongs: songs }));
     }
-  }
+  };
 
   render() {
     const { songs } = this.props;
