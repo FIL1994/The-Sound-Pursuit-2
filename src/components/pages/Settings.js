@@ -5,14 +5,34 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import { Howler } from "howler";
+import Tooltip from "rc-tooltip";
+import Slider, { Handle } from "rc-slider";
+
 import { Page, Button, Panel } from "../SpectreCSS";
 import localForage, {
   PLAY_SONG,
   SONG_VOLUME,
   SONG_TO_PLAY
 } from "../../data/localForage";
-import SONGS from "../../data/Songs";
-import { Howler } from "howler";
+
+import "rc-slider/assets/index.css";
+import "rc-tooltip/assets/bootstrap.css";
+
+const handle = props => {
+  const { value, dragging, index, ...restProps } = props;
+  return (
+    <Tooltip
+      prefixCls="rc-slider-tooltip"
+      overlay={value}
+      visible={dragging}
+      placement="top"
+      key={index}
+    >
+      <Handle value={value} {...restProps} />
+    </Tooltip>
+  );
+};
 
 class Settings extends Component {
   state = {
@@ -30,8 +50,7 @@ class Settings extends Component {
     localForage.setItem(PLAY_SONG, song.playing() ? "on" : "off");
   };
 
-  volumeChange = event => {
-    const volume = event.target.value;
+  volumeChange = volume => {
     this.setState({
       volume
     });
@@ -80,13 +99,20 @@ class Settings extends Component {
               <p className="form-label" htmlFor="rangeVolume">
                 Volume:
               </p>
-              <input
-                id="rangeVolume"
-                className="slider"
-                type="range"
+              <Slider
+                handleStyle={{
+                  backgroundColor: "#1e5f53",
+                  borderColor: "white"
+                }}
+                trackStyle={{ backgroundColor: "#237c70de" }}
+                railStyle={{
+                  backgroundColor: "white",
+                  boxShadow: "rgba(103, 151, 232, 0.29) 2px 2px 8px 1px"
+                }}
                 min={0}
                 max={100}
                 value={volume}
+                handle={handle}
                 onChange={this.volumeChange}
               />
             </div>

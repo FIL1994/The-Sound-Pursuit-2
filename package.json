@@ -51,6 +51,8 @@
     "lodash": "^4.17.10",
     "numeral": "^2.0.6",
     "prop-types": "^15.6.2",
+    "rc-slider": "^8.6.1",
+    "rc-tooltip": "^3.7.2",
     "react": "^16.4.1",
     "react-avatar": "^3.0.2",
     "react-dnd": "^4.0.5",
