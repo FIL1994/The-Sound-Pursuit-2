@@ -91,7 +91,8 @@ class Charts extends Component {
                           opacity,
                           transform: x.interpolate(
                             x => `translate3d(${x}%,0,0)`
-                          )
+                          ),
+                          height: 100
                         }}
                       >
                         <div className="tile-icon">
