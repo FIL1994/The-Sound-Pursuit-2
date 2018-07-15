@@ -1,9 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import anime from "animejs";
 import _ from "lodash";
-
-window.anime = anime;
+import TWEEN, { Tween, Easing } from "@tweenjs/tween.js";
 
 class NumberEase extends Component {
   state = {
@@ -13,38 +11,24 @@ class NumberEase extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(this.props.value, prevProps.value)) {
-      this.state.animation.pause();
-      this.setState({ value: this.props.value }, () =>
-        this.startAnimation(this.state.animation.animations[0].currentValue)
-      );
+      this.state.animation.stop();
+      this.startAnimation(this.state.animation._object.value);
     }
   }
 
   componentWillUnmount() {
-    delete this.timeline;
+    this.state.animation.stop();
   }
 
-  timeline = anime.timeline();
-
   startAnimation = (value = 0) => {
-    let myObject = {
-      value
-    };
-
-    window.t = this.timeline;
-
-    const animation = this.timeline.add({
-      targets: myObject,
-      value: this.state.value,
-      easing: "linear",
-      round: 1,
-      update: () => {
-        this.setState(myObject);
-      },
-      complete: () => {
-        console.log(this.timeline.remove)
-      }
-    });
+    let valueToUpdate = { value };
+    const animation = new Tween(valueToUpdate)
+      .to({ value: this.props.value })
+      .easing(Easing.Quadratic.Out)
+      .onUpdate(() => {
+        this.setState(valueToUpdate);
+      })
+      .start();
 
     this.setState({ animation });
   };

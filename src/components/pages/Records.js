@@ -13,7 +13,7 @@ import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
-import { NumberEase } from "../../helpers";
+import { NumberEase, formatNumber } from "../../helpers";
 
 class Records extends Component {
   state = {
@@ -81,12 +81,15 @@ class Records extends Component {
       <div>
         <div>
           <span className="float-left">
-            Total Single Sales: {numeral(totalSingleSales).format()} <br />
+            Total Single Sales:{" "}
+            <NumberEase value={totalSingleSales} format={formatNumber} />
+            <br />
             Best Selling Single:{" "}
             <Link to={`/single/${bestSellingSingle.id}`}>
               {bestSellingSingle.title}
             </Link>{" "}
-            - {numeral(bestSellingSingle.sales).format()}
+            -{" "}
+            <NumberEase value={bestSellingSingle.sales} format={formatNumber} />
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
@@ -172,19 +175,14 @@ class Records extends Component {
         <div>
           <span className="float-left">
             Total Album Sales:{" "}
-            <NumberEase
-              value={totalAlbumSales}
-              format={v => numeral(v).format()}
-            />{" "}
+            <NumberEase value={totalAlbumSales} format={formatNumber} />
             <br />
             Best Selling Album:{" "}
             <Link to={`/album/${bestSellingAlbum.id}`}>
               {bestSellingAlbum.title}
             </Link>{" "}
-            - <NumberEase
-              value={bestSellingAlbum.sales}
-              format={v => numeral(v).format()}
-            />
+            -{" "}
+            <NumberEase value={bestSellingAlbum.sales} format={formatNumber} />
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
