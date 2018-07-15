@@ -8,6 +8,7 @@ import _ from "lodash";
 import { Howler } from "howler";
 import Tooltip from "rc-tooltip";
 import Slider, { Handle } from "rc-slider";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 import { Page, Button, Panel } from "../SpectreCSS";
 import localForage, {
@@ -44,11 +45,14 @@ class Settings extends Component {
     setTimeout(() => this.setState({ volume: Howler.volume() * 100 }), 600);
   }
 
-  toggleMusic = () => {
+  toggleMusic = async () => {
     const { song } = this.state;
     song.playing() ? song.stop() : song.play();
-    localForage.setItem(PLAY_SONG, song.playing() ? "on" : "off");
+    await localForage.setItem(PLAY_SONG, song.playing() ? "on" : "off");
+    this.forceUpdate();
   };
+
+  isSongPlaying = () => this.state.song.playing();
 
   volumeChange = volume => {
     this.setState({
@@ -118,14 +122,22 @@ class Settings extends Component {
             </div>
             <br />
             <div>
-              <Button large onClick={this.toggleMusic}>
-                Toggle Music
+              <Button
+                large
+                style={{ width: "100%" }}
+                onClick={this.toggleMusic}
+              >
+                {this.isSongPlaying() ? (
+                  <FontAwesomeIcon icon="volume-up" />
+                ) : (
+                  <FontAwesomeIcon icon="volume-off" />
+                )}
               </Button>
             </div>
             <br />
             <div>
               <Link to="/">
-                <Button large primary>
+                <Button large primary style={{ width: "100%" }}>
                   Go to Main Menu
                 </Button>
               </Link>
