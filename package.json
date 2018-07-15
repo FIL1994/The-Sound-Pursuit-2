@@ -9,8 +9,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --mode=development --port=8080 --progress",
-    "build": "NODE_ENV='production' webpack --mode=production -p --progress --colors && java -jar closure-compiler-v20180506.jar --js_output_file=dist/min.js dist/main.js && mv dist/min.js dist/main.js && cp -R assets dist/assets",
-    "build:win": "set NODE_ENV=production && webpack --mode=production -p --progress --colors && scripts\\build.cmd",
+    "build": "NODE_ENV='production' webpack --mode=production -p --progress --colors && google-closure-compiler --js_output_file=dist/min.js dist/main.js && mv dist/min.js dist/main.js && cp -R assets dist/assets",
+    "build:win": "set NODE_ENV=production && webpack --mode=production -p --progress --colors && google-closure-compiler --js_output_file=dist/min.js dist/main.js && scripts\\build.cmd",
     "dev": "webpack --mode=development"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "babel-loader": "^8.0.0-beta.4",
     "babel-minify": "0.5.0-alpha.a24dd066",
     "css-loader": "^0.28.11",
+    "google-closure-compiler": "^20180610.0.2",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.1",
