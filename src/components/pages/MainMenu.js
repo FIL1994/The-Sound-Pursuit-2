@@ -57,7 +57,7 @@ class MainMenu extends Component {
     return (
       <Page centered>
         <h1>
-          <LightSpeed left cascade onReveal={() => console.log("Reveal")}>
+          <LightSpeed left cascade>
             The Sound Pursuit 2
           </LightSpeed>
         </h1>
