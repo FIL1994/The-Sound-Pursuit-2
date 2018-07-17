@@ -53,6 +53,8 @@
     "lodash": "^4.17.10",
     "numeral": "^2.0.6",
     "prop-types": "^15.6.2",
+    "rc-pagination": "^1.16.5",
+    "rc-select": "^8.1.0",
     "rc-slider": "^8.6.1",
     "rc-tooltip": "^3.7.2",
     "react": "^16.4.1",

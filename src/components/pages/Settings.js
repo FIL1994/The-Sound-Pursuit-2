@@ -19,6 +19,8 @@ import localForage, {
 
 import "rc-slider/assets/index.css";
 import "rc-tooltip/assets/bootstrap.css";
+import "rc-pagination/assets/index.css";
+import "rc-select/assets/index.css";
 
 const handle = props => {
   const { value, dragging, index, ...restProps } = props;

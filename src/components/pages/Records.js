@@ -9,15 +9,24 @@ import _ from "lodash";
 import numeral from "numeral";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { Trail, animated } from "react-spring";
+import Select from "rc-select";
+import Pagination from "rc-pagination";
+import localeInfo from "rc-pagination/lib/locale/en_US";
+
 import { Page, EmptyState, Button } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
-
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 import { NumberEase, formatNumber } from "../../helpers";
 
+const defaultPaginationState = {
+  pageSize: 10,
+  current: 1
+};
+
 class Records extends Component {
   state = {
-    showAlbums: false
+    showAlbums: false,
+    ...defaultPaginationState
   };
 
   componentDidMount() {
@@ -34,6 +43,11 @@ class Records extends Component {
     });
   }
 
+  getRange = () => {
+    const { current, pageSize } = this.state;
+    return [(current - 1) * pageSize, current * pageSize];
+  };
+
   renderSinglesOrAlbumsSwitch = () => {
     const { showAlbums } = this.state;
     return (
@@ -43,7 +57,10 @@ class Records extends Component {
           <input
             type="checkbox"
             onChange={e => {
-              this.setState({ showAlbums: e.target.checked });
+              this.setState({
+                showAlbums: e.target.checked,
+                ...defaultPaginationState
+              });
             }}
             checked={showAlbums}
           />
@@ -100,46 +117,48 @@ class Records extends Component {
             to={{ opacity: 1, x: 0 }}
             keys={singles.map(s => "s" + s.id)}
           >
-            {singles.map(
-              ({
-                id,
-                title,
-                quality,
-                released,
-                salesLastWeek,
-                sales,
-                charts: { peak }
-              }) => ({ x, opacity }) => {
-                const age = week - released;
-                return (
-                  <animated.div
-                    className="card bg-dark"
-                    style={{
-                      opacity,
-                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
-                    }}
-                  >
-                    <div className="card-header">
-                      <div className="card-title h5">
-                        <Link to={`/single/${id}`}>{title}</Link>
+            {singles
+              .slice(...this.getRange())
+              .map(
+                ({
+                  id,
+                  title,
+                  quality,
+                  released,
+                  salesLastWeek,
+                  sales,
+                  charts: { peak }
+                }) => ({ x, opacity }) => {
+                  const age = week - released;
+                  return (
+                    <animated.div
+                      className="card bg-dark"
+                      style={{
+                        opacity,
+                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                      }}
+                    >
+                      <div className="card-header">
+                        <div className="card-title h5">
+                          <Link to={`/single/${id}`}>{title}</Link>
+                        </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                      {`${age} ${age === 1 ? "week" : "weeks"}`}
-                      <br />
-                      Quality: {quality}
-                      <br />
-                      Sales Last Week: {numeral(salesLastWeek).format()}
-                      <br />
-                      Total Sales: {numeral(sales).format()}
-                      <br />
-                      Peak Chart Position: {checkNA(peak)}
-                    </div>
-                  </animated.div>
-                );
-              }
-            )}
+                      <div className="card-body">
+                        Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                        {`${age} ${age === 1 ? "week" : "weeks"}`}
+                        <br />
+                        Quality: {quality}
+                        <br />
+                        Sales Last Week: {numeral(salesLastWeek).format()}
+                        <br />
+                        Total Sales: {numeral(sales).format()}
+                        <br />
+                        Peak Chart Position: {checkNA(peak)}
+                      </div>
+                    </animated.div>
+                  );
+                }
+              )}
           </Trail>
         </div>
       </div>
@@ -193,46 +212,48 @@ class Records extends Component {
             to={{ opacity: 1, x: 0 }}
             keys={albums.map(a => "a" + a.id)}
           >
-            {albums.map(
-              ({
-                id,
-                title,
-                quality,
-                released,
-                salesLastWeek,
-                sales,
-                charts: { peak }
-              }) => ({ x, opacity }) => {
-                const age = week - released;
-                return (
-                  <animated.div
-                    className="card bg-dark"
-                    style={{
-                      opacity,
-                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
-                    }}
-                  >
-                    <div className="card-header">
-                      <div className="card-title h5">
-                        <Link to={`/album/${id}`}>{title}</Link>
+            {albums
+              .slice(...this.getRange())
+              .map(
+                ({
+                  id,
+                  title,
+                  quality,
+                  released,
+                  salesLastWeek,
+                  sales,
+                  charts: { peak }
+                }) => ({ x, opacity }) => {
+                  const age = week - released;
+                  return (
+                    <animated.div
+                      className="card bg-dark"
+                      style={{
+                        opacity,
+                        transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
+                      }}
+                    >
+                      <div className="card-header">
+                        <div className="card-title h5">
+                          <Link to={`/album/${id}`}>{title}</Link>
+                        </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                      {`${age} ${age === 1 ? "week" : "weeks"}`}
-                      <br />
-                      Quality: {quality}
-                      <br />
-                      Sales Last Week: {numeral(salesLastWeek).format()}
-                      <br />
-                      Total Sales: {numeral(sales).format()}
-                      <br />
-                      Peak Chart Position: {checkNA(peak)}
-                    </div>
-                  </animated.div>
-                );
-              }
-            )}
+                      <div className="card-body">
+                        Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
+                        {`${age} ${age === 1 ? "week" : "weeks"}`}
+                        <br />
+                        Quality: {quality}
+                        <br />
+                        Sales Last Week: {numeral(salesLastWeek).format()}
+                        <br />
+                        Total Sales: {numeral(sales).format()}
+                        <br />
+                        Peak Chart Position: {checkNA(peak)}
+                      </div>
+                    </animated.div>
+                  );
+                }
+              )}
           </Trail>
         </div>
       </div>
@@ -264,7 +285,28 @@ class Records extends Component {
               title="You haven't released any records yet"
             />
           ) : (
-            <div>{showAlbums ? this.renderAlbums() : this.renderSingles()}</div>
+            <div>
+              {showAlbums ? this.renderAlbums() : this.renderSingles()}{" "}
+              <Pagination
+                selectComponentClass={Select}
+                showSizeChanger
+                pageSize={this.state.pageSize}
+                current={this.state.current}
+                onChange={(current, pageSize) => {
+                  this.setState({ current, pageSize });
+                }}
+                onShowSizeChange={(current, pageSize) => {
+                  this.setState({ current, pageSize });
+                }}
+                total={
+                  showAlbums
+                    ? this.props.albums.length
+                    : this.props.singles.length
+                }
+                locale={localeInfo}
+                pageSizeOptions={["10", "25", "50", "100"]}
+              />
+            </div>
           )}
         </div>
       </Page>
