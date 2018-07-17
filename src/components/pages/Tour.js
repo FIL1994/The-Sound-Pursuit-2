@@ -13,6 +13,18 @@ import TourResults from "../tour/TourResults";
 import ErrorDiv from "../ErrorDiv";
 import { goOnTour, getCash, removeCash } from "../../actions/index";
 
+const defaultState = {
+  weeksToTour: 0,
+  continentsToTour: 0,
+  errorContinents: null,
+  errorVenueSize: null,
+  errorWeeksToTour: null,
+  errorCost: null,
+  onTour: false,
+  showTourResults: false,
+  tourCost: 0 // set when going on tour - used in showing tour results
+};
+
 class Tour extends Component {
   continents = [
     "North America",
@@ -22,25 +34,8 @@ class Tour extends Component {
     "Europe",
     "Asia"
   ];
-  defaultState = {
-    weeksToTour: 0,
-    continentsToTour: 0,
-    errorContinents: null,
-    errorVenueSize: null,
-    errorWeeksToTour: null,
-    errorCost: null,
-    onTour: false,
-    showTourResults: false,
-    tourCost: 0 // set when going on tour - used in showing tour results
-  };
-  constructor(props) {
-    super(props);
 
-    this.validateTour = this.validateTour.bind(this);
-    this.resetTourPage = this.resetTourPage.bind(this);
-
-    this.state = this.defaultState;
-  }
+  state = defaultState;
 
   componentDidMount() {
     this.props.getCash();
@@ -58,9 +53,7 @@ class Tour extends Component {
     }
   }
 
-  resetTourPage() {
-    this.setState(this.defaultState);
-  }
+  resetTourPage = () => this.setState(defaultState);
 
   calcCost(weeksToTour, continentsToTour) {
     const venueSize = Number($("input[name=venue-size]:checked").val());
@@ -97,7 +90,7 @@ class Tour extends Component {
     return cost;
   }
 
-  validateTour() {
+  validateTour = () => {
     const { weeksToTour, continentsToTour } = this.state;
     const { cash } = this.props;
     let errorContinents = null,
@@ -147,7 +140,7 @@ class Tour extends Component {
       errorWeeksToTour,
       tourCost
     });
-  }
+  };
 
   render() {
     const {
