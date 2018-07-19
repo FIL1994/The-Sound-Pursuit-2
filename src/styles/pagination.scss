@@ -1,0 +1,39 @@
+.rc-pagination-item.rc-pagination-item-active {
+  background-color: $primary-color;
+}
+
+.rc-pagination-prev,
+.rc-pagination-next {
+  background-color: #fff9;
+}
+
+.rc-pagination-item:hover {
+  border-color: $primary-color;
+}
+
+.rc-pagination-item:hover a {
+  color: $primary-color;
+}
+
+.rc-pagination-disabled {
+  background-color: #f5f5f599;
+  border-color: #d1d1d1;
+}
+
+.rc-pagination a:hover {
+  text-decoration: none;
+}
+
+.rc-select-enabled .rc-select-selection:hover,
+.rc-select-enabled .rc-select-selection:focus {
+  border-color: $primary-color;
+  box-shadow: 0 0 2px #aeaeae;
+}
+
+li.rc-select-dropdown-menu-item-active {
+  background-color: $primary-color;
+}
+
+.rc-select-dropdown-menu-item:hover {
+  background-color: $primary-color;
+}
