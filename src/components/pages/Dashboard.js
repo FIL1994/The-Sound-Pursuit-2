@@ -5,7 +5,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { Page, Button, Toast, Divider } from "../SpectreCSS";
+import { Page, Button, Toast, Divider, Grid } from "../SpectreCSS";
 import Avatar from "react-avatar";
 import numeral from "numeral";
 
@@ -29,6 +29,8 @@ import {
   unlockSkills75
 } from "../../ng/UnlockMedals";
 import { doPractice } from "../../data/bandMember";
+
+const { Column } = Grid;
 
 class Dashboard extends Component {
   constructor(props) {
@@ -250,10 +252,19 @@ class Dashboard extends Component {
                     className="tile-subtitle"
                     style={{ marginLeft: 20, marginTop: 5 }}
                   >
-                    Live: {m.skills.live} <br />
-                    Musicianship: {m.skills.musicianship} <br />
-                    Songwriting: {m.skills.songwriting} <br />
-                    Studio: {m.skills.studio}
+                    <Grid>
+                      <Column width={6}>Live:</Column>
+                      <Column width={4}>{m.skills.live}</Column>
+
+                      <Column width={6}>Musicianship:</Column>
+                      <Column width={4}>{m.skills.musicianship}</Column>
+
+                      <Column width={6}>Songwriting:</Column>
+                      <Column width={4}>{m.skills.songwriting}</Column>
+
+                      <Column width={6}>Studio:</Column>
+                      <Column width={4}>{m.skills.studio}</Column>
+                    </Grid>
                   </div>
                 </div>
               </div>
