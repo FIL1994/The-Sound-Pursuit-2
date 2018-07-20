@@ -29,6 +29,12 @@ import {
   unlockSkills75
 } from "../../ng/UnlockMedals";
 import { doPractice } from "../../data/bandMember";
+import {
+  NumberEase,
+  formatDecimal,
+  formatMoney,
+  formatNumber
+} from "../../helpers";
 
 const { Column } = Grid;
 
@@ -254,16 +260,22 @@ class Dashboard extends Component {
                   >
                     <Grid>
                       <Column width={6}>Live:</Column>
-                      <Column width={4}>{m.skills.live}</Column>
+                      <Column width={4}>{formatDecimal(m.skills.live)}</Column>
 
                       <Column width={6}>Musicianship:</Column>
-                      <Column width={4}>{m.skills.musicianship}</Column>
+                      <Column width={4}>
+                        {formatDecimal(m.skills.musicianship)}
+                      </Column>
 
                       <Column width={6}>Songwriting:</Column>
-                      <Column width={4}>{m.skills.songwriting}</Column>
+                      <Column width={4}>
+                        {formatDecimal(m.skills.songwriting)}
+                      </Column>
 
                       <Column width={6}>Studio:</Column>
-                      <Column width={4}>{m.skills.studio}</Column>
+                      <Column width={4}>
+                        {formatDecimal(m.skills.studio)}
+                      </Column>
                     </Grid>
                   </div>
                 </div>
@@ -302,8 +314,10 @@ class Dashboard extends Component {
                 {!showShow ? null : (
                   <Toast centered>
                     <span>
-                      New Fans: {numeral(newFans).format()}
-                      <br />Cash: {numeral(newCash).format("$0,0.00")}
+                      New Fans:{" "}
+                      <NumberEase value={newFans} format={formatNumber} />
+                      <br />
+                      Cash: <NumberEase value={newCash} format={formatMoney} />
                     </span>
                   </Toast>
                 )}
