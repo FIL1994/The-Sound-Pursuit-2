@@ -241,16 +241,20 @@ class Dashboard extends Component {
                     size={50}
                   />
                 </div>
-                <div className="tile-content">
-                  <strong className="tile-title">
+                <div className="tile-content" style={{ textAlign: "left" }}>
+                  <strong className="tile-title" style={{ marginLeft: 15 }}>
                     {m.name} -{" "}
                     <span className="text-capitalize">{m.instrument}</span>
                   </strong>
-                  <p className="tile-subtitle">
-                    Live: {m.skills.live} | Musicianship:{" "}
-                    {m.skills.musicianship} | Songwriting:{" "}
-                    {m.skills.songwriting} | Studio: {m.skills.studio}
-                  </p>
+                  <div
+                    className="tile-subtitle"
+                    style={{ marginLeft: 20, marginTop: 5 }}
+                  >
+                    Live: {m.skills.live} <br />
+                    Musicianship: {m.skills.musicianship} <br />
+                    Songwriting: {m.skills.songwriting} <br />
+                    Studio: {m.skills.studio}
+                  </div>
                 </div>
               </div>
             );
