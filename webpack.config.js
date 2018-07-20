@@ -22,7 +22,13 @@ module.exports = {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true
+        sourceMap: true,
+        uglifyOptions: {
+          comments: false,
+          compress: {
+            drop_console: isProduction
+          }
+        }
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
