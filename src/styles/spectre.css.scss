@@ -18,3 +18,7 @@ $base-font-family: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
 .form-switch {
   display: inline;
 }
+
+.tab-item a {
+  cursor: pointer;
+}

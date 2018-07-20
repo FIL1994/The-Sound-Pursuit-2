@@ -4,7 +4,7 @@
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Loading, Page } from "../SpectreCSS";
+import { Loading, Page, ControlledTab } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
@@ -80,30 +80,46 @@ class Single extends Component {
       <Page centered>
         <h3>{title}</h3>
         <img src={imgURL} />
-        <p>
-          Released: {weeksToYearsAndWeeks(released)} <br />
-          Quality: {quality} <br />
-          Sales: {numeral(sales).format()} <br />
-          Sales Last Week: {numeral(salesLastWeek).format()}
-        </p>
-        <div>
-          <h5>Chart Details</h5>
-          <p>
-            Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This Week:{" "}
-            {checkNA(thisWeek)}
-          </p>
-        </div>
-        <div>
-          <h5>Tracklist:</h5>
-          <p className="scrollable-small">
-            {songs.map(({ id, title }, index) => (
-              <span key={id}>
-                {index + 1}. {title}
-                <br />
-              </span>
-            ))}
-          </p>
-        </div>
+        <ControlledTab
+          options={[
+            {
+              label: "Tracklist",
+              value: "tracklist",
+              render: () => (
+                <p className="scrollable-small" style={{ height: 220 }}>
+                  {songs.map(({ id, title }, index) => (
+                    <span key={id}>
+                      {index + 1}. {title}
+                      <br />
+                    </span>
+                  ))}
+                </p>
+              )
+            },
+            {
+              label: "Info",
+              value: "info",
+              render: () => (
+                <p>
+                  Released: {weeksToYearsAndWeeks(released)} <br />
+                  Quality: {quality} <br />
+                  Sales: {numeral(sales).format()} <br />
+                  Sales Last Week: {numeral(salesLastWeek).format()}
+                </p>
+              )
+            },
+            {
+              label: "Chart Details",
+              value: "chart-details",
+              render: () => (
+                <p>
+                  Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This
+                  Week: {checkNA(thisWeek)}
+                </p>
+              )
+            }
+          ]}
+        />
       </Page>
     );
   }

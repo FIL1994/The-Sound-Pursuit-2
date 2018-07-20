@@ -6,7 +6,7 @@
  *
  * Functional components for the Spectre CSS library.
  */
-import React, { Fragment } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
@@ -17,7 +17,7 @@ import _ from "lodash";
  * @returns {String} JSX Component
  */
 function addClass(defaultClass, newClass) {
-  return `${_.isString(newClass) ? newClass : ""} ${defaultClass}`.trim();
+  return `${defaultClass} ${_.isString(newClass) ? newClass : ""}`.trim();
 }
 
 /**
@@ -554,3 +554,59 @@ Grid.Column.propTypes = {
 };
 
 export { Grid };
+
+class ControlledTab extends Component {
+  state = {
+    active:
+      this.props.defaultActive ||
+      (this.props.options[0] && this.props.options[0].value)
+  };
+
+  renderActive = () => {
+    const activeOption = this.props.options.find(
+      o => this.state.active === o.value
+    );
+
+    return activeOption ? activeOption.render() : <Fragment />;
+  };
+
+  render() {
+    console.log("tab", this.state);
+    return (
+      <Fragment>
+        <Tab block>
+          {this.props.options.map(({ label, value }) => {
+            return (
+              <Fragment key={value}>
+                <Tab.Heading
+                  active={this.state.active === value}
+                  onClick={() => {
+                    this.setState({ active: value });
+                  }}
+                  children={<a>{label}</a>}
+                />
+              </Fragment>
+            );
+          })}
+        </Tab>
+        <div style={{ marginTop: 10 }}>{this.renderActive()}</div>
+      </Fragment>
+    );
+  }
+}
+ControlledTab.defaultProps = {
+  defaultActive: undefined
+};
+
+ControlledTab.propTypes = {
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.stringisRequired,
+      render: PropTypes.nodeisRequired
+    })
+  ),
+  defaultActive: PropTypes.string
+};
+
+export { ControlledTab };
