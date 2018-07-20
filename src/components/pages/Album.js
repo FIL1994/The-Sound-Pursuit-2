@@ -72,12 +72,14 @@ class Album extends Component {
       salesLastWeek,
       songs,
       title,
-      charts: { peak, lastWeek, thisWeek }
+      charts: { peak, lastWeek, thisWeek },
+      imgURL
     } = album;
 
     return (
       <Page centered>
         <h3>{title}</h3>
+        <img src={imgURL}/>
         <p>
           Released: {weeksToYearsAndWeeks(released)} <br />
           Quality: {quality} <br />
