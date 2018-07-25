@@ -1,19 +1,28 @@
+$background-gradient: linear-gradient(
+  141deg,
+  #43565d 0%,
+  #496974 20%,
+  #245970 51%,
+  #285161 75%
+);
+
 .navbar.bg-dark {
-  background: linear-gradient(
-    141deg,
-    #43565d 0%,
-    #496974 20%,
-    #245970 51%,
-    #285161 75%
-  );
+  background: $background-gradient;
 }
+
 .card.bg-dark,
 .tile.bg-dark {
   background: linear-gradient(to right, #353d40, #244543);
 }
+
 .panel {
   background: linear-gradient(to right, #e5e5e5, #cccbcb);
 }
+
 .empty {
   background: linear-gradient(to right, #e0e5e9, #e2e5e7);
+}
+
+.Toastify__toast--info {
+  background: $background-gradient;
 }

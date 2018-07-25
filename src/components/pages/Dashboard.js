@@ -8,6 +8,7 @@ import _ from "lodash";
 import { Page, Button, Toast, Divider, Grid } from "../SpectreCSS";
 import Avatar from "react-avatar";
 import numeral from "numeral";
+import { ToastContainer, toast } from "react-toastify";
 
 import {
   getBand,
@@ -38,6 +39,8 @@ import {
 
 const { Column } = Grid;
 
+window.toast = toast;
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -47,10 +50,8 @@ class Dashboard extends Component {
   }
 
   state = {
-    showShow: false,
     newFans: null,
     newCash: null,
-    showPractice: false,
     practiceToast: null,
     lastPractice: 0,
     lastShow: 0
@@ -103,23 +104,24 @@ class Dashboard extends Component {
     Promise.all(unlocks.map(unlockFunction => new Promise(unlockFunction)));
 
     this.setState({
-      showShow: true,
       newFans,
       newCash,
       lastShow
     });
 
-    setTimeout(() => {
-      const now = Date.now() / 1000;
-      if (now > this.state.lastShow + 2.9) {
-        this.setState({
-          showShow: false,
-          newFans: null,
-          newCash: null,
-          lastShow: Date.now() / 1000
-        });
-      }
-    }, 3000);
+    const toastContent = (
+      <Fragment>
+        New Fans: <NumberEase value={newFans} format={formatNumber} />
+        <br />
+        Cash: <NumberEase value={newCash} format={formatMoney} />
+      </Fragment>
+    );
+
+    if (toast.isActive(this.toastShowID)) {
+      toast.update(this.toastShowID, { render: toastContent });
+    } else {
+      this.toastShowID = toast.info(toastContent);
+    }
   };
 
   practice = () => {
@@ -203,6 +205,11 @@ class Dashboard extends Component {
     }
 
     practiceToast = <span>Practiced!</span>;
+    if (toast.isActive(this.toastPracticeID)) {
+      toast.update(this.toastPracticeID);
+    } else {
+      this.toastPracticeID = toast.info("Practiced!");
+    }
 
     this.props.saveBand({ ...this.props.band, leadMember, members });
     this.props.nextWeek();
@@ -213,22 +220,9 @@ class Dashboard extends Component {
     Promise.all(unlocks.map(unlockFunction => new Promise(unlockFunction)));
 
     this.setState({
-      showPractice: true,
       practiceToast,
       lastPractice
     });
-
-    // in 3 seconds (from the last practice) hide practice toast
-    setTimeout(() => {
-      const now = Date.now() / 1000;
-      if (now > this.state.lastPractice + 2.9) {
-        this.setState({
-          showPractice: false,
-          practiceToast: null,
-          lastPractice: Date.now() / 1000
-        });
-      }
-    }, 3000);
   };
 
   renderMembers = () => {
@@ -250,7 +244,10 @@ class Dashboard extends Component {
                   />
                 </div>
                 <div className="tile-content" style={{ textAlign: "left" }}>
-                  <strong className="tile-title" style={{ marginLeft: 15, fontSize: "0.82rem" }}>
+                  <strong
+                    className="tile-title"
+                    style={{ marginLeft: 15, fontSize: "0.82rem" }}
+                  >
                     {m.name} -{" "}
                     <span className="text-capitalize">{m.instrument}</span>
                   </strong>
@@ -289,13 +286,7 @@ class Dashboard extends Component {
 
   render() {
     const { band } = this.props;
-    const {
-      showShow,
-      showPractice,
-      newFans,
-      newCash,
-      practiceToast
-    } = this.state;
+    const { newFans, newCash, practiceToast } = this.state;
 
     return (
       <Page className="text-center">
@@ -310,24 +301,12 @@ class Dashboard extends Component {
               <Button size={4} large onClick={this.practice}>
                 Practice
               </Button>
-              <div className="centered col-3">
-                {!showShow ? null : (
-                  <Toast centered>
-                    <span>
-                      New Fans:{" "}
-                      <NumberEase value={newFans} format={formatNumber} />
-                      <br />
-                      Cash: <NumberEase value={newCash} format={formatMoney} />
-                    </span>
-                  </Toast>
-                )}
-                {!showPractice ? null : <Toast centered>{practiceToast}</Toast>}
-              </div>
             </div>
             <br />
             {this.renderMembers()}
           </Fragment>
         )}
+        <ToastContainer autoClose={2000} position="bottom-center" />
       </Page>
     );
   }
