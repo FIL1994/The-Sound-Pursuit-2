@@ -13,10 +13,12 @@ import Select from "rc-select";
 import Pagination from "rc-pagination";
 import localeInfo from "rc-pagination/lib/locale/en_US";
 
-import { Page, EmptyState, Button } from "../SpectreCSS";
+import { Page, EmptyState, Button, Grid } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
 import { NumberEase, formatNumber } from "../../helpers";
+
+const { Column } = Grid;
 
 const defaultPaginationState = {
   pageSize: 10,
@@ -132,7 +134,7 @@ class Records extends Component {
                   const age = week - released;
                   return (
                     <animated.div
-                      className="card bg-dark"
+                      className="card bg-dark record"
                       style={{
                         opacity,
                         transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
@@ -142,18 +144,25 @@ class Records extends Component {
                         <div className="card-title h5">
                           <Link to={`/single/${id}`}>{title}</Link>
                         </div>
+                        <div className="record-release">
+                          {weeksToYearsAndWeeks(released)} ({`${age} ${
+                            age === 1 ? "week" : "weeks"
+                          }`})
+                        </div>
                       </div>
                       <div className="card-body">
-                        Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                        {`${age} ${age === 1 ? "week" : "weeks"}`}
-                        <br />
-                        Quality: {quality}
-                        <br />
-                        Sales Last Week: {numeral(salesLastWeek).format()}
-                        <br />
-                        Total Sales: {numeral(sales).format()}
-                        <br />
-                        Peak Chart Position: {checkNA(peak)}
+                        <Grid>
+                          <Column width={4}>
+                            Quality: {quality}
+                            <br />
+                            Peak Chart Position: {checkNA(peak)}
+                          </Column>
+                          <Column width={4}>
+                            Sales Last Week: {numeral(salesLastWeek).format()}
+                            <br />
+                            Total Sales: {numeral(sales).format()}
+                          </Column>
+                        </Grid>
                       </div>
                     </animated.div>
                   );
@@ -227,7 +236,7 @@ class Records extends Component {
                   const age = week - released;
                   return (
                     <animated.div
-                      className="card bg-dark"
+                      className="card bg-dark record"
                       style={{
                         opacity,
                         transform: x.interpolate(x => `translate3d(${x}%,0,0)`)
@@ -237,18 +246,25 @@ class Records extends Component {
                         <div className="card-title h5">
                           <Link to={`/album/${id}`}>{title}</Link>
                         </div>
+                        <div className="record-release">
+                          {weeksToYearsAndWeeks(released)} ({`${age} ${
+                            age === 1 ? "week" : "weeks"
+                          }`})
+                        </div>
                       </div>
                       <div className="card-body">
-                        Released: {weeksToYearsAndWeeks(released)} | Age:{" "}
-                        {`${age} ${age === 1 ? "week" : "weeks"}`}
-                        <br />
-                        Quality: {quality}
-                        <br />
-                        Sales Last Week: {numeral(salesLastWeek).format()}
-                        <br />
-                        Total Sales: {numeral(sales).format()}
-                        <br />
-                        Peak Chart Position: {checkNA(peak)}
+                        <Grid>
+                          <Column width={4}>
+                            Quality: {quality}
+                            <br />
+                            Peak Chart Position: {checkNA(peak)}
+                          </Column>
+                          <Column width={4}>
+                            Sales Last Week: {numeral(salesLastWeek).format()}
+                            <br />
+                            Total Sales: {numeral(sales).format()}
+                          </Column>
+                        </Grid>
                       </div>
                     </animated.div>
                   );
@@ -285,7 +301,7 @@ class Records extends Component {
               title="You haven't released any records yet"
             />
           ) : (
-            <div>
+            <div className="record-group">
               {showAlbums ? this.renderAlbums() : this.renderSingles()}{" "}
               <Pagination
                 selectComponentClass={Select}

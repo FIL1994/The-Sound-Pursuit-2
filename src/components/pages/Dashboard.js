@@ -250,7 +250,7 @@ class Dashboard extends Component {
                   />
                 </div>
                 <div className="tile-content" style={{ textAlign: "left" }}>
-                  <strong className="tile-title" style={{ marginLeft: 15 }}>
+                  <strong className="tile-title" style={{ marginLeft: 15, fontSize: "0.82rem" }}>
                     {m.name} -{" "}
                     <span className="text-capitalize">{m.instrument}</span>
                   </strong>
