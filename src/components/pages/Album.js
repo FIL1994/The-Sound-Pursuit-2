@@ -79,7 +79,7 @@ class Album extends Component {
     return (
       <Page centered>
         <h3>{title}</h3>
-        <img src={imgURL} />
+        <img src={imgURL} height={200} width={200} />
         <ControlledTab
           options={[
             {

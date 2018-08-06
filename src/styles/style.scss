@@ -1,4 +1,5 @@
 $box-shadow: rgba(224, 224, 224, 0.69) 2px 2px 6px 2px;
+$page-height: 630px;
 
 @import "utils";
 @import "select";
@@ -12,13 +13,13 @@ $box-shadow: rgba(224, 224, 224, 0.69) 2px 2px 6px 2px;
 
 body {
   margin-top: -10px;
-  max-height: 620px;
+  max-height: $page-height;
   overflow-y: scroll;
 }
 
 #site {
   padding-top: 10px;
-  min-height: 620px;
+  min-height: $page-height;
 }
 
 .page {
