@@ -4,10 +4,7 @@
  */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import _ from "lodash";
 import { Howler } from "howler";
-import Tooltip from "rc-tooltip";
-import Slider, { Handle } from "rc-slider";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 import { Page, Button, Panel } from "../SpectreCSS";
@@ -16,26 +13,7 @@ import localForage, {
   SONG_VOLUME,
   SONG_TO_PLAY
 } from "../../data/localForage";
-
-import "rc-slider/assets/index.css";
-import "rc-tooltip/assets/bootstrap.css";
-import "rc-pagination/assets/index.css";
-import "rc-select/assets/index.css";
-
-const handle = props => {
-  const { value, dragging, index, ...restProps } = props;
-  return (
-    <Tooltip
-      prefixCls="rc-slider-tooltip"
-      overlay={value}
-      visible={dragging}
-      placement="top"
-      key={index}
-    >
-      <Handle value={value} {...restProps} />
-    </Tooltip>
-  );
-};
+import MySlider from "../MySlider";
 
 class Settings extends Component {
   state = {
@@ -105,20 +83,10 @@ class Settings extends Component {
               <p className="form-label" htmlFor="rangeVolume">
                 Volume:
               </p>
-              <Slider
-                handleStyle={{
-                  backgroundColor: "#1e5f53",
-                  borderColor: "white"
-                }}
-                trackStyle={{ backgroundColor: "#237c70de" }}
-                railStyle={{
-                  backgroundColor: "white",
-                  boxShadow: "rgba(103, 151, 232, 0.29) 2px 2px 8px 1px"
-                }}
+              <MySlider
                 min={0}
                 max={100}
                 value={volume}
-                handle={handle}
                 onChange={this.volumeChange}
               />
             </div>
