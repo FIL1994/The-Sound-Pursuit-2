@@ -44,8 +44,6 @@ class Album extends Component {
     this.setState({
       album
     });
-
-    console.log("album", album);
   }
 
   render() {

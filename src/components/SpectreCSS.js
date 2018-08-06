@@ -571,7 +571,6 @@ class ControlledTab extends Component {
   };
 
   render() {
-    console.log("tab", this.state);
     return (
       <Fragment>
         <Tab block>

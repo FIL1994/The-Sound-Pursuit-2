@@ -44,8 +44,6 @@ class Single extends Component {
     this.setState({
       single
     });
-
-    console.log("single", single);
   }
 
   render() {
