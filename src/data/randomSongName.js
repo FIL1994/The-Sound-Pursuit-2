@@ -352,7 +352,16 @@ const SONG_LIST = [
   "It Won't Fade",
   "Sharp Teeth",
   "All Around the World",
-  "Autumn Leaves"
+  "Autumn Leaves",
+  "Call It In",
+  "Falsify",
+  "Individual Expectations",
+  "Here to Stay",
+  "Precursor to a Big Event",
+  "In Your Mind",
+  "Certain to Succeed",
+  "A Sure-Fire Way",
+  "Broken Flashlight"
 ];
 
 export default () => {
