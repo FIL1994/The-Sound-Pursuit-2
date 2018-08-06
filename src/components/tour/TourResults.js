@@ -30,38 +30,38 @@ class TourResults extends Component {
         <h5>Tour Results</h5>
 
         <Grid style={{ textAlign: "right" }}>
-          <Column width={4} />
+          <Column width={3} />
 
-          <Column width={2}>New Fans:</Column>
-          <Column width={2} style={{ textAlign: "left" }}>
+          <Column width={3}>New Fans:</Column>
+          <Column width={3} style={{ textAlign: "left" }}>
             <NumberEase value={newFans} format={formatNumber} />{" "}
           </Column>
 
-          <Column width={4} />
-          <Column width={4} />
+          <Column width={3} />
+          <Column width={3} />
 
-          <Column width={2}>Tour Cost:</Column>
-          <Column width={2} style={{ textAlign: "left" }}>
+          <Column width={3}>Tour Cost:</Column>
+          <Column width={3} style={{ textAlign: "left" }}>
             <NumberEase value={tourCost} format={formatMoney} />
           </Column>
 
-          <Column width={4} />
-          <Column width={4} />
+          <Column width={3} />
+          <Column width={3} />
 
-          <Column width={2}>Gross Revenue:</Column>
-          <Column width={2} style={{ textAlign: "left" }}>
+          <Column width={3}>Gross Revenue:</Column>
+          <Column width={3} style={{ textAlign: "left" }}>
             <NumberEase value={newCash} format={formatMoney} />
           </Column>
 
-          <Column width={4} />
-          <Column width={4} />
+          <Column width={3} />
+          <Column width={3} />
 
-          <Column width={2}>Net Revenue: </Column>
-          <Column width={2} style={{ textAlign: "left" }}>
+          <Column width={3}>Net Revenue: </Column>
+          <Column width={3} style={{ textAlign: "left" }}>
             <NumberEase value={newCash - tourCost} format={formatMoney} />
           </Column>
 
-          <Column width={4} />
+          <Column width={3} />
         </Grid>
       </div>
     );

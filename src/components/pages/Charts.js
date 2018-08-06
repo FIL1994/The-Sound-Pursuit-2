@@ -8,11 +8,11 @@ import { Page, Loading, Button } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
 import { Trail, animated } from "react-spring";
-import { getCharts, getBand } from "../../actions";
-import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
-
 import { LazyImage } from "react-lazy-images";
 import ReactLoading from "react-loading";
+
+import { getCharts, getBand } from "../../actions";
+import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 class Charts extends Component {
   state = {
