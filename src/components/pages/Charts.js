@@ -11,6 +11,9 @@ import { Trail, animated } from "react-spring";
 import { getCharts, getBand } from "../../actions";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
+import { LazyImage } from "react-lazy-images";
+import ReactLoading from "react-loading";
+
 class Charts extends Component {
   state = {
     showSingles: true
@@ -96,12 +99,35 @@ class Charts extends Component {
                         }}
                       >
                         <div className="tile-icon">
-                          <img
+                          <LazyImage
                             className="img-fit-contain"
                             src={imgURL}
-                            alt={title}
-                            height={100}
-                            width={100}
+                            actual={({ imageProps }) => (
+                              <img
+                                {...imageProps}
+                                alt={title}
+                                height={100}
+                                width={100}
+                              />
+                            )}
+                            placeholder={({ imageProps, ref }) => {
+                              return (
+                                <div
+                                  ref={ref}
+                                  style={{ width: 100, height: 100 }}
+                                >
+                                  <div
+                                    style={{ marginLeft: 18, marginTop: 16 }}
+                                  >
+                                    <ReactLoading
+                                      type="spinningBubbles"
+                                      color="#ffffff"
+                                      delay={300}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            }}
                           />
                         </div>
                         <div className="tile-content">
