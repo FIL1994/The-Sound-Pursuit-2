@@ -12,6 +12,7 @@ import numeral from "numeral";
 import TourResults from "../tour/TourResults";
 import ErrorDiv from "../ErrorDiv";
 import { goOnTour, getCash, removeCash } from "../../actions/index";
+import MySlider from "../MySlider";
 
 const defaultState = {
   weeksToTour: 0,
@@ -216,15 +217,12 @@ class Tour extends Component {
                     _.isEmpty(errorWeeksToTour) ? "" : "has-error"
                   }`}
                 >
-                  <label htmlFor="range-weeks-to-tour">Weeks to Tour:</label>
-                  <input
-                    className="slider tooltip"
-                    type="range"
-                    id="range-weeks-to-tour"
+                  <label>Weeks to Tour:</label>
+                  <MySlider
                     min={minWeeksToTour}
                     max={104}
                     value={weeksToTour}
-                    onChange={({ target: { value } }) =>
+                    onChange={value =>
                       this.setState({ weeksToTour: Number(value) })
                     }
                   />
