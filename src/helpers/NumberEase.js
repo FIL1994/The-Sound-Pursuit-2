@@ -23,7 +23,7 @@ class NumberEase extends Component {
   startAnimation = (value = 0) => {
     let valueToUpdate = { value };
     const animation = new Tween(valueToUpdate)
-      .to({ value: this.props.value })
+      .to({ value: this.props.value }, this.props.duration)
       .easing(Easing.Quadratic.Out)
       .onUpdate(() => {
         this.setState(valueToUpdate);
@@ -41,12 +41,14 @@ class NumberEase extends Component {
 }
 
 NumberEase.defaultProps = {
-  format: v => v
+  format: v => v,
+  duration: 1000
 };
 
 NumberEase.propTypes = {
   format: PropTypes.func,
-  value: PropTypes.number.isRequired
+  value: PropTypes.number.isRequired,
+  duration: PropTypes.number
 };
 
 export default NumberEase;

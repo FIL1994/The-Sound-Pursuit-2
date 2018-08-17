@@ -4,9 +4,12 @@
  */
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-
 import $ from "jquery";
 import _ from "lodash";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import numeral from "numeral";
+import FlipMove from "react-flip-move";
+
 import { Page, Button, EmptyState } from "../SpectreCSS";
 import getRandomSongName from "../../data/randomSongName";
 import {
@@ -23,9 +26,7 @@ import {
 import studios from "../../data/studios";
 import { unlockWriteSong, unlockRecordSong } from "../../ng/UnlockMedals";
 import { weeksToYearsAndWeeks } from "../../data/util";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import numeral from "numeral";
-import FlipMove from "react-flip-move";
+import { NumberEase, formatNumber } from "../../helpers";
 
 class Songs extends Component {
   state = {
@@ -596,7 +597,14 @@ class Songs extends Component {
           this.renderEmpty()
         ) : (
           <div className="col-12 centered">
-            <p className="text-left">Unreleased Songs: {usableSongs.length}</p>
+            <p className="text-left">
+              Unreleased Songs:{" "}
+              <NumberEase
+                value={usableSongs.length}
+                format={formatNumber}
+                duration={800}
+              />
+            </p>
             <div /*className="scrollable"*/>{this.renderSongList()}</div>
           </div>
         )}
