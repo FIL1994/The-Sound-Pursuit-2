@@ -49,6 +49,8 @@ class Album extends Component {
   render() {
     const { album } = this.state;
 
+    console.log("album", album);
+
     if (album === undefined) {
       return (
         <Page centered>

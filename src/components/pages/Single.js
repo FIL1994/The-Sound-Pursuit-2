@@ -49,6 +49,8 @@ class Single extends Component {
   render() {
     const { single } = this.state;
 
+    console.log("single", single)
+
     if (single === undefined) {
       return (
         <Page centered>

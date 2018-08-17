@@ -79,6 +79,7 @@ import getRandomBandName from "../data/randomBandName";
 import getRandomSongName from "../data/randomSongName";
 import getRandomName from "../data/names";
 import { ImageURL } from "../data/util";
+import { calcSalesHistory } from "../helpers";
 
 const DEFAULT_CASH = 250;
 const SINGLE_SALES_LAST = 16; //weeks singles sell for
@@ -411,6 +412,9 @@ export function nextWeek(weeks, tourDetails = {}) {
         );
       }
       totalSingleSales += singles[index].sales;
+
+      // sales history
+      singles[index] = calcSalesHistory(singles[index], week);
     });
 
     // check total single sales medals
@@ -467,6 +471,9 @@ export function nextWeek(weeks, tourDetails = {}) {
         );
       }
       totalAlbumSales += albums[index].sales;
+
+      // sales history
+      albums[index] = calcSalesHistory(albums[index], week);
     });
 
     // check total album sales medals
@@ -570,7 +577,9 @@ export function nextWeek(weeks, tourDetails = {}) {
       _.ceil(performance * 3.2 * (1 + continents.length / 10)) *
       (1 + venueSize / 5);
     const newCashFromTour =
-      performance * ((1 + venueSize) * 3 / 10) * _.max([1 + fans / 1000000, 3]);
+      performance *
+      (((1 + venueSize) * 3) / 10) *
+      _.max([1 + fans / 1000000, 3]);
 
     return { newCashFromTour, newFansFromTour };
   }
