@@ -25,6 +25,7 @@ import { unlockWriteSong, unlockRecordSong } from "../../ng/UnlockMedals";
 import { weeksToYearsAndWeeks } from "../../data/util";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import numeral from "numeral";
+import FlipMove from "react-flip-move";
 
 class Songs extends Component {
   state = {
@@ -522,7 +523,15 @@ class Songs extends Component {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <FlipMove
+          typeName="tbody"
+          duration={400}
+          staggerDelayBy={10}
+          staggerDurationBy={15}
+          appearAnimation="elevator"
+          enterAnimation="accordionVertical"
+          leaveAnimation="accordionHorizontal"
+        >
           {songs.map(s => {
             return (
               <tr key={s.id}>
@@ -560,7 +569,7 @@ class Songs extends Component {
               </tr>
             );
           })}
-        </tbody>
+        </FlipMove>
       </table>
     );
   };
@@ -605,14 +614,17 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  getBand,
-  getCash,
-  saveCash,
-  getSongs,
-  writeSong,
-  updateSong,
-  deleteSong,
-  getWeek,
-  nextWeek
-})(Songs);
+export default connect(
+  mapStateToProps,
+  {
+    getBand,
+    getCash,
+    saveCash,
+    getSongs,
+    writeSong,
+    updateSong,
+    deleteSong,
+    getWeek,
+    nextWeek
+  }
+)(Songs);
