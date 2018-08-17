@@ -105,7 +105,8 @@ class Tour extends Component {
     }
 
     // check venue size
-    const venueSize = Number($("input[name=venue-size]:checked")[0].value);
+    const venueRadio = $("input[name=venue-size]:checked")[0] || {};
+    const venueSize = Number(venueRadio.value);
     if (!_.isFinite(venueSize)) {
       errorVenueSize = <ErrorDiv>You must select a venue size.</ErrorDiv>;
     }
