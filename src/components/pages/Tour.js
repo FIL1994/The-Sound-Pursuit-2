@@ -186,7 +186,7 @@ class Tour extends Component {
           </Fragment>
         ) : (
           <Fragment>
-            <Panel>
+            <Panel style={{ marginTop: 35, paddingTop: 15 }}>
               <form className="centered col-10">
                 <div
                   className={`form-group ${

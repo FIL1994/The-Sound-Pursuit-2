@@ -58,7 +58,10 @@ class Settings extends Component {
 
     return (
       <Page centered>
-        <Panel className="col-8 centered text-center">
+        <Panel
+          className="col-8 centered text-center"
+          style={{ marginTop: 35, paddingTop: 15 }}
+        >
           <form>
             <div className="form-group">
               <p className="form-label" htmlFor="selectSong">
