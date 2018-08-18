@@ -9,16 +9,18 @@ import _ from "lodash";
 import numeral from "numeral";
 import {
   VictoryChart,
-  VictoryZoomContainer,
   VictoryLine,
   VictoryBrushContainer,
   VictoryAxis,
-  VictoryTheme
+  VictoryTooltip,
+  createContainer
 } from "victory";
 import moment from "moment";
 import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 
 import { getSongs, getAlbums } from "../../actions";
+
+const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 
 class Album extends Component {
   state = {
@@ -57,8 +59,8 @@ class Album extends Component {
 
       return {
         y: s.sales,
-        // x: date.toDate()
-        x: s.week
+        x: s.week,
+        label: s.sales
       };
     });
 
@@ -78,8 +80,6 @@ class Album extends Component {
 
   render() {
     const { album } = this.state;
-
-    console.log("album", album);
 
     if (album === undefined) {
       return (
@@ -154,7 +154,7 @@ class Album extends Component {
           width={700}
           height={350}
           containerComponent={
-            <VictoryZoomContainer
+            <VictoryZoomVoronoiContainer
               responsive
               zoomDimension="x"
               zoomDomain={this.state.zoomDomain}
@@ -169,6 +169,12 @@ class Album extends Component {
             tickFormat={y => formatNumber(y, false, true)}
           />
           <VictoryLine
+            labelComponent={
+              <VictoryTooltip
+                cornerRadius={2}
+                text={data => numeral(data.y).format("0,0")}
+              />
+            }
             style={{
               data: { stroke: "#2d948a" }
             }}
@@ -195,6 +201,7 @@ class Album extends Component {
               data: { stroke: "#2d948a" }
             }}
             data={this.state.salesHistory}
+            labelComponent={<VictoryTooltip />}
           />
         </VictoryChart>
       </Page>
