@@ -80,6 +80,7 @@
     "react-dnd-html5-backend": "^4.0.6",
     "react-dom": "^16.4.2",
     "react-flip-move": "^3.0.2",
+    "react-image-lightbox": "^5.0.0",
     "react-lazy-images": "^1.1.0",
     "react-loading": "^2.0.3",
     "react-redux": "5.0.7",

@@ -17,6 +17,7 @@ import "./helpers/setupTweenJS";
 
 import "fg-select-css/src/select-css.css";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-image-lightbox/style.css';
 import "spectre.css/dist/spectre-exp.css";
 // import "./styles/spectre-dark.min.css";
 import "./index.scss";

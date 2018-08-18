@@ -16,6 +16,7 @@ import {
   createContainer
 } from "victory";
 import moment from "moment";
+import Lightbox from "react-image-lightbox";
 import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 
 import { getSongs, getAlbums } from "../../actions";
@@ -25,7 +26,8 @@ const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 class Album extends Component {
   state = {
     album: undefined,
-    salesHistory: []
+    salesHistory: [],
+    isLightboxOpen: false
   };
 
   componentDidMount() {
@@ -109,7 +111,19 @@ class Album extends Component {
     return (
       <Page centered>
         <h3>{title}</h3>
-        <img src={imgURL} height={200} width={200} />
+        <img
+          src={imgURL}
+          height={200}
+          width={200}
+          onClick={() => this.setState({ isLightboxOpen: true })}
+        />
+        {this.state.isLightboxOpen && (
+          <Lightbox
+            imageTitle={title}
+            mainSrc={imgURL}
+            onCloseRequest={() => this.setState({ isLightboxOpen: false })}
+          />
+        )}
         <ControlledTab
           options={[
             {
@@ -158,7 +172,7 @@ class Album extends Component {
                     height={200}
                     containerComponent={
                       <VictoryZoomVoronoiContainer
-                        responsive//={false}
+                        responsive //={false}
                         zoomDimension="x"
                         zoomDomain={this.state.zoomDomain}
                         onZoomDomainChange={this.handleZoom.bind(this)}
@@ -194,7 +208,7 @@ class Album extends Component {
                     height={60}
                     containerComponent={
                       <VictoryBrushContainer
-                        responsive//={false}
+                        responsive //={false}
                         brushDimension="x"
                         brushDomain={this.state.selectedDomain}
                         onBrushDomainChange={this.handleBrush.bind(this)}
