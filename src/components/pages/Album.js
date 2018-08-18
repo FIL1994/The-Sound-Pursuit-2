@@ -149,14 +149,18 @@ class Album extends Component {
               label: "Tracklist",
               value: "tracklist",
               render: () => (
-                <p className="scrollable-small" style={{ height: 220 }}>
+                <div className="scrollable-small" style={{ height: 330, overflowX: "hidden" }}>
                   {songs.map(({ id, title }, index) => (
-                    <span key={id}>
-                      {index + 1}. {title}
-                      <br />
-                    </span>
+                    <Grid key={id}>
+                      <Column width={5} style={{ textAlign: "right" }}>
+                        {index + 1}.
+                      </Column>
+                      <Column width={7} style={{ textAlign: "left" }}>
+                        {title}
+                      </Column>
+                    </Grid>
                   ))}
-                </p>
+                </div>
               )
             },
             {
