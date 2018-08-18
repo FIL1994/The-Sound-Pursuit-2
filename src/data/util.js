@@ -9,7 +9,7 @@ export function weeksToYearsAndWeeks(weeks) {
     return "N/A";
   }
   const year = Math.floor(weeks / 52);
-  const leftoverWeeks = weeks % 52;
+  const leftoverWeeks = Math.floor(weeks % 52);
   return `Y${year} W${leftoverWeeks}`;
 }
 

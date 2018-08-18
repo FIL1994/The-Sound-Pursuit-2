@@ -2,7 +2,7 @@
  * @author Philip Van Raalte
  * @date 2017-12-18
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Page, Loading, ControlledTab } from "../SpectreCSS";
 import _ from "lodash";
@@ -147,63 +147,74 @@ class Album extends Component {
                   Week: {checkNA(thisWeek)}
                 </p>
               )
+            },
+            {
+              label: "Sales History",
+              value: "sales-history",
+              render: () => (
+                <Fragment>
+                  <VictoryChart
+                    width={750}
+                    height={200}
+                    containerComponent={
+                      <VictoryZoomVoronoiContainer
+                        responsive//={false}
+                        zoomDimension="x"
+                        zoomDomain={this.state.zoomDomain}
+                        onZoomDomainChange={this.handleZoom.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis
+                      fixLabelOverlap
+                      tickFormat={weeksToYearsAndWeeks}
+                    />
+                    <VictoryAxis
+                      dependentAxis
+                      fixLabelOverlap
+                      tickFormat={y => formatNumber(y, false, true)}
+                    />
+                    <VictoryLine
+                      labelComponent={
+                        <VictoryTooltip
+                          cornerRadius={2}
+                          text={data => numeral(data.y).format("0,0")}
+                        />
+                      }
+                      style={{
+                        data: { stroke: "#2d948a" }
+                      }}
+                      data={this.state.salesHistory}
+                    />
+                  </VictoryChart>
+
+                  <VictoryChart
+                    padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                    width={650}
+                    height={60}
+                    containerComponent={
+                      <VictoryBrushContainer
+                        responsive//={false}
+                        brushDimension="x"
+                        brushDomain={this.state.selectedDomain}
+                        onBrushDomainChange={this.handleBrush.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis tickFormat={weeksToYearsAndWeeks} />
+                    <VictoryLine
+                      style={{
+                        data: { stroke: "#2d948a" }
+                      }}
+                      data={this.state.salesHistory}
+                      labelComponent={<VictoryTooltip />}
+                    />
+                  </VictoryChart>
+                </Fragment>
+              )
             }
           ]}
         />
-        <VictoryChart
-          width={700}
-          height={350}
-          containerComponent={
-            <VictoryZoomVoronoiContainer
-              responsive
-              zoomDimension="x"
-              zoomDomain={this.state.zoomDomain}
-              onZoomDomainChange={this.handleZoom.bind(this)}
-            />
-          }
-        >
-          <VictoryAxis fixLabelOverlap tickFormat={weeksToYearsAndWeeks} />
-          <VictoryAxis
-            dependentAxis
-            fixLabelOverlap
-            tickFormat={y => formatNumber(y, false, true)}
-          />
-          <VictoryLine
-            labelComponent={
-              <VictoryTooltip
-                cornerRadius={2}
-                text={data => numeral(data.y).format("0,0")}
-              />
-            }
-            style={{
-              data: { stroke: "#2d948a" }
-            }}
-            data={this.state.salesHistory}
-          />
-        </VictoryChart>
-
-        <VictoryChart
-          padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-          width={600}
-          height={90}
-          containerComponent={
-            <VictoryBrushContainer
-              responsive
-              brushDimension="x"
-              brushDomain={this.state.selectedDomain}
-              onBrushDomainChange={this.handleBrush.bind(this)}
-            />
-          }
-        >
-          <VictoryAxis tickFormat={weeksToYearsAndWeeks} />
-          <VictoryLine
-            style={{
-              data: { stroke: "#2d948a" }
-            }}
-            data={this.state.salesHistory}
-            labelComponent={<VictoryTooltip />}
-          />
-        </VictoryChart>
       </Page>
     );
   }
