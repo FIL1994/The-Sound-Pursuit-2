@@ -15,7 +15,6 @@ import {
   VictoryTooltip,
   createContainer
 } from "victory";
-import moment from "moment";
 import Lightbox from "react-image-lightbox";
 import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 
@@ -57,9 +56,6 @@ class Album extends Component {
     }
 
     const salesHistory = album.salesHistory.map(s => {
-      let date = moment("0000", "YYYY");
-      date.add(s.week, "weeks");
-
       return {
         y: s.sales,
         x: s.week,
@@ -83,6 +79,8 @@ class Album extends Component {
 
   render() {
     const { album } = this.state;
+
+    console.log("album", album);
 
     if (album === undefined) {
       return (

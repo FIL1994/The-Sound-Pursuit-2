@@ -7,6 +7,15 @@ import { connect } from "react-redux";
 import { Loading, Page, ControlledTab } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
+import {
+  VictoryChart,
+  VictoryLine,
+  VictoryBrushContainer,
+  VictoryAxis,
+  VictoryTooltip,
+  createContainer
+} from "victory";
+import Lightbox from "react-image-lightbox";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 
 import { getSongs, getSingles } from "../../actions";
