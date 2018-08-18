@@ -4,7 +4,7 @@
  */
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Page, Loading, ControlledTab } from "../SpectreCSS";
+import { Page, Loading, ControlledTab, Grid, Panel } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
 import {
@@ -22,6 +22,7 @@ import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 import { getSongs, getAlbums } from "../../actions";
 
 const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+const { Column } = Grid;
 
 class Album extends Component {
   state = {
@@ -110,20 +111,40 @@ class Album extends Component {
 
     return (
       <Page centered>
-        <h3>{title}</h3>
-        <img
-          src={imgURL}
-          height={200}
-          width={200}
-          onClick={() => this.setState({ isLightboxOpen: true })}
-        />
-        {this.state.isLightboxOpen && (
-          <Lightbox
-            imageTitle={title}
-            mainSrc={imgURL}
-            onCloseRequest={() => this.setState({ isLightboxOpen: false })}
-          />
-        )}
+        <Panel
+          style={{
+            padding: "5px 0px"
+          }}
+        >
+          <Grid>
+            <Column width={4}>
+              <img
+                src={imgURL}
+                height={160}
+                width={160}
+                onClick={() => this.setState({ isLightboxOpen: true })}
+              />
+              {this.state.isLightboxOpen && (
+                <Lightbox
+                  imageTitle={title}
+                  mainSrc={imgURL}
+                  onCloseRequest={() =>
+                    this.setState({ isLightboxOpen: false })
+                  }
+                />
+              )}
+            </Column>
+            <Column width={8} style={{ textAlign: "left" }}>
+              <h3>{title}</h3>
+              <p>
+                Released: {weeksToYearsAndWeeks(released)} <br />
+                Quality: {quality} <br />
+                Sales: {numeral(sales).format()} <br />
+                Sales Last Week: {numeral(salesLastWeek).format()}
+              </p>
+            </Column>
+          </Grid>
+        </Panel>
         <ControlledTab
           options={[
             {
@@ -137,18 +158,6 @@ class Album extends Component {
                       <br />
                     </span>
                   ))}
-                </p>
-              )
-            },
-            {
-              label: "Info",
-              value: "info",
-              render: () => (
-                <p>
-                  Released: {weeksToYearsAndWeeks(released)} <br />
-                  Quality: {quality} <br />
-                  Sales: {numeral(sales).format()} <br />
-                  Sales Last Week: {numeral(salesLastWeek).format()}
                 </p>
               )
             },

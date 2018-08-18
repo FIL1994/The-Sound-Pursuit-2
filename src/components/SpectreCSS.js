@@ -418,7 +418,7 @@ export const Panel = props => {
     <div {...myProps} className={className}>
       {header}
       <div className="panel-body">{children}</div>
-      <div className="panel-footer">{footer}</div>
+      {footer && <div className="panel-footer">{footer}</div>}
     </div>
   );
 };
