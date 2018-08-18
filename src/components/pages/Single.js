@@ -2,9 +2,9 @@
  * @author Philip Van Raalte
  * @date 2017-12-18
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Loading, Page, ControlledTab } from "../SpectreCSS";
+import { Loading, Page, ControlledTab, Grid, Panel } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
 import {
@@ -16,13 +16,18 @@ import {
   createContainer
 } from "victory";
 import Lightbox from "react-image-lightbox";
-import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
+import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 
 import { getSongs, getSingles } from "../../actions";
 
+const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+const { Column } = Grid;
+
 class Single extends Component {
   state = {
-    single: undefined
+    single: undefined,
+    salesHistory: [],
+    isLightboxOpen: false
   };
 
   componentDidMount() {
@@ -50,15 +55,32 @@ class Single extends Component {
       single.songs = single.songs.map(si => songs.find(s => s.id === si));
     }
 
-    this.setState({
-      single
+    console.log("single", single);
+
+    const salesHistory = single.salesHistory.map(s => {
+      return {
+        y: s.sales,
+        x: s.week,
+        label: s.sales
+      };
     });
+
+    this.setState({
+      single,
+      salesHistory
+    });
+  }
+
+  handleZoom(domain) {
+    this.setState({ selectedDomain: domain });
+  }
+
+  handleBrush(domain) {
+    this.setState({ zoomDomain: domain });
   }
 
   render() {
     const { single } = this.state;
-
-    console.log("single", single)
 
     if (single === undefined) {
       return (
@@ -87,8 +109,40 @@ class Single extends Component {
 
     return (
       <Page centered>
-        <h3>{title}</h3>
-        <img src={imgURL} height={200} width={200} />
+        <Panel
+          style={{
+            padding: "5px 0px"
+          }}
+        >
+          <Grid>
+            <Column width={4}>
+              <img
+                src={imgURL}
+                height={160}
+                width={160}
+                onClick={() => this.setState({ isLightboxOpen: true })}
+              />
+              {this.state.isLightboxOpen && (
+                <Lightbox
+                  imageTitle={title}
+                  mainSrc={imgURL}
+                  onCloseRequest={() =>
+                    this.setState({ isLightboxOpen: false })
+                  }
+                />
+              )}
+            </Column>
+            <Column width={8} style={{ textAlign: "left" }}>
+              <h3>{title}</h3>
+              <p>
+                Released: {weeksToYearsAndWeeks(released)} <br />
+                Quality: {quality} <br />
+                Sales: {numeral(sales).format()} <br />
+                Sales Last Week: {numeral(salesLastWeek).format()}
+              </p>
+            </Column>
+          </Grid>
+        </Panel>
         <ControlledTab
           options={[
             {
@@ -106,18 +160,6 @@ class Single extends Component {
               )
             },
             {
-              label: "Info",
-              value: "info",
-              render: () => (
-                <p>
-                  Released: {weeksToYearsAndWeeks(released)} <br />
-                  Quality: {quality} <br />
-                  Sales: {numeral(sales).format()} <br />
-                  Sales Last Week: {numeral(salesLastWeek).format()}
-                </p>
-              )
-            },
-            {
               label: "Chart Details",
               value: "chart-details",
               render: () => (
@@ -125,6 +167,71 @@ class Single extends Component {
                   Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This
                   Week: {checkNA(thisWeek)}
                 </p>
+              )
+            },
+            {
+              label: "Sales History",
+              value: "sales-history",
+              render: () => (
+                <Fragment>
+                  <VictoryChart
+                    width={750}
+                    height={200}
+                    containerComponent={
+                      <VictoryZoomVoronoiContainer
+                        responsive //={false}
+                        zoomDimension="x"
+                        zoomDomain={this.state.zoomDomain}
+                        onZoomDomainChange={this.handleZoom.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis
+                      fixLabelOverlap
+                      tickFormat={weeksToYearsAndWeeks}
+                    />
+                    <VictoryAxis
+                      dependentAxis
+                      fixLabelOverlap
+                      tickFormat={y => formatNumber(y, false, true)}
+                    />
+                    <VictoryLine
+                      labelComponent={
+                        <VictoryTooltip
+                          cornerRadius={2}
+                          text={data => numeral(data.y).format("0,0")}
+                        />
+                      }
+                      style={{
+                        data: { stroke: "#2d948a" }
+                      }}
+                      data={this.state.salesHistory}
+                    />
+                  </VictoryChart>
+
+                  <VictoryChart
+                    padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                    width={650}
+                    height={60}
+                    containerComponent={
+                      <VictoryBrushContainer
+                        responsive //={false}
+                        brushDimension="x"
+                        brushDomain={this.state.selectedDomain}
+                        onBrushDomainChange={this.handleBrush.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis tickFormat={weeksToYearsAndWeeks} />
+                    <VictoryLine
+                      style={{
+                        data: { stroke: "#2d948a" }
+                      }}
+                      data={this.state.salesHistory}
+                      labelComponent={<VictoryTooltip />}
+                    />
+                  </VictoryChart>
+                </Fragment>
               )
             }
           ]}

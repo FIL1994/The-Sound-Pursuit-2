@@ -55,6 +55,8 @@ class Album extends Component {
       album.songs = album.songs.map(si => songs.find(s => s.id === si));
     }
 
+    console.log("album", album);
+
     const salesHistory = album.salesHistory.map(s => {
       return {
         y: s.sales,
@@ -79,8 +81,6 @@ class Album extends Component {
 
   render() {
     const { album } = this.state;
-
-    console.log("album", album);
 
     if (album === undefined) {
       return (
