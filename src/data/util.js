@@ -52,3 +52,17 @@ async function getImage() {
     return "";
   }
 }
+
+export function formatNumber(number, isFloat = false, noDecimal = false) {
+  const digits = noDecimal ? 0 : 2;
+
+  if (number > 1000000000) {
+    return `${(number / 1000000000).toFixed(digits)}B`;
+  } else if (number > 1000000) {
+    return `${(number / 1000000).toFixed(digits)}M`;
+  } else if (number > 1000) {
+    return `${(number / 1000).toFixed(digits)}K`;
+  } else {
+    return isFloat ? number.toFixed(digits) : _.ceil(number);
+  }
+}

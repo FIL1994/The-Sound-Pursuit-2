@@ -8,7 +8,7 @@ import { NavLink, matchPath, withRouter } from "react-router-dom";
 import _ from "lodash";
 import { getFans, getCash, getWeek } from "../actions";
 import localForage, { DATA_BAND } from "../data/localForage";
-import { weeksToYearsAndWeeks } from "../data/util";
+import { weeksToYearsAndWeeks , formatNumber} from "../data/util";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/fontawesome-free-regular";
 import numeral from "numeral";
@@ -54,18 +54,6 @@ class HeaderNav extends Component {
     }
     return !(match.url === "/" && !match.isExact);
   };
-
-  formatNumber(number, isFloat) {
-    if (number > 1000000000) {
-      return `${(number / 1000000000).toFixed(2)}B`;
-    } else if (number > 1000000) {
-      return `${(number / 1000000).toFixed(2)}M`;
-    } else if (number > 1000) {
-      return `${(number / 1000).toFixed(2)}K`;
-    } else {
-      return isFloat ? number.toFixed(2) : _.ceil(number);
-    }
-  }
 
   renderLinks() {
     return (
@@ -167,7 +155,7 @@ class HeaderNav extends Component {
             <i className="icon icon-people" />
             <span className="left-space-1">
               {_.isNumber(this.props.fans) ? (
-                this.formatNumber(this.props.fans, false)
+                formatNumber(this.props.fans, false)
               ) : (
                 <div className="loading" />
               )}
@@ -178,7 +166,7 @@ class HeaderNav extends Component {
             data-tooltip={numeral(this.props.cash).format("$0,0.00")}
           >
             {_.isNumber(this.props.cash) ? (
-              `$${this.formatNumber(this.props.cash, true)}`
+              `$${formatNumber(this.props.cash, true)}`
             ) : (
               <div className="loading" />
             )}

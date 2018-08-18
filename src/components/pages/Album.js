@@ -7,13 +7,23 @@ import { connect } from "react-redux";
 import { Page, Loading, ControlledTab } from "../SpectreCSS";
 import _ from "lodash";
 import numeral from "numeral";
-import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
+import {
+  VictoryChart,
+  VictoryZoomContainer,
+  VictoryLine,
+  VictoryBrushContainer,
+  VictoryAxis,
+  VictoryTheme
+} from "victory";
+import moment from "moment";
+import { checkNA, weeksToYearsAndWeeks, formatNumber } from "../../data/util";
 
 import { getSongs, getAlbums } from "../../actions";
 
 class Album extends Component {
   state = {
-    album: undefined
+    album: undefined,
+    salesHistory: []
   };
 
   componentDidMount() {
@@ -41,9 +51,29 @@ class Album extends Component {
       album.songs = album.songs.map(si => songs.find(s => s.id === si));
     }
 
-    this.setState({
-      album
+    const salesHistory = album.salesHistory.map(s => {
+      let date = moment("0000", "YYYY");
+      date.add(s.week, "weeks");
+
+      return {
+        y: s.sales,
+        // x: date.toDate()
+        x: s.week
+      };
     });
+
+    this.setState({
+      album,
+      salesHistory
+    });
+  }
+
+  handleZoom(domain) {
+    this.setState({ selectedDomain: domain });
+  }
+
+  handleBrush(domain) {
+    this.setState({ zoomDomain: domain });
   }
 
   render() {
@@ -120,6 +150,31 @@ class Album extends Component {
             }
           ]}
         />
+        <VictoryChart
+          width={700}
+          height={350}
+          containerComponent={
+            <VictoryZoomContainer
+              responsive
+              zoomDimension="x"
+              zoomDomain={this.state.zoomDomain}
+              onZoomDomainChange={this.handleZoom.bind(this)}
+            />
+          }
+        >
+          <VictoryAxis fixLabelOverlap tickFormat={weeksToYearsAndWeeks} />
+          <VictoryAxis
+            dependentAxis
+            fixLabelOverlap
+            tickFormat={y => formatNumber(y, false, true)}
+          />
+          <VictoryLine
+            style={{
+              data: { stroke: "tomato" }
+            }}
+            data={this.state.salesHistory}
+          />
+        </VictoryChart>
       </Page>
     );
   }

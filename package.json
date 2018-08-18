@@ -67,6 +67,7 @@
     "jquery": "^3.3.1",
     "localforage": "^1.7.2",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "numeral": "^2.0.6",
     "prop-types": "^15.6.2",
     "rc-pagination": "^1.16.5",
@@ -89,6 +90,7 @@
     "react-toastify": "^4.2.0",
     "redux": "4.0.0",
     "redux-thunk": "^2.3.0",
-    "spectre.css": "^0.5.3"
+    "spectre.css": "^0.5.3",
+    "victory": "^30.2.0"
   }
 }
