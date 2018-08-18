@@ -149,7 +149,10 @@ class Album extends Component {
               label: "Tracklist",
               value: "tracklist",
               render: () => (
-                <div className="scrollable-small" style={{ height: 330, overflowX: "hidden" }}>
+                <div
+                  className="scrollable-small"
+                  style={{ height: 330, overflowX: "hidden" }}
+                >
                   {songs.map(({ id, title }, index) => (
                     <Grid key={id}>
                       <Column width={5} style={{ textAlign: "right" }}>
@@ -167,10 +170,26 @@ class Album extends Component {
               label: "Chart Details",
               value: "chart-details",
               render: () => (
-                <p>
-                  Peak: {checkNA(peak)} | Last Week: {checkNA(lastWeek)} | This
-                  Week: {checkNA(thisWeek)}
-                </p>
+                <Grid>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    Peak:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(peak)}
+                  </Column>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    Last Week:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(lastWeek)}
+                  </Column>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    This Week:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(thisWeek)}
+                  </Column>
+                </Grid>
               )
             },
             {
