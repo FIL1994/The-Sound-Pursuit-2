@@ -170,7 +170,29 @@ class Album extends Component {
           />
           <VictoryLine
             style={{
-              data: { stroke: "tomato" }
+              data: { stroke: "#2d948a" }
+            }}
+            data={this.state.salesHistory}
+          />
+        </VictoryChart>
+
+        <VictoryChart
+          padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+          width={600}
+          height={90}
+          containerComponent={
+            <VictoryBrushContainer
+              responsive
+              brushDimension="x"
+              brushDomain={this.state.selectedDomain}
+              onBrushDomainChange={this.handleBrush.bind(this)}
+            />
+          }
+        >
+          <VictoryAxis tickFormat={weeksToYearsAndWeeks} />
+          <VictoryLine
+            style={{
+              data: { stroke: "#2d948a" }
             }}
             data={this.state.salesHistory}
           />
