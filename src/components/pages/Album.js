@@ -121,6 +121,9 @@ class Album extends Component {
                 height={160}
                 width={160}
                 onClick={() => this.setState({ isLightboxOpen: true })}
+                style={{
+                  cursor: "pointer"
+                }}
               />
               {this.state.isLightboxOpen && (
                 <Lightbox
