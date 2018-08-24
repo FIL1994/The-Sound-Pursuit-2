@@ -9,6 +9,7 @@ export const ERROR_BAND = "error_band";
 export const SAVE_SONGS = "save_song";
 export const GET_SONGS = "get_songs";
 export const ERROR_SONG = "error_song";
+export const DELETE_SONG = "delete_song";
 
 export const GET_WEEK = "get_week";
 export const SAVE_WEEK = "save_week";
