@@ -5,6 +5,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import numeral from "numeral";
 
 import _ from "lodash";
 import { getScore } from "../actions/index";
@@ -22,7 +23,7 @@ import Single from "./pages/Single";
 import Album from "./pages/Album";
 import Tour from "./pages/Tour";
 import Charts from "./pages/Charts";
-import numeral from "numeral";
+import "../helpers/setupTweenJS";
 
 import "fg-select-css/src/select-css.css";
 import "react-toastify/dist/ReactToastify.css";

@@ -28,6 +28,6 @@ $background-gradient: linear-gradient(
   background: linear-gradient(to right, #e0e5e9, #e2e5e7);
 }
 
-.Toastify__toast--info {
-  background: $background-gradient;
+#root .Toastify__toast--info {
+  background: $background-gradient ;
 }

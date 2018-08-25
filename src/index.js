@@ -7,18 +7,17 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
-import { startSession, getDateTime, initSession } from "./ng/NG_Connect";
-import { NG } from "./ng/UnlockMedals";
+
 import AppLoader from "./components/AppLoader";
 
 import reducers from "./reducers";
-import "./setupSoundJS";
-import "./helpers/setupTweenJS";
 
 import "spectre.css/dist/spectre-exp.css";
 // import "./styles/spectre-dark.min.css";
 import "./index.scss";
 import Loadable from "react-loadable";
+import("./setupNG");
+import("./setupSoundJS");
 
 const store = createStore(reducers, applyMiddleware(ReduxThunk));
 
@@ -33,11 +32,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-
-// NG Start Session
-initSession();
-startSession(() => {
-  NG.fetchedUser = true;
-  NG.executeQueue();
-});
-getDateTime();
