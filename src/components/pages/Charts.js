@@ -52,13 +52,19 @@ class Charts extends Component {
             <div className="btn-group btn-group-block centered col-4">
               <Button
                 primary={showSingles}
-                onClick={() => this.setState({ showSingles: true })}
+                onClick={() => {
+                  this.setState({ showSingles: true });
+                  document.querySelector(".scrollable").scroll(0, 0);
+                }}
               >
                 Singles
               </Button>
               <Button
                 primary={!showSingles}
-                onClick={() => this.setState({ showSingles: false })}
+                onClick={() => {
+                  this.setState({ showSingles: false });
+                  document.querySelector(".scrollable").scroll(0, 0);
+                }}
               >
                 Albums
               </Button>
