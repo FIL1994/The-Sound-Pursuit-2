@@ -149,53 +149,6 @@ class Album extends Component {
         <ControlledTab
           options={[
             {
-              label: "Tracklist",
-              value: "tracklist",
-              render: () => (
-                <div
-                  className="scrollable-small"
-                  style={{ height: 330, overflowX: "hidden" }}
-                >
-                  {songs.map(({ id, title }, index) => (
-                    <Grid key={id}>
-                      <Column width={5} style={{ textAlign: "right" }}>
-                        {index + 1}.
-                      </Column>
-                      <Column width={7} style={{ textAlign: "left" }}>
-                        {title}
-                      </Column>
-                    </Grid>
-                  ))}
-                </div>
-              )
-            },
-            {
-              label: "Chart Details",
-              value: "chart-details",
-              render: () => (
-                <Grid>
-                  <Column width={6} style={{ textAlign: "right" }}>
-                    Peak:
-                  </Column>
-                  <Column width={6} style={{ textAlign: "left" }}>
-                    {checkNA(peak)}
-                  </Column>
-                  <Column width={6} style={{ textAlign: "right" }}>
-                    Last Week:
-                  </Column>
-                  <Column width={6} style={{ textAlign: "left" }}>
-                    {checkNA(lastWeek)}
-                  </Column>
-                  <Column width={6} style={{ textAlign: "right" }}>
-                    This Week:
-                  </Column>
-                  <Column width={6} style={{ textAlign: "left" }}>
-                    {checkNA(thisWeek)}
-                  </Column>
-                </Grid>
-              )
-            },
-            {
               label: "Sales History",
               value: "sales-history",
               render: () => (
@@ -258,6 +211,53 @@ class Album extends Component {
                     />
                   </VictoryChart>
                 </Fragment>
+              )
+            },
+            {
+              label: "Tracklist",
+              value: "tracklist",
+              render: () => (
+                <div
+                  className="scrollable-small"
+                  style={{ height: 330, overflowX: "hidden" }}
+                >
+                  {songs.map(({ id, title }, index) => (
+                    <Grid key={id}>
+                      <Column width={5} style={{ textAlign: "right" }}>
+                        {index + 1}.
+                      </Column>
+                      <Column width={7} style={{ textAlign: "left" }}>
+                        {title}
+                      </Column>
+                    </Grid>
+                  ))}
+                </div>
+              )
+            },
+            {
+              label: "Chart Details",
+              value: "chart-details",
+              render: () => (
+                <Grid>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    Peak:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(peak)}
+                  </Column>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    Last Week:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(lastWeek)}
+                  </Column>
+                  <Column width={6} style={{ textAlign: "right" }}>
+                    This Week:
+                  </Column>
+                  <Column width={6} style={{ textAlign: "left" }}>
+                    {checkNA(thisWeek)}
+                  </Column>
+                </Grid>
               )
             }
           ]}
