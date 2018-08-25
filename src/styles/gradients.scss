@@ -12,7 +12,11 @@ $background-gradient: linear-gradient(
 
 .card.bg-dark,
 .tile.bg-dark {
-  background: linear-gradient(to right, #353d40, #244543);
+  background: linear-gradient(to right, #1b282d, #184846);
+}
+
+.tile.bg-success {
+  background: linear-gradient(to right, #0c2b18, #0c4824);
 }
 
 .panel {
