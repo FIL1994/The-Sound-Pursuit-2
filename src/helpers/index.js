@@ -2,8 +2,9 @@ import numeral from "numeral";
 import _ from "lodash";
 
 import NumberEase from "./NumberEase";
+import { springConfig } from "./Spring";
 
-export { NumberEase };
+export { NumberEase, springConfig };
 export const formatNumber = v => numeral(v).format();
 export const formatMoney = v => numeral(v).format("$0,0.00");
 export const formatDecimal = v => numeral(v).format("0.00");

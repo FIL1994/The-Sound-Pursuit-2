@@ -13,6 +13,7 @@ import ReactLoading from "react-loading";
 
 import { getCharts, getBand } from "../../actions";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
+import { springConfig } from "../../helpers";
 
 class Charts extends Component {
   state = {
@@ -69,12 +70,13 @@ class Charts extends Component {
                 Albums
               </Button>
             </div>
-            <ul className="scrollable">
+            <ul className="scrollable" style={{ overflowX: "hidden" }}>
               <Trail
                 native
                 from={{ opacity: 0, x: -100 }}
                 to={{ opacity: 1, x: 0 }}
                 keys={chartItems.map(i => `${showSingles ? "s" : "a"}-${i.id}`)}
+                config={springConfig}
               >
                 {chartItems.map(
                   (
