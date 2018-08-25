@@ -75,16 +75,15 @@ class Container extends Component {
         style={{ ...style, backgroundColor }}
         className={`${this.props.classes} drag-container`}
       >
-        {!isHoveringOnMaxItems ? (
-          ""
-        ) : (
+        {isHoveringOnMaxItems && (
           <div
             style={{
-              color: "#e83600",
-              backgroundColor: "#b7b5b5",
+              color: "white",
+              backgroundColor: "#e83600",
               fontWeight: "bold",
               position: "relative",
-              padding: "3px 0px"
+              padding: "3px 0px",
+              background: "linear-gradient(131deg, #971212, #b80707)"
             }}
           >
             Max Songs Reached
