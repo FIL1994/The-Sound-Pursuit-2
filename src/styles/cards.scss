@@ -1,12 +1,20 @@
 .member-card {
   margin-left: auto;
   margin-right: auto;
-  box-shadow: $box-shadow;
+  box-shadow: rgba(107, 134, 124, 0.62) 1px 2px 12px 2px;
   padding: 16px;
   margin-bottom: 20px;
   width: 48%;
-  background-color: #ffffffc9;
   border-radius: 3px;
+  color: white;
+
+  background: linear-gradient(131deg, #227970, #12534d);
+  background-size: 400% 400%;
+  
+  -webkit-animation: gradientScroll 38s ease infinite;
+  -moz-animation: gradientScroll 38s ease infinite;
+  -o-animation: gradientScroll 38s ease infinite;
+  animation: gradientScroll 38s ease infinite;
 }
 
 .record .card-header {
@@ -18,4 +26,49 @@
   font-style: italic;
   display: inline;
   color: #d0d0d0;
+}
+
+@-webkit-keyframes gradientScroll {
+  0% {
+    background-position: 83% 0%;
+  }
+  50% {
+    background-position: 18% 100%;
+  }
+  100% {
+    background-position: 83% 0%;
+  }
+}
+@-moz-keyframes gradientScroll {
+  0% {
+    background-position: 83% 0%;
+  }
+  50% {
+    background-position: 18% 100%;
+  }
+  100% {
+    background-position: 83% 0%;
+  }
+}
+@-o-keyframes gradientScroll {
+  0% {
+    background-position: 83% 0%;
+  }
+  50% {
+    background-position: 18% 100%;
+  }
+  100% {
+    background-position: 83% 0%;
+  }
+}
+@keyframes gradientScroll {
+  0% {
+    background-position: 83% 0%;
+  }
+  50% {
+    background-position: 18% 100%;
+  }
+  100% {
+    background-position: 83% 0%;
+  }
 }
