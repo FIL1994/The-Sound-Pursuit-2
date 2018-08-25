@@ -87,7 +87,7 @@ class Container extends Component {
               padding: "3px 0px"
             }}
           >
-            Max Items Reached
+            Max Songs Reached
           </div>
         )}
         {cards.map((card, i) => (
