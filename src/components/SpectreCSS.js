@@ -164,7 +164,7 @@ export const Divider = props => {
  * @returns {XML} JSX Component
  * @constructor
  */
-export const Loading = props => {
+const Loading = props => {
   const { large } = props;
   let className = "loading";
 
@@ -180,6 +180,18 @@ export const Loading = props => {
 
   return <div {...myProps} className={className} />;
 };
+
+Loading.defaultProps = {
+  large: false,
+  className: ""
+};
+
+Loading.propTypes = {
+  large: PropTypes.bool,
+  className: PropTypes.string
+};
+
+export { Loading };
 
 /**
  * A page for containing elements.

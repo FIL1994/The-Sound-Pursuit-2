@@ -9,6 +9,7 @@ import { createStore, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
 import { startSession, getDateTime, initSession } from "./ng/NG_Connect";
 import { NG } from "./ng/UnlockMedals";
+import AppLoader from "./components/AppLoader";
 
 import reducers from "./reducers";
 import "./setupSoundJS";
@@ -33,14 +34,13 @@ const store = createStore(reducers, applyMiddleware(ReduxThunk));
 
 const App = Loadable({
   loader: () => import("./components/App"),
-  loading: () => (
-    <div children="Loading..." style={{ margin: 50, textAlign: "center" }} />
-  )
+  loading: AppLoader
 });
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AppLoader />
+    {/* <App /> */}
   </Provider>,
   document.getElementById("root")
 );
