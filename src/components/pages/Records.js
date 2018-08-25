@@ -36,6 +36,10 @@ class Records extends Component {
     this.props.getSongs();
     this.props.getSingles();
     this.props.getAlbums();
+
+    if (!this.state.showAlbums && _.isEmpty(this.props.singles)) {
+      setTimeout(() => this.setState({ showAlbums: true }));
+    }
   }
 
   componentDidUpdate() {
@@ -80,10 +84,13 @@ class Records extends Component {
 
     if (_.isEmpty(singles)) {
       return (
-        <EmptyState
-          icon={<FontAwesomeIcon icon="file-audio" size="4x" />}
-          title="You haven't released any singles yet"
-        />
+        <Fragment>
+          {this.renderSinglesOrAlbumsSwitch()}
+          <EmptyState
+            icon={<FontAwesomeIcon icon="file-audio" size="4x" />}
+            title="You haven't released any singles yet"
+          />
+        </Fragment>
       );
     }
 
@@ -145,9 +152,8 @@ class Records extends Component {
                           <Link to={`/single/${id}`}>{title}</Link>
                         </div>
                         <div className="record-release">
-                          {weeksToYearsAndWeeks(released)} ({`${age} ${
-                            age === 1 ? "week" : "weeks"
-                          }`})
+                          {weeksToYearsAndWeeks(released)} (
+                          {`${age} ${age === 1 ? "week" : "weeks"}`})
                         </div>
                       </div>
                       <div className="card-body">
@@ -182,10 +188,13 @@ class Records extends Component {
 
     if (_.isEmpty(albums)) {
       return (
-        <EmptyState
-          icon={<FontAwesomeIcon icon="file-audio" size="4x" />}
-          title="You haven't released any albums yet"
-        />
+        <Fragment>
+          {this.renderSinglesOrAlbumsSwitch()}
+          <EmptyState
+            icon={<FontAwesomeIcon icon="file-audio" size="4x" />}
+            title="You haven't released any albums yet"
+          />
+        </Fragment>
       );
     }
 
@@ -247,9 +256,8 @@ class Records extends Component {
                           <Link to={`/album/${id}`}>{title}</Link>
                         </div>
                         <div className="record-release">
-                          {weeksToYearsAndWeeks(released)} ({`${age} ${
-                            age === 1 ? "week" : "weeks"
-                          }`})
+                          {weeksToYearsAndWeeks(released)} (
+                          {`${age} ${age === 1 ? "week" : "weeks"}`})
                         </div>
                       </div>
                       <div className="card-body">
@@ -279,10 +287,6 @@ class Records extends Component {
   render() {
     const { showAlbums } = this.state;
     const { singles, albums } = this.props;
-
-    if (!showAlbums && _.isEmpty(singles)) {
-      setTimeout(() => this.setState({ showAlbums: true }));
-    }
 
     return (
       <Page id="page-records">
