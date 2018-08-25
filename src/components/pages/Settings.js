@@ -14,6 +14,7 @@ import localForage, {
   SONG_TO_PLAY
 } from "../../data/localForage";
 import MySlider from "../MySlider";
+import { fullscreenMode } from "../../helpers";
 
 class Settings extends Component {
   state = {
@@ -105,6 +106,16 @@ class Settings extends Component {
                 ) : (
                   <FontAwesomeIcon icon="volume-off" />
                 )}
+              </Button>
+            </div>
+            <br />
+            <div>
+              <Button
+                large
+                style={{ width: "100%" }}
+                onClick={() => fullscreenMode()}
+              >
+                Fullscreen Mode
               </Button>
             </div>
             <br />

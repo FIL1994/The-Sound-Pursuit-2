@@ -20,6 +20,25 @@ export const calcSalesHistory = (record, week) => {
     sales: salesThisWeek,
     week
   });
-  
+
   return record;
 };
+
+const defaultQuerySelector = "html";
+export function fullscreenMode(
+  element = document.querySelector(defaultQuerySelector)
+) {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  } else {
+    if (element !== document.querySelector(defaultQuerySelector)) {
+      launchIntoFullscreen(document.querySelector(defaultQuerySelector));
+    }
+  }
+}
