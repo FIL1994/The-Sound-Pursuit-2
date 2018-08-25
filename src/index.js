@@ -15,20 +15,10 @@ import reducers from "./reducers";
 import "./setupSoundJS";
 import "./helpers/setupTweenJS";
 
-import "fg-select-css/src/select-css.css";
-import "react-toastify/dist/ReactToastify.css";
-import "react-image-lightbox/style.css";
 import "spectre.css/dist/spectre-exp.css";
 // import "./styles/spectre-dark.min.css";
 import "./index.scss";
-
-import fa from "@fortawesome/fontawesome";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import faSolid from "@fortawesome/fontawesome-free-solid";
-import { faCircle } from "@fortawesome/fontawesome-free-regular";
 import Loadable from "react-loadable";
-
-fa.library.add(faSolid, faCircle);
 
 const store = createStore(reducers, applyMiddleware(ReduxThunk));
 
@@ -39,8 +29,8 @@ const App = Loadable({
 
 ReactDOM.render(
   <Provider store={store}>
-    <AppLoader />
-    {/* <App /> */}
+    {/* <AppLoader /> */}
+    <App />
   </Provider>,
   document.getElementById("root")
 );

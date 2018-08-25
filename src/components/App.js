@@ -24,6 +24,16 @@ import Tour from "./pages/Tour";
 import Charts from "./pages/Charts";
 import numeral from "numeral";
 
+import "fg-select-css/src/select-css.css";
+import "react-toastify/dist/ReactToastify.css";
+import "react-image-lightbox/style.css";
+
+import fa from "@fortawesome/fontawesome";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import faSolid from "@fortawesome/fontawesome-free-solid";
+import { faCircle } from "@fortawesome/fontawesome-free-regular";
+fa.library.add(faSolid, faCircle);
+
 let ROOT_URL =
   process.env.NODE_ENV === "production" ? "assets/bg/" : "/assets/bg/";
 
