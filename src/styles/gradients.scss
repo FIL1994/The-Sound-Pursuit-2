@@ -15,8 +15,9 @@ $background-gradient: linear-gradient(
   background: linear-gradient(to right, #1b282d, #184846);
 }
 
-.tile.bg-success {
-  background: linear-gradient(to right, #0c2b18, #0c4824);
+.tile.bg-other {
+  background: linear-gradient(to right, #1f1b19, #233840);
+  color: white;
 }
 
 .panel {

@@ -95,7 +95,7 @@ class Charts extends Component {
 
                     return (
                       <animated.li
-                        className={`tile ${isUser ? "bg-success" : "bg-dark"}`}
+                        className={`tile ${isUser ? "bg-dark" : "bg-other"}`}
                         style={{
                           opacity,
                           transform: x.interpolate(
