@@ -69,6 +69,8 @@
     "lodash": "^4.17.10",
     "numeral": "^2.0.6",
     "prop-types": "^15.6.2",
+    "pure-random": "^0.1.1",
+    "random-js": "^1.0.8",
     "rc-pagination": "^1.17.0",
     "rc-select": "^8.2.1",
     "rc-slider": "^8.6.1",

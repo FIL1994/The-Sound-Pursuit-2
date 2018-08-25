@@ -27,6 +27,14 @@ import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faSolid from "@fortawesome/fontawesome-free-solid";
 import { faCircle } from "@fortawesome/fontawesome-free-regular";
 
+import r from "random-js";
+import _ from "lodash";
+import rnd from "pure-random";
+
+window.r = r();
+window.rnd = rnd;
+
+
 fa.library.add(faSolid, faCircle);
 
 const store = createStore(reducers, applyMiddleware(ReduxThunk));
