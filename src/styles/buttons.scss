@@ -1,0 +1,14 @@
+.btn.btn-lg,
+.btn-group .btn {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.btn.btn-lg:hover,
+.btn-group .btn:hover {
+  -webkit-transform: rotateX(-15deg);
+  -moz-transform: rotateX(-15deg);
+  -ms-transform: rotateX(-15deg);
+  transform: rotateX(-15deg);
+}
