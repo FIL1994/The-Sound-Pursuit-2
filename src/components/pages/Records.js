@@ -16,7 +16,7 @@ import localeInfo from "rc-pagination/lib/locale/en_US";
 import { Page, EmptyState, Button, Grid } from "../SpectreCSS";
 import { checkNA, weeksToYearsAndWeeks } from "../../data/util";
 import { getSongs, getSingles, getAlbums, getWeek } from "../../actions";
-import { NumberEase, formatNumber } from "../../helpers";
+import { NumberEase, formatNumber, springConfig } from "../../helpers";
 
 const { Column } = Grid;
 
@@ -119,12 +119,16 @@ class Records extends Component {
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
-        <div className="scrollable centered full-width">
+        <div
+          className="scrollable centered full-width"
+          style={{ overflowX: "hidden" }}
+        >
           <Trail
             native
             from={{ opacity: 0, x: -100 }}
             to={{ opacity: 1, x: 0 }}
             keys={singles.map(s => "s" + s.id)}
+            config={springConfig}
           >
             {singles
               .slice(...this.getRange())
@@ -223,12 +227,16 @@ class Records extends Component {
           </span>
           {this.renderSinglesOrAlbumsSwitch()}
         </div>
-        <div className="scrollable centered full-width">
+        <div
+          className="scrollable centered full-width"
+          style={{ overflowX: "hidden" }}
+        >
           <Trail
             native
             from={{ opacity: 0, x: 100 }}
             to={{ opacity: 1, x: 0 }}
             keys={albums.map(a => "a" + a.id)}
+            config={springConfig}
           >
             {albums
               .slice(...this.getRange())
