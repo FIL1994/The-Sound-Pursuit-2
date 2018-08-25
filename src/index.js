@@ -39,11 +39,10 @@ ReactDOM.render(
 );
 
 // NG Start Session
-/*
 initSession();
 startSession(() => {
   NG.fetchedUser = true;
   NG.executeQueue();
 });
 getDateTime();
-*/
+
