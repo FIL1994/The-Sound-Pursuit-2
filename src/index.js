@@ -29,7 +29,6 @@ const App = Loadable({
 
 ReactDOM.render(
   <Provider store={store}>
-    {/* <AppLoader /> */}
     <App />
   </Provider>,
   document.getElementById("root")
