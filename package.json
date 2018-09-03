@@ -35,11 +35,13 @@
     "@babel/plugin-proposal-throw-expressions": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
     "babel-minify": "0.5.0-alpha.3cc09dcf",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "google-closure-compiler": "^20180805.0.0",
     "html-loader": "^0.5.5",
@@ -55,6 +57,7 @@
     "webpack-dev-server": "^3.1.7"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-regular": "^5.0.13",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
