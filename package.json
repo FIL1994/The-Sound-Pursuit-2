@@ -9,9 +9,9 @@
   },
   "scripts": {
     "start": "webpack-dev-server --mode=development --port=8080 --progress",
-    "build": "NODE_ENV='production' webpack --mode=production -p --progress --colors && cp -R assets dist/assets",
-    "build:win": "set NODE_ENV=production && webpack --mode=production -p --progress --colors && scripts\\build.cmd",
-    "build-full:win": "set NODE_ENV=production && webpack --mode=production -p --progress --colors && scripts\\build.cmd",
+    "build": "cross-env NODE_ENV=production webpack --mode=production -p --progress --colors && cp -R assets dist/assets",
+    "build:win": "cross-env NODE_ENV=production webpack --mode=production -p --progress --colors && scripts\\build.cmd",
+    "build-full:win": "cross-env NODE_ENV=production webpack --mode=production -p --progress --colors && scripts\\build.cmd",
     "dev": "webpack --mode=development",
     "min": "node compile.js"
   },
