@@ -72,7 +72,10 @@ class Songs extends Component {
     return _.orderBy(songs, [column], [sortAsc ? "asc" : "desc"]);
   };
 
-  writeSongSubmit = () => {
+  writeSongSubmit = e => {
+    e.preventDefault();
+    window.location.hash = "page-songs";
+
     let txtSongName = $("#txtSongName");
     if (_.isEmpty(this.props.band)) {
       return;
@@ -216,17 +219,23 @@ class Songs extends Component {
   renderModalWriteSong() {
     return (
       <div id="modal-write-song" className="modal modal-sm">
-        <a href="#page-songs" className="modal-overlay" aria-label="Close" />
-        <form
-          className="modal-container"
-          onSubmit={this.writeSongSubmit}
-          action="#page-songs"
-        >
+        <a
+          className="modal-overlay"
+          aria-label="Close"
+          onClick={e => {
+            e.preventDefault();
+            window.location.hash = "page-songs";
+          }}
+        />
+        <form className="modal-container" onSubmit={this.writeSongSubmit}>
           <div className="modal-header">
             <a
-              href="#page-songs"
               className="btn btn-clear float-right"
               aria-label="Close"
+              onClick={e => {
+                e.preventDefault();
+                window.location.hash = "page-songs";
+              }}
             />
             <div className="modal-title h5 text-center">Write a Song</div>
           </div>
@@ -251,14 +260,16 @@ class Songs extends Component {
             </div>
           </div>
           <div className="modal-footer">
-            <a
-              href="#page-songs"
-              onClick={this.writeSongSubmit}
-              className="btn btn-primary"
-            >
+            <a onClick={this.writeSongSubmit} className="btn btn-primary">
               Submit
             </a>
-            <a href="#page-songs" className="btn btn-link">
+            <a
+              className="btn btn-link"
+              onClick={e => {
+                e.preventDefault();
+                window.location.hash = "page-songs";
+              }}
+            >
               Close
             </a>
           </div>
